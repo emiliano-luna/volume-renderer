@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<options>	
+	<radius>0.02</radius>		
+	<!-- <fileName>spheres.phmap</fileName> -->
+	<!--<fileName>empty_rg.phmap</fileName>-->	
+	 <fileName>original.phmap</fileName> 
+	<!-- <fileName>mirror.phmap</fileName> -->
+	<width>640</width>
+	<height>640</height>
+	<multiThreaded>false</multiThreaded>
+	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
+	<camera x="0" y="1" z="2.25" pitch="0" yaw="0" roll="0" fov="80"/>
+	<!-- <camera x="0.5" y="1.5" z="1.25" roll="-20" pitch="25" yaw="0" fov="120"/> -->
+</options>
