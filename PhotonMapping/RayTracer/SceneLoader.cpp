@@ -40,7 +40,7 @@ RTCDevice SceneLoader::initializeDevice()
  *
  * Scenes, like devices, are reference-counted.
  */
-SceneInfo* SceneLoader::initializeScene(RTCDevice device, std::string modelName)
+SceneInfo* SceneLoader::initializeScene(RTCDevice device)
 {
 	auto info = new SceneInfo();
 
@@ -63,7 +63,7 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device, std::string modelName)
 	std::string basedir = "..\\Models\\";
 	//std::string inputfile = "..\\Models\\CornellBox-Sphere.obj";
 	//std::string inputfile = "..\\Models\\CornellBox-Mirror.obj";
-	std::string inputfile = "..\\Models\\" + modelName;
+	std::string inputfile = "..\\Models\\CornellBox-Original.obj";
 
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

@@ -75,7 +75,7 @@ std::pair<PointCloud, std::vector<PhotonData>>* PhotonMapper::Generate(PhotonMap
 	/* Initialization. All of this may fail, but we will be notified by
 	 * our errorFunction. */
 	RTCDevice device = SceneLoader::initializeDevice();
-	SceneInfo* sceneInfo = SceneLoader::initializeScene(device, options->modelName);
+	SceneInfo* sceneInfo = SceneLoader::initializeScene(device);
 
 	//TO DO: Guardar Archivo y no retornar
 	auto res = PhotonMapper::GeneratePhotons(sceneInfo, options);

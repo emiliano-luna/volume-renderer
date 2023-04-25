@@ -16,6 +16,6 @@ private:
 	static void errorFunction(void * userPtr, RTCError error, const char * str);
 public:	
 	static RTCDevice initializeDevice();
-	static SceneInfo* initializeScene(RTCDevice device, std::string modelName);
+	static SceneInfo* initializeScene(RTCDevice device);
 };
 

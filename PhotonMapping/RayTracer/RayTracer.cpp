@@ -48,24 +48,10 @@ void RenderScene()
 
 	auto configOptions = FileManager::GetRendererOptions();
 
-	//std::cout << "Ingrese el nombre del mapa de fotones" << std::endl;
-	//std::string photonMapName;
-	//std::cin >> photonMapName;
-
-	std::string modelName;
-
-	std::chrono::steady_clock::time_point begin;
-	begin = std::chrono::steady_clock::now();
-
-	auto photonMap = FileManager::ReadPhotonMap(configOptions->fileName, &modelName);//PhotonMapper::Generate();
-
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	std::cout << "Renderer - Mapa de fotones cargado en: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
-
 	configOptions->maxDepth = 5;	
 
 	//MinimalTutorial::main2();
-	renderer->RenderScene(photonMap, modelName, *configOptions);
+	renderer->RenderScene(*configOptions);
 
 	std::getchar();
 }

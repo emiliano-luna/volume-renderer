@@ -13,6 +13,6 @@ class SceneRenderer
 private:
 	void castRay(RTCScene scene, float ox, float oy, float oz, float dx, float dy, float dz);	
 public:
-	void RenderScene(std::pair<PointCloud, std::vector<PhotonData>>* photonMap, std::string modelName, Options options);
+	void RenderScene(Options options);
 };
 

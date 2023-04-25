@@ -122,9 +122,7 @@ Vec3f Renderer::castRay(
 	SceneInfo* scene,
 	int objectId,
 	const Options &options,
-	uint32_t depth, 
-	my_kd_tree_t* photons, 
-	std::vector<PhotonData>* photonData)
+	uint32_t depth)
 {
 	if (depth > options.maxDepth) {
 		return options.backgroundColor;
@@ -186,7 +184,7 @@ Vec3f Renderer::castRay(
 		//Si estoy intersecando el mismo objeto, lo ignoro
 		if (shapeIndex == objectId)
 		{
-			hitColor = castRay(hitPoint + dir * 0.001, dir, scene, shapeIndex, options, depth + 1, photons, photonData);
+			hitColor = castRay(hitPoint + dir * 0.001, dir, scene, shapeIndex, options, depth + 1);
 		}
 		else
 		{		
@@ -199,26 +197,27 @@ Vec3f Renderer::castRay(
 
 				auto newDir = Utils::normalize(Utils::reflect(dir, normal));
 
-				//hitColor = castRay(hitPoint, newDir, scene, objectId, options, depth + 1, photons, photonData);
-				hitColor = castRay(hitPoint + newDir * 0.001, newDir, scene, shapeIndex, options, depth + 1, photons, photonData);
+				hitColor = castRay(hitPoint + newDir * 0.001, newDir, scene, shapeIndex, options, depth + 1);
 			}
 			//Superficie Difusa
 			else
 			{
-				std::vector<std::pair<size_t, PointCoord>> matches;
+				//std::vector<std::pair<size_t, PointCoord>> matches;
 
-				const PointCoord query_pt[3] = { hitPoint.x, hitPoint.y, hitPoint.z };
-				nanoflann::SearchParams params;
+				//const PointCoord query_pt[3] = { hitPoint.x, hitPoint.y, hitPoint.z };
+				//nanoflann::SearchParams params;
 
-				auto matchesCount = photons->radiusSearch(&query_pt[0], options.radiusSearch, matches, params);
+				//auto matchesCount = photons->radiusSearch(&query_pt[0], options.radiusSearch, matches, params);
 
 				auto surfaceColor = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 
-				for (std::pair<size_t, PointCoord> hit : matches) {
-					hitColor += (surfaceColor * (1 / M_PI)) * (*photonData)[hit.first].color;
-				}
+				hitColor = surfaceColor;
 
-				hitColor = hitColor * (float)(1 / (M_PI * (options.radiusSearch * options.radiusSearch)));
+				//for (std::pair<size_t, PointCoord> hit : matches) {
+				//	hitColor += (surfaceColor * (1 / M_PI)) * (*photonData)[hit.first].color;
+				//}
+
+				//hitColor = hitColor * (float)(1 / (M_PI * (options.radiusSearch * options.radiusSearch)));
 				//hitColor = hitColor * (float)(1 / (M_PI * 50));
 				//hitColor = Vec3f(1 / (float)(rayhit.hit.primID + 1));
 
@@ -239,7 +238,7 @@ Vec3f Renderer::castRay(
 
 // generate primary ray direction
 void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, const Options &options, 
-												SceneInfo* scene, my_kd_tree_t* photons,std::vector<PhotonData>* photonData) {
+												SceneInfo* scene) {
 	float x = (2 * (i + 0.5) / (float)options.width - 1) * imageAspectRatio * scale;
 	float y = (1 - 2 * (j + 0.5) / (float)options.height) * scale;
 	
@@ -248,13 +247,11 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	//El orden y, x, z es para matchear con el pitch roll y yaw del método (usa otro sistemas de coordenadas)
 	Utils::rotate(options.cameraRotation.y, options.cameraRotation.x, options.cameraRotation.z, &dir);
 
-	*(pix++) = castRay(*orig, dir, scene, -1, options, 0, photons, photonData);
+	*(pix++) = castRay(*orig, dir, scene, -1, options, 0);
 }
 
 void Renderer::renderPixel(int i, int j, Options &options,
-	SceneInfo* scene,
-	my_kd_tree_t* photons,
-	std::vector<PhotonData>* photonData)
+	SceneInfo* scene)
 {
 	Vec3f *framebuffer = new Vec3f[1];
 	Vec3f *pix = framebuffer;
@@ -263,7 +260,7 @@ void Renderer::renderPixel(int i, int j, Options &options,
 	float imageAspectRatio = options.width / (float)options.height;
 	Vec3f orig(0, 1, 2.25);
 
-	Renderer::renderRay(i, j, pix, &orig, imageAspectRatio, scale, options, scene, photons, photonData);
+	Renderer::renderRay(i, j, pix, &orig, imageAspectRatio, scale, options, scene);
 
 	std::cout << "Escena rendereada - tiempo transcurrido: " << std::endl;
 	   
@@ -274,9 +271,7 @@ void Renderer::renderPixel(int i, int j, Options &options,
 
 
 void Renderer::render(Options &options,
-	SceneInfo* scene, 
-	my_kd_tree_t* photons,
-	std::vector<PhotonData>* photonData)
+	SceneInfo* scene)
 {
 	Vec3f *framebuffer = new Vec3f[options.width * options.height];
 	Vec3f *pix = framebuffer;
@@ -311,8 +306,6 @@ void Renderer::render(Options &options,
 			data->fromHeight = fromHeight;
 			data->toHeight = toHeight;
 			data->i = ipoint;
-			data->photons = photons;
-			data->photonData = photonData;
 			data->scene = scene;
 
 			myhandle[i] = (HANDLE)_beginthreadex(0, 0, &Renderer::mythread, data, 0, 0);
@@ -331,7 +324,7 @@ void Renderer::render(Options &options,
 				Renderer::renderRay(i, j, pix, &options.cameraPosition, imageAspectRatio, scale, options, scene, photons, photonData);
 			}
 		}*/
-		Renderer::renderPartial(&options.cameraPosition, pix, 0, options.height - 1, options, scene, photons, photonData);
+		Renderer::renderPartial(&options.cameraPosition, pix, 0, options.height - 1, options, scene);
 	}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -350,19 +343,19 @@ unsigned int __stdcall Renderer::mythread(void* data)
 	RenderThreadData* threadData = static_cast<RenderThreadData*>(data);
 
 	Renderer::renderPartial(Renderer::scene.orig, &Renderer::scene.pix[Renderer::scene.options.width * Renderer::scene.heightPerThread * *threadData->i],
-		*threadData->fromHeight, *threadData->toHeight, Renderer::scene.options, threadData->scene, threadData->photons, threadData->photonData);
+		*threadData->fromHeight, *threadData->toHeight, Renderer::scene.options, threadData->scene);
 
 	return 0;
 }
 
 void Renderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint32_t toHeight, const Options &options,
-	SceneInfo* scene, my_kd_tree_t* photons, std::vector<PhotonData>* photonData) {
+	SceneInfo* scene) {
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
 
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {
 		for (uint32_t i = 0; i < options.width; ++i) {
-			Renderer::renderRay(i, j, pix, orig, imageAspectRatio, scale, options, scene, photons, photonData);
+			Renderer::renderRay(i, j, pix, orig, imageAspectRatio, scale, options, scene);
 		}
 	}
 }

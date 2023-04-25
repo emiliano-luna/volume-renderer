@@ -109,18 +109,16 @@ void SceneRenderer::castRay(RTCScene scene,
 
 /* -------------------------------------------------------------------------- */
 
-void SceneRenderer::RenderScene(std::pair<PointCloud, std::vector<PhotonData>>* photonMap, std::string modelName, Options options)
+void SceneRenderer::RenderScene(Options options)
 {
-	auto cloud = photonMap->first;
+	//my_kd_tree_t index(3 /*dim*/, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(10 /* max leaf */));
 
-	my_kd_tree_t index(3 /*dim*/, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(10 /* max leaf */));
-
-	index.buildIndex();	
+	//index.buildIndex();	
 
 	/* Initialization. All of this may fail, but we will be notified by
 	 * our errorFunction. */
 	RTCDevice device = SceneLoader::initializeDevice();
-	SceneInfo* sceneInfo = SceneLoader::initializeScene(device, modelName);
+	SceneInfo* sceneInfo = SceneLoader::initializeScene(device);
 
 	/* This will hit the triangle at t=1. */
 	//castRay(scene, 0, 0, -1, 0, 0, 1);
@@ -128,7 +126,7 @@ void SceneRenderer::RenderScene(std::pair<PointCloud, std::vector<PhotonData>>* 
 	/* This will not hit anything. */
 	//castRay(scene, 1, 1, -1, 0, 0, 1);
 
-	Renderer::render(options, sceneInfo, &index, &photonMap->second);
+	Renderer::render(options, sceneInfo);
 	//Renderer::renderPixel(35, 190, options, sceneInfo, &index, &photonMap->second);
 	//Renderer::renderPixel(75, 470, options, sceneInfo, &index, &photonMap->second);
 	//Renderer::renderPixel(325, 435, options, sceneInfo, &index, &photonMap->second);
