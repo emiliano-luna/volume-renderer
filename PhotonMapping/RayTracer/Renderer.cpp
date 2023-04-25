@@ -122,7 +122,9 @@ Vec3f Renderer::castRay(
 	SceneInfo* scene,
 	int objectId,
 	const Options &options,
-	uint32_t depth, my_kd_tree_t* photons, std::vector<PhotonData>* photonData)
+	uint32_t depth, 
+	my_kd_tree_t* photons, 
+	std::vector<PhotonData>* photonData)
 {
 	if (depth > options.maxDepth) {
 		return options.backgroundColor;
@@ -135,8 +137,8 @@ Vec3f Renderer::castRay(
    * filters or flags, and it also contains the instance ID stack
    * used in multi-level instancing.
    */
-	struct RTCIntersectContext context;
-	rtcInitIntersectContext(&context);
+	//struct RTCRayQueryContext context;
+	//rtcInitRayQueryContext(&context);
 
 	/*
 	 * The ray hit structure holds both the ray and the hit.
@@ -151,8 +153,8 @@ Vec3f Renderer::castRay(
 	rayhit.ray.dir_y = dir.y;
 	rayhit.ray.dir_z = dir.z;
 	rayhit.ray.tnear = 0;
-	rayhit.ray.tfar = INFINITY;
-	rayhit.ray.mask = 0;
+	rayhit.ray.tfar = std::numeric_limits<float>::infinity();
+	rayhit.ray.mask = -1;
 	rayhit.ray.flags = 0;
 	rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
 	rayhit.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
@@ -161,7 +163,7 @@ Vec3f Renderer::castRay(
 	 * There are multiple variants of rtcIntersect. This one
 	 * intersects a single ray with the scene.
 	 */
-	rtcIntersect1(scene->scene, &context, &rayhit);
+	rtcIntersect1(scene->scene, &rayhit);
 
 	//printf("%f, %f, %f: ", orig.x, orig.y, orig.z);
 	if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID)

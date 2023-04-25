@@ -15,7 +15,7 @@
 #include <limits>
 #include <iostream>
 #include <algorithm>
-#include "embree3\rtcore.h"
+#include "rtcore.h"
 #include "tinyobjloader\tiny_obj_loader.h"
 
 enum MaterialType { DIFFUSE_AND_GLOSSY, REFLECTION_AND_REFRACTION, REFLECTION };

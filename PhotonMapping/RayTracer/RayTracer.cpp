@@ -9,6 +9,7 @@
 #include "FileManager.h"
 #include "Types.h"
 #include <chrono>
+#include "minimal.h"
 
 void ray_tracer_test()
 {
@@ -63,6 +64,7 @@ void RenderScene()
 
 	configOptions->maxDepth = 5;	
 
+	//MinimalTutorial::main2();
 	renderer->RenderScene(photonMap, modelName, *configOptions);
 
 	std::getchar();

@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-#include <embree3/rtcore.h>
+#include <rtcore.h>
 #include <stdio.h>
 #include <math.h>
 

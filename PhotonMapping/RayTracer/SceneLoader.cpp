@@ -140,7 +140,7 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device, std::string modelName)
 		RTC_BUFFER_TYPE_INDEX,
 		0,
 		RTC_FORMAT_UINT3,
-		3 * sizeof(int),
+		3 * sizeof(unsigned),
 		indexCol.size() / 3);
 
 	for (size_t i = 0; i < attrib.vertices.size(); i++)

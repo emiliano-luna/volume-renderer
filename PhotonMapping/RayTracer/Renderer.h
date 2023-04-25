@@ -7,7 +7,7 @@
 #include "Utils.h"
 #include "FreeImage.h"
 #include <vector>
-#include <embree3/rtcore.h>
+#include <rtcore.h>
 #include <stdio.h>
 #include <math.h>
 #include "nanonflann\utils.h"
