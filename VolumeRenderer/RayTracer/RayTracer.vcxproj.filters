@@ -21,9 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="minimal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RayTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -57,9 +54,6 @@
     <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhotonMapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SceneLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,18 +63,12 @@
     <ClInclude Include="nanonflann\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ONB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="minimal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RayTracer.cpp">
@@ -110,13 +98,7 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhotonMapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ONB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

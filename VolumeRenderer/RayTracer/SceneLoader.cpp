@@ -63,7 +63,7 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device)
 	std::string basedir = "..\\Models\\";
 	//std::string inputfile = "..\\Models\\CornellBox-Sphere.obj";
 	//std::string inputfile = "..\\Models\\CornellBox-Mirror.obj";
-	std::string inputfile = "..\\Models\\CornellBox-Original.obj";
+	std::string inputfile = "..\\Models\\CornellBox-Empty-RG.obj";
 
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

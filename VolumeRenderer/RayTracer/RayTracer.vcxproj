@@ -160,13 +160,10 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
     <ClInclude Include="nanonflann\utils.h" />
-    <ClInclude Include="ONB.h" />
     <ClInclude Include="Options.h" />
-    <ClInclude Include="PhotonMapper.h" />
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp" />
     <ClInclude Include="pugixml-1.9\src\pugixml.hpp" />
     <ClInclude Include="RayTracer.h" />
-    <ClInclude Include="minimal.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneRenderer.h" />
@@ -180,11 +177,8 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FileManager.cpp" />
-    <ClCompile Include="ONB.cpp" />
-    <ClCompile Include="PhotonMapper.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
     <ClCompile Include="RayTracer.cpp" />
-    <ClCompile Include="minimal.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
