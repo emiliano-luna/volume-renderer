@@ -46,98 +46,19 @@
 RTC_NAMESPACE_OPEN
 #endif
 
-/*
- * Cast a single ray with origin (ox, oy, oz) and direction
- * (dx, dy, dz).
- */
-void SceneRenderer::castRay(RTCScene scene,
-	float ox, float oy, float oz,
-	float dx, float dy, float dz)
-{
-	/*
-	 * The intersect context can be used to set intersection
-	 * filters or flags, and it also contains the instance ID stack
-	 * used in multi-level instancing.
-	 */
-	struct RTCRayQueryContext context;
-	rtcInitRayQueryContext(&context);
-
-	/*
-	 * The ray hit structure holds both the ray and the hit.
-	 * The user must initialize it properly -- see API documentation
-	 * for rtcIntersect1() for details.
-	 */
-	struct RTCRayHit rayhit;
-	rayhit.ray.org_x = ox;
-	rayhit.ray.org_y = oy;
-	rayhit.ray.org_z = oz;
-	rayhit.ray.dir_x = dx;
-	rayhit.ray.dir_y = dy;
-	rayhit.ray.dir_z = dz;
-	rayhit.ray.tnear = 0;
-	rayhit.ray.tfar = INFINITY;
-	rayhit.ray.mask = 0;
-	rayhit.ray.flags = 0;
-	rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
-	rayhit.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
-
-	/*
-	 * There are multiple variants of rtcIntersect. This one
-	 * intersects a single ray with the scene.
-	 */
-	rtcIntersect1(scene, &rayhit);
-
-	printf("%f, %f, %f: ", ox, oy, oz);
-	if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID)
-	{
-		/* Note how geomID and primID identify the geometry we just hit.
-		 * We could use them here to interpolate geometry information,
-		 * compute shading, etc.
-		 * Since there is only a single triangle in this scene, we will
-		 * get geomID=0 / primID=0 for all hits.
-		 * There is also instID, used for instancing. See
-		 * the instancing tutorials for more information */
-		printf("Found intersection on geometry %d, primitive %d at tfar=%f\n",
-			rayhit.hit.geomID,
-			rayhit.hit.primID,
-			rayhit.ray.tfar);
-	}
-	else
-		printf("Did not find any intersection.\n");
-}
-
-
-/* -------------------------------------------------------------------------- */
-
 void SceneRenderer::RenderScene(Options options)
 {
-	//my_kd_tree_t index(3 /*dim*/, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(10 /* max leaf */));
-
-	//index.buildIndex();	
-
 	/* Initialization. All of this may fail, but we will be notified by
-	 * our errorFunction. */
+	 * our errorFunction. */ 
 	RTCDevice device = SceneLoader::initializeDevice();
-	SceneInfo* sceneInfo = SceneLoader::initializeScene(device);
-
-	/* This will hit the triangle at t=1. */
-	//castRay(scene, 0, 0, -1, 0, 0, 1);
-
-	/* This will not hit anything. */
-	//castRay(scene, 1, 1, -1, 0, 0, 1);
+	SceneInfo* sceneInfo = SceneLoader::initializeScene(device, options);
 
 	Renderer::render(options, sceneInfo);
 	//Renderer::renderPixel(35, 190, options, sceneInfo, &index, &photonMap->second);
-	//Renderer::renderPixel(75, 470, options, sceneInfo, &index, &photonMap->second);
-	//Renderer::renderPixel(325, 435, options, sceneInfo, &index, &photonMap->second);
-	//Renderer::renderPixel(385, 396, options, sceneInfo, &index, &photonMap->second);
-	//Renderer::renderPixel(360, 428, options, sceneInfo, &index, &photonMap->second);
 
 	/* Though not strictly necessary in this example, you should
 	 * always make sure to release resources allocated through Embree. */
 	rtcReleaseScene(sceneInfo->scene);
 	rtcReleaseDevice(device);
-
-	//return 0;
 }
 

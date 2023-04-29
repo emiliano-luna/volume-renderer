@@ -124,19 +124,19 @@ Vec3f Renderer::castRay(
 	const Options &options,
 	uint32_t depth)
 {
+	Vec3f hitColor = options.backgroundColor;
+
 	if (depth > options.maxDepth) {
-		return options.backgroundColor;
+		return hitColor;
 	}
 
-	Vec3f hitColor = Vec3f(0);
-
 	/*
-   * The intersect context can be used to set intersection
-   * filters or flags, and it also contains the instance ID stack
-   * used in multi-level instancing.
-   */
-	//struct RTCRayQueryContext context;
-	//rtcInitRayQueryContext(&context);
+	* The intersect context can be used to set intersection
+	* filters or flags, and it also contains the instance ID stack
+	* used in multi-level instancing.
+	*/
+	struct RTCRayQueryContext context;
+	rtcInitRayQueryContext(&context);
 
 	/*
 	 * The ray hit structure holds both the ray and the hit.
@@ -173,10 +173,6 @@ Vec3f Renderer::castRay(
 		 * get geomID=0 / primID=0 for all hits.
 		 * There is also instID, used for instancing. See
 		 * the instancing tutorials for more information */
-		//printf("Found intersection on geometry %d, primitive %d at tfar=%f\n",
-		//	rayhit.hit.geomID,
-		//	rayhit.hit.primID,
-		//	rayhit.ray.tfar);
 
 		auto hitPoint = rayhit.ray.tfar * dir + orig;
 		auto shapeIndex = scene->primitives[rayhit.hit.primID];
@@ -229,9 +225,6 @@ Vec3f Renderer::castRay(
 			}
 		}	
 	}
-	else {
-		hitColor = Vec3f(0);
-	}
 
 	return hitColor;
 }
@@ -275,62 +268,52 @@ void Renderer::render(Options &options,
 {
 	Vec3f *framebuffer = new Vec3f[options.width * options.height];
 	Vec3f *pix = framebuffer;
-		
-	//float scale = tan(Utils::deg2rad(options.fov * 0.5));
-	//float imageAspectRatio = options.width / (float)options.height;
-	//Vec3f orig(0, 1, 2.25);
 
 	unsigned concurrentThreadsSupported = std::thread::hardware_concurrency();
 
 	std::chrono::steady_clock::time_point begin;
 	begin = std::chrono::steady_clock::now();
 	
-	if (options.multiThreaded && concurrentThreadsSupported > 1)
-	{
-		int heightPerThread = options.height / concurrentThreadsSupported;
+	//if (options.multiThreaded && concurrentThreadsSupported > 1)
+	//{
+	//	int heightPerThread = options.height / concurrentThreadsSupported;
 
-		Renderer::scene.pix = pix;
-		Renderer::scene.options = options;
-		Renderer::scene.heightPerThread = heightPerThread;
-		Renderer::scene.orig = &options.cameraPosition;
+	//	Renderer::scene.pix = pix;
+	//	Renderer::scene.options = options;
+	//	Renderer::scene.heightPerThread = heightPerThread;
+	//	Renderer::scene.orig = &options.cameraPosition;
 
-		HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
+	//	HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
 
-		for (uint32_t i = 0; i < concurrentThreadsSupported; ++i) {
-			RenderThreadData* data = new RenderThreadData();
+	//	for (uint32_t i = 0; i < concurrentThreadsSupported; ++i) {
+	//		RenderThreadData* data = new RenderThreadData();
 
-			uint32_t* fromHeight = new uint32_t(heightPerThread * i);
-			uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
-			uint32_t* ipoint = new uint32_t(i);
+	//		uint32_t* fromHeight = new uint32_t(heightPerThread * i);
+	//		uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
+	//		uint32_t* ipoint = new uint32_t(i);
 
-			data->fromHeight = fromHeight;
-			data->toHeight = toHeight;
-			data->i = ipoint;
-			data->scene = scene;
+	//		data->fromHeight = fromHeight;
+	//		data->toHeight = toHeight;
+	//		data->i = ipoint;
+	//		data->scene = scene;
 
-			myhandle[i] = (HANDLE)_beginthreadex(0, 0, &Renderer::mythread, data, 0, 0);
-			SetThreadAffinityMask(myhandle[i], 1 << i);
-		}
+	//		myhandle[i] = (HANDLE)_beginthreadex(0, 0, &Renderer::mythread, data, 0, 0);
+	//		SetThreadAffinityMask(myhandle[i], 1 << i);
+	//	}
 
-		WaitForMultipleObjects(concurrentThreadsSupported, myhandle, true, INFINITE);
+	//	WaitForMultipleObjects(concurrentThreadsSupported, myhandle, true, INFINITE);
 
-		for (int i = 0; i < concurrentThreadsSupported; ++i)
-			CloseHandle(myhandle[i]);
-	}
-	else
-	{		
-		/*for (int j = 0; j < options.height; ++j) {
-			for (int i = 0; i < options.width; ++i) {
-				Renderer::renderRay(i, j, pix, &options.cameraPosition, imageAspectRatio, scale, options, scene, photons, photonData);
-			}
-		}*/
+	//	for (int i = 0; i < concurrentThreadsSupported; ++i)
+	//		CloseHandle(myhandle[i]);
+	//}
+	//else
+	//{		
 		Renderer::renderPartial(&options.cameraPosition, pix, 0, options.height - 1, options, scene);
-	}
+	//}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	std::cout << "Renderer - Escena rendereada en: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
 	
-
 	saveFile(framebuffer, options.height, options.width, "out.png");
 
 	std::cout << "Renderer - Imagen Guardada.";
@@ -348,8 +331,7 @@ unsigned int __stdcall Renderer::mythread(void* data)
 	return 0;
 }
 
-void Renderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint32_t toHeight, const Options &options,
-	SceneInfo* scene) {
+void Renderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint32_t toHeight, const Options &options, SceneInfo* scene) {
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
 

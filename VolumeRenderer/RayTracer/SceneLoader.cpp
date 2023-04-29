@@ -40,8 +40,13 @@ RTCDevice SceneLoader::initializeDevice()
  *
  * Scenes, like devices, are reference-counted.
  */
-SceneInfo* SceneLoader::initializeScene(RTCDevice device)
+SceneInfo* SceneLoader::initializeScene(RTCDevice device, Options options)
 {
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	//El indice es el identificador de la primitiva y el valor es el identificador de la shape
+	std::vector<unsigned int> primitives;
+
 	auto info = new SceneInfo();
 
 	RTCScene scene = rtcNewScene(device);
@@ -59,129 +64,98 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device)
 	RTCGeometry geom = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
 	/*FileName*/
 
-  //std::string sceneFileName = "";
-	std::string basedir = "..\\Models\\";
-	//std::string inputfile = "..\\Models\\CornellBox-Sphere.obj";
-	//std::string inputfile = "..\\Models\\CornellBox-Mirror.obj";
-	std::string inputfile = "..\\Models\\CornellBox-Empty-RG.obj";
+	for (auto model : options.models)
+	{
+		std::string basedir = model.baseDir;
+		std::string inputfile = basedir + model.fileName;
 
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
+		tinyobj::attrib_t attrib;
 
-	std::string warn;
-	std::string err;
+		std::string warn;
+		std::string err;
 
-	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.c_str(), basedir.c_str());
+		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.c_str(), basedir.c_str());
 
-	if (!warn.empty()) {
-		std::cout << warn << std::endl;
-	}
+		if (!warn.empty()) {
+			std::cout << warn << std::endl;
+		}
 
-	if (!err.empty()) {
-		std::cerr << err << std::endl;
-	}
+		if (!err.empty()) {
+			std::cerr << err << std::endl;
+		}
 
-	if (!ret) {
-		exit(1);
-	}
+		if (!ret) {
+			exit(1);
+		}
 
-	std::vector<tinyobj::index_t> indexCol;
-	//El indice es el identificador de la primitiva y el valor es el identificador de la shape
-	std::vector<unsigned int> primitives;
+		std::vector<tinyobj::index_t> indexCol;
 
-	unsigned maxVertexIndex = 0;
-	// Loop over shapes
-	for (size_t s = 0; s < shapes.size(); s++) {
 
-		// Loop over faces(polygon)
-		size_t index_offset = 0;
-		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-			int fv = shapes[s].mesh.num_face_vertices[f];
+		unsigned maxVertexIndex = 0;
+		// Loop over shapes
+		for (size_t s = 0; s < shapes.size(); s++) {
 
-			// Loop over vertices in the face.
-			for (size_t v = 0; v < fv; v++) {
-				// access to vertex
-				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-				tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
-				tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
-				tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
-				/*tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
-				tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
-				tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
-				tinyobj::real_t tx = attrib.texcoords[2 * idx.texcoord_index + 0];
-				tinyobj::real_t ty = attrib.texcoords[2 * idx.texcoord_index + 1];*/
-				//Optional: vertex colors
-				tinyobj::real_t red = attrib.colors[3 * idx.vertex_index + 0];
-				tinyobj::real_t green = attrib.colors[3 * idx.vertex_index + 1];
-				tinyobj::real_t blue = attrib.colors[3 * idx.vertex_index + 2];
+			// Loop over faces(polygon)
+			size_t index_offset = 0;
+			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+				int fv = shapes[s].mesh.num_face_vertices[f];
 
-				//if (idx.vertex_index > maxVertexIndex) maxVertexIndex = idx.vertex_index;
-				indexCol.push_back(idx);
+				// Loop over vertices in the face.
+				for (size_t v = 0; v < fv; v++) {
+					// access to vertex
+					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+					tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
+					tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
+					tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
+					/*tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
+					tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
+					tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
+					tinyobj::real_t tx = attrib.texcoords[2 * idx.texcoord_index + 0];
+					tinyobj::real_t ty = attrib.texcoords[2 * idx.texcoord_index + 1];*/
+					//Optional: vertex colors
+					tinyobj::real_t red = attrib.colors[3 * idx.vertex_index + 0];
+					tinyobj::real_t green = attrib.colors[3 * idx.vertex_index + 1];
+					tinyobj::real_t blue = attrib.colors[3 * idx.vertex_index + 2];
+
+					//if (idx.vertex_index > maxVertexIndex) maxVertexIndex = idx.vertex_index;
+					indexCol.push_back(idx);
+				}
+				index_offset += fv;
+
+				// per-face material
+				shapes[s].mesh.material_ids[f];
+
+				//En nuestro código asumimos que cada mesh tiene el mismo material, y uno sólo
+				primitives.push_back(s);
 			}
-			index_offset += fv;
+		}
 
-			// per-face material
-			shapes[s].mesh.material_ids[f];
+		float* vertices = (float*)rtcSetNewGeometryBuffer(geom,
+			RTC_BUFFER_TYPE_VERTEX,
+			0,
+			RTC_FORMAT_FLOAT3,
+			3 * sizeof(float),
+			attrib.vertices.size());
 
-			//En nuestro código asumimos que cada mesh tiene el mismo material, y uno sólo
-			primitives.push_back(s);
+		unsigned* indices = (unsigned*)rtcSetNewGeometryBuffer(geom,
+			RTC_BUFFER_TYPE_INDEX,
+			0,
+			RTC_FORMAT_UINT3,
+			3 * sizeof(unsigned),
+			indexCol.size() / 3);
+
+		for (size_t i = 0; i < attrib.vertices.size(); i++)
+		{
+			vertices[i] = attrib.vertices[i];
+		}
+
+		int count = 0;
+		for (auto i : indexCol)
+		{
+			indices[count] = i.vertex_index;
+			count++;
 		}
 	}
-
-	float* vertices = (float*)rtcSetNewGeometryBuffer(geom,
-		RTC_BUFFER_TYPE_VERTEX,
-		0,
-		RTC_FORMAT_FLOAT3,
-		3 * sizeof(float),
-		attrib.vertices.size());
-
-	unsigned* indices = (unsigned*)rtcSetNewGeometryBuffer(geom,
-		RTC_BUFFER_TYPE_INDEX,
-		0,
-		RTC_FORMAT_UINT3,
-		3 * sizeof(unsigned),
-		indexCol.size() / 3);
-
-	for (size_t i = 0; i < attrib.vertices.size(); i++)
-	{
-		vertices[i] = attrib.vertices[i];
-	}
-
-	int count = 0;
-	for (auto i : indexCol)
-	{
-		indices[count] = i.vertex_index;
-		count++;
-	}
-
-	/*for (size_t i = 0; i < maxVertexIndex; i++)
-	{
-		indices[i] = i;
-	}*/
-
-	/*float* vertices = (float*)rtcSetNewGeometryBuffer(geom,
-		RTC_BUFFER_TYPE_VERTEX,
-		0,
-		RTC_FORMAT_FLOAT3,
-		3 * sizeof(float),
-		3);
-
-	unsigned* indices = (unsigned*)rtcSetNewGeometryBuffer(geom,
-		RTC_BUFFER_TYPE_INDEX,
-		0,
-		RTC_FORMAT_UINT3,
-		3 * sizeof(unsigned),
-		1);
-
-	if (vertices && indices)
-	{
-		vertices[0] = 0.f; vertices[1] = 0.f; vertices[2] = 0.f;
-		vertices[3] = 1.f; vertices[4] = 0.f; vertices[5] = 0.f;
-		vertices[6] = 0.f; vertices[7] = 1.f; vertices[8] = 0.f;
-
-		indices[0] = 0; indices[1] = 1; indices[2] = 2;
-	}*/
 
 	/*
 	 * You must commit geometry objects when you are done setting them up,

@@ -15,6 +15,20 @@ Options* XMLManager::GetRendererOptions() {
 	//Options
 	pugi::xml_node root = doc.child("options");
 
+	auto models = root.child("models").children("model");
+
+	for (auto model : models)
+	{
+		Model newModel;
+
+		newModel.baseDir = model.attribute("baseDir").as_string();
+		newModel.fileName = model.text().as_string();
+
+		options->models.push_back(newModel);
+	}
+
+	options->maxDepth = root.child("maxDepth").text().as_int();
+
 	options->radiusSearch = root.child("radius").text().as_float();
 	options->fileName = root.child("fileName").text().as_string();
 
@@ -29,6 +43,11 @@ Options* XMLManager::GetRendererOptions() {
 		root.child("ambient").attribute("g").as_float(),
 		root.child("ambient").attribute("b").as_float()
 	);*/
+	options->backgroundColor = Vec3f(
+		root.child("backgroundColor").attribute("r").as_int(),
+		root.child("backgroundColor").attribute("g").as_int(),
+		root.child("backgroundColor").attribute("b").as_int()
+	);
 
 	options->fov = root.child("camera").attribute("fov").as_float();
 	
@@ -40,30 +59,5 @@ Options* XMLManager::GetRendererOptions() {
 	options->cameraRotation.y = root.child("camera").attribute("yaw").as_float();
 	options->cameraRotation.z = root.child("camera").attribute("roll").as_float();
 
-	return options;
-}
-
-PhotonMapOptions* XMLManager::GetPhotonMapOptions() {
-	PhotonMapOptions* options = new PhotonMapOptions();
-
-	pugi::xml_document doc;
-
-	pugi::xml_parse_result result = doc.load_file("config.xml");
-
-	//Options
-	pugi::xml_node root = doc.child("options");
-
-	options->photonCount = root.child("photons").text().as_int();
-	options->modelName = root.child("model").text().as_string();
-	options->fileName = root.child("fileName").text().as_string();
-
-	options->lightPos.x = root.child("light").attribute("x").as_float();
-	options->lightPos.y = root.child("light").attribute("y").as_float();
-	options->lightPos.z = root.child("light").attribute("z").as_float();
-
-	options->lightColor.x = root.child("light").attribute("r").as_float();
-	options->lightColor.y = root.child("light").attribute("g").as_float();
-	options->lightColor.z = root.child("light").attribute("b").as_float();
-	
 	return options;
 }

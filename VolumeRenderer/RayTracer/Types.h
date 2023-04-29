@@ -60,8 +60,14 @@ public:
 	float x, y, z;
 };
 
+struct Model {
+	std::string baseDir;
+	std::string fileName;
+};
+
 struct Options
 {	
+	std::vector<Model> models;
 	uint32_t width;
 	uint32_t height;
 	float fov;

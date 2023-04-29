@@ -13,10 +13,7 @@ void RenderScene()
 	auto renderer = new SceneRenderer();
 
 	auto configOptions = FileManager::GetRendererOptions();
-
-	configOptions->maxDepth = 5;	
-
-	//MinimalTutorial::main2();
+	
 	renderer->RenderScene(*configOptions);
 
 	std::getchar();
