@@ -75,6 +75,9 @@
     <ClInclude Include="IntersectionHandlerFactory.h">
       <Filter>IntersectionHandlers</Filter>
     </ClInclude>
+    <ClInclude Include="ScratchPixel1IntersectionHandler.h">
+      <Filter>IntersectionHandlers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -117,6 +120,9 @@
       <Filter>IntersectionHandlers</Filter>
     </ClCompile>
     <ClCompile Include="IntersectionHandlerFactory.cpp">
+      <Filter>IntersectionHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="ScratchPixel1IntersectionHandler.cpp">
       <Filter>IntersectionHandlers</Filter>
     </ClCompile>
   </ItemGroup>

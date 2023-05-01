@@ -46,9 +46,9 @@ Options* XMLManager::GetRendererOptions() {
 		root.child("ambient").attribute("b").as_float()
 	);*/
 	options->backgroundColor = Vec3f(
-		root.child("backgroundColor").attribute("r").as_int(),
-		root.child("backgroundColor").attribute("g").as_int(),
-		root.child("backgroundColor").attribute("b").as_int()
+		root.child("backgroundColor").attribute("r").as_float(),
+		root.child("backgroundColor").attribute("g").as_float(),
+		root.child("backgroundColor").attribute("b").as_float()
 	);
 
 	options->fov = root.child("camera").attribute("fov").as_float();

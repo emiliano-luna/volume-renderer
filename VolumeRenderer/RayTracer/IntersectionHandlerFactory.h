@@ -5,6 +5,7 @@
 #include <string>
 #include "BaseIntersectionHandler.h"
 #include "BasicIntersectionHandler.h"
+#include "ScratchPixel1IntersectionHandler.h"
 
 class IntersectionHandlerFactory
 {

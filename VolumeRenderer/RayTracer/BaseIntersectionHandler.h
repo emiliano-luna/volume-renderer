@@ -15,6 +15,11 @@ public:
     Vec3f rayDirection;
     SceneInfo* sceneInfo;
     Options options;
+    float tFar;
+
+    //scratchpixel sample 1
+    float transmissionRemaining;
+    Vec3f colorSoFar;
 };
 
 class BaseIntersectionHandler

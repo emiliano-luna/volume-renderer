@@ -112,6 +112,8 @@ Vec3f Renderer::castRay(
 		data->hitPoint = rayhit.ray.tfar * data->rayDirection + data->rayOrigin;
 
 		data->hitNormal = Vec3f(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z);
+
+		data->tFar = rayhit.ray.tfar;		
 		
 		if (intersectionHandler->HandleIntersection(data, hitColor)) {
 			return hitColor;
@@ -121,6 +123,9 @@ Vec3f Renderer::castRay(
 
 		return castRay(intersectionHandler, data, depth);
 	}
+
+	if (data->transmissionRemaining > 0)
+		hitColor = hitColor * data->transmissionRemaining + data->colorSoFar;
 
 	return hitColor;
 }
@@ -138,6 +143,7 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	data->rayOrigin = *orig;
 	data->rayDirection = dir;
 	data->objectId = -1;
+	data->transmissionRemaining = 0;
 
 	*(pix++) = castRay(intersectionHandler, data, 0);
 }
