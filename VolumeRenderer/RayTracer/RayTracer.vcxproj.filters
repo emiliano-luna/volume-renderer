@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="IntersectionHandlers">
+      <UniqueIdentifier>{46985ebd-eef7-4c06-827e-6754dd020b63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -63,6 +66,12 @@
     <ClInclude Include="nanonflann\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BasicIntersectionHandler.h">
+      <Filter>IntersectionHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseIntersectionHandler.h">
+      <Filter>IntersectionHandlers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -100,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicIntersectionHandler.cpp">
+      <Filter>IntersectionHandlers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
