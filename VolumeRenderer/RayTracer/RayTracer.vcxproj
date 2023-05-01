@@ -157,6 +157,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseIntersectionHandler.h" />
+    <ClInclude Include="BasicIntersectionHandler.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
     <ClInclude Include="nanonflann\utils.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BasicIntersectionHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
