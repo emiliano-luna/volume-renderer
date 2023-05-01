@@ -83,7 +83,7 @@ struct Options
 	float radiusSearch;
 	std::string fileName;
 	Vec3f cameraPosition;
-	Vec3f cameraRotation;	
+	Vec3f cameraRotation;
 };
 
 struct SceneInfo {
