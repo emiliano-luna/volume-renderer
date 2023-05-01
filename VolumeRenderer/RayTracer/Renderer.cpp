@@ -126,23 +126,17 @@ Vec3f Renderer::castRay(
 }
 
 // generate primary ray direction
-void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, const Options &options, 
-												SceneInfo* scene) {
-	float x = (2 * (i + 0.5) / (float)options.width - 1) * imageAspectRatio * scale;
-	float y = (1 - 2 * (j + 0.5) / (float)options.height) * scale;
+void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, BaseIntersectionHandler* intersectionHandler, HandleIntersectionData* data) {
+	float x = (2 * (i + 0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float y = (1 - 2 * (j + 0.5) / (float)data->options.height) * scale;
 	
 	Vec3f dir = Utils::normalize(Vec3f(x, y, -1));
 
 	//El orden y, x, z es para matchear con el pitch roll y yaw del método (usa otro sistemas de coordenadas)
-	Utils::rotate(options.cameraRotation.y, options.cameraRotation.x, options.cameraRotation.z, &dir);
-
-	BaseIntersectionHandler* intersectionHandler = new BasicIntersectionHandler();
-
-	HandleIntersectionData* data = new HandleIntersectionData();
+	Utils::rotate(data->options.cameraRotation.y, data->options.cameraRotation.x, data->options.cameraRotation.z, &dir);
 
 	data->rayOrigin = *orig;
 	data->rayDirection = dir;
-	data->sceneInfo = scene;
 	data->objectId = -1;
 
 	*(pix++) = castRay(intersectionHandler, data, 0);
@@ -151,20 +145,20 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 void Renderer::renderPixel(int i, int j, Options &options,
 	SceneInfo* scene)
 {
-	Vec3f *framebuffer = new Vec3f[1];
-	Vec3f *pix = framebuffer;
+	//Vec3f *framebuffer = new Vec3f[1];
+	//Vec3f *pix = framebuffer;
 
-	float scale = tan(Utils::deg2rad(options.fov * 0.5));
-	float imageAspectRatio = options.width / (float)options.height;
-	Vec3f orig(0, 1, 2.25);
+	//float scale = tan(Utils::deg2rad(options.fov * 0.5));
+	//float imageAspectRatio = options.width / (float)options.height;
+	//Vec3f orig(0, 1, 2.25);
 
-	Renderer::renderRay(i, j, pix, &orig, imageAspectRatio, scale, options, scene);
+	//Renderer::renderRay(i, j, pix, &orig, imageAspectRatio, scale, options, scene);
 
-	std::cout << "Escena rendereada - tiempo transcurrido: " << std::endl;
-	   
-	saveFile(framebuffer, 1, 1, ("outPixel_" + std::to_string(i) + "_" + std::to_string(j) + ".png").c_str());
+	//std::cout << "Escena rendereada - tiempo transcurrido: " << std::endl;
+	//   
+	//saveFile(framebuffer, 1, 1, ("outPixel_" + std::to_string(i) + "_" + std::to_string(j) + ".png").c_str());
 
-	delete[] framebuffer;
+	//delete[] framebuffer;
 }
 
 
@@ -240,9 +234,15 @@ void Renderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint3
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
 
+	BaseIntersectionHandler* intersectionHandler = new BasicIntersectionHandler();
+	HandleIntersectionData* data = new HandleIntersectionData();
+		
+	data->sceneInfo = scene;
+	data->options = options;	
+
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {
 		for (uint32_t i = 0; i < options.width; ++i) {
-			Renderer::renderRay(i, j, pix, orig, imageAspectRatio, scale, options, scene);
+			Renderer::renderRay(i, j, pix, orig, imageAspectRatio, scale, intersectionHandler, data);
 		}
 	}
 }
