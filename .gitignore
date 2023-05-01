@@ -259,4 +259,4 @@ $RECYCLE.BIN/
 *.opendb
 
 VolumeRenderer/.vs/
-VolumeRenderer/RayTracer/x64
+VolumeRenderer/RayTracer/x64/
