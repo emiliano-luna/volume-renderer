@@ -72,6 +72,9 @@
     <ClInclude Include="BaseIntersectionHandler.h">
       <Filter>IntersectionHandlers</Filter>
     </ClInclude>
+    <ClInclude Include="IntersectionHandlerFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -112,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="BasicIntersectionHandler.cpp">
       <Filter>IntersectionHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlerFactory.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

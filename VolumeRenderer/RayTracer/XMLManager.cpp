@@ -27,6 +27,8 @@ Options* XMLManager::GetRendererOptions() {
 		options->models.push_back(newModel);
 	}
 
+	options->intersectionHandler = root.child("intersectionHandler").text().as_string();
+
 	options->maxDepth = root.child("maxDepth").text().as_int();
 
 	options->radiusSearch = root.child("radius").text().as_float();

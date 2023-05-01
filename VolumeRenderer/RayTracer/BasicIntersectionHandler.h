@@ -8,6 +8,7 @@
 class BasicIntersectionHandler :
     public BaseIntersectionHandler
 {
+public:
     virtual bool HandleIntersection(HandleIntersectionData* data, Vec3f& resultColor);
 };
 

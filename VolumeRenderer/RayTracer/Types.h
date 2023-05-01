@@ -84,6 +84,7 @@ struct Options
 	std::string fileName;
 	Vec3f cameraPosition;
 	Vec3f cameraRotation;	
+	std::string intersectionHandler;
 };
 
 struct SceneInfo {

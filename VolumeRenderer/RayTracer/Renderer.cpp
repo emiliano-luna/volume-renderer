@@ -234,7 +234,7 @@ void Renderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint3
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
 
-	BaseIntersectionHandler* intersectionHandler = new BasicIntersectionHandler();
+	BaseIntersectionHandler* intersectionHandler = IntersectionHandlerFactory::GetIntersectionHandler(options.intersectionHandler);
 	HandleIntersectionData* data = new HandleIntersectionData();
 		
 	data->sceneInfo = scene;

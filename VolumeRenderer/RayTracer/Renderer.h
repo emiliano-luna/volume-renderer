@@ -6,7 +6,7 @@
 #include "Types.h"
 #include "Utils.h"
 #include "BaseIntersectionHandler.h"
-#include "BasicIntersectionHandler.h"
+#include "IntersectionHandlerFactory.h"
 #include "FreeImage.h"
 #include <vector>
 #include <rtcore.h>

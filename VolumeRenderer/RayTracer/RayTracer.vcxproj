@@ -160,6 +160,7 @@
     <ClInclude Include="BaseIntersectionHandler.h" />
     <ClInclude Include="BasicIntersectionHandler.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="IntersectionHandlerFactory.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
     <ClInclude Include="nanonflann\utils.h" />
     <ClInclude Include="Options.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="BasicIntersectionHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="IntersectionHandlerFactory.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
     <ClCompile Include="RayTracer.cpp" />
     <ClCompile Include="Renderer.cpp" />

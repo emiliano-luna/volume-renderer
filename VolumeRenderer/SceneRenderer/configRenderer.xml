@@ -3,6 +3,7 @@
   <models>
     <model baseDir="..\Models\">CornellBox-Empty-RG.obj</model>
   </models>
+  <intersectionHandler>basic</intersectionHandler>
   <maxDepth>5</maxDepth>
 	<width>640</width>
 	<height>640</height>
