@@ -41,7 +41,7 @@ bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data
 
 	//Superficie Difusa
 	//Calcular la irradiancia directa (E_directa)
-	
+	//auto E_directa_i = 
 	//Calcular el término de reflectancia difusa (rho_i)
 	auto rho_i = Vec3f(material.diffuse);
 	//Actualizar el total de radiancia difusa

@@ -1,8 +1,8 @@
 #pragma once
 #include <Windows.h>
 #include "Process.h"
-#include "Types.h"
-#include "Utils.h"
+#include "Utils\Types.h"
+#include "Utils\Utils.h"
 #include "FreeImage.h"
 #include <vector>
 #include <rtcore.h>

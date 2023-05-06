@@ -4,8 +4,8 @@
 //#include <limits.h>
 #include "RayTracer.h"
 #include "SceneRenderer.h"
-#include "FileManager.h"
-#include "Types.h"
+#include "Utils\FileManager.h"
+#include "Utils\Types.h"
 #include <chrono>
 
 void RenderScene()

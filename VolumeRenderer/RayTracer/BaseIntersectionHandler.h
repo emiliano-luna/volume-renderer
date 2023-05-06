@@ -2,7 +2,7 @@
 #ifndef VOLUMERENDERER_BASEINTERSECTIONHANDLER
 #define VOLUMERENDERER_BASEINTERSECTIONHANDLER
 
-#include "Types.h"
+#include "Utils\Types.h"
 
 class HandleIntersectionData {
 public:

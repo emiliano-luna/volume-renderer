@@ -30,13 +30,7 @@
     <ClInclude Include="SceneRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Options.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XMLManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp">
@@ -46,12 +40,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tinyobjloader\tiny_obj_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
@@ -81,6 +69,21 @@
     <ClInclude Include="DiffuseIntersectionHandler.h">
       <Filter>IntersectionHandlers</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\XMLManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\FileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\ONB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -95,22 +98,10 @@
     <ClCompile Include="SceneRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="XMLManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tinyobjloader\tiny_obj_loader.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -130,6 +121,21 @@
     </ClCompile>
     <ClCompile Include="DiffuseIntersectionHandler.cpp">
       <Filter>IntersectionHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\FileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\ONB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\XMLManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Types.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

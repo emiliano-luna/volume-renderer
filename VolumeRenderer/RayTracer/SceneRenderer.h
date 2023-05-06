@@ -4,7 +4,7 @@
 #include <math.h>
 #include "Renderer.h"
 #include "tinyobjloader\tiny_obj_loader.h"
-#include "Types.h"
+#include "Utils\Types.h"
 #include "SceneLoader.h"
 #include "nanonflann\utils.h"
 

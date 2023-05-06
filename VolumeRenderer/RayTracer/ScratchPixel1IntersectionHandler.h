@@ -3,7 +3,7 @@
 #define VOLUMERENDERER_SCRATCH1INTERSECTIONHANDLER
 
 #include "BaseIntersectionHandler.h"
-#include "Utils.h"
+#include "Utils\Utils.h"
 
 class ScratchPixel1IntersectionHandler :
     public BaseIntersectionHandler

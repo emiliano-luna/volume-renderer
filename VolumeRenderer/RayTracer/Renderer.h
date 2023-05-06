@@ -3,8 +3,8 @@
 #pragma once
 #include <Windows.h>
 #include "Process.h"
-#include "Types.h"
-#include "Utils.h"
+#include "Utils\Types.h"
+#include "Utils\Utils.h"
 #include "BaseIntersectionHandler.h"
 #include "IntersectionHandlerFactory.h"
 #include "FreeImage.h"
