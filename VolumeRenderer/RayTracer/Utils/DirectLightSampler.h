@@ -4,6 +4,7 @@
 
 #include "Types.h"
 #include "../BaseIntersectionHandler.h"
+#include "Utils.h"
 
 class DirectLightSampler
 {

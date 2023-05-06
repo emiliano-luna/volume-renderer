@@ -54,7 +54,7 @@ void SceneRenderer::RenderScene(Options options)
 	SceneInfo* sceneInfo = SceneLoader::initializeScene(device, options);
 
 	Renderer::render(options, sceneInfo);
-	/*Renderer::renderPixel(319, 223, options, sceneInfo);*/
+	//Renderer::renderPixel(255, 211, options, sceneInfo);
 
 	/* Though not strictly necessary in this example, you should
 	 * always make sure to release resources allocated through Embree. */

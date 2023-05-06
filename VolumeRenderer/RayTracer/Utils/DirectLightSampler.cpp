@@ -16,7 +16,14 @@ Vec3f DirectLightSampler::Sample(Vec3f origin, SceneInfo* sceneInfo)
 	for (auto& light : sceneInfo->lights)
 	{
 		if (SampleLight(origin, (light.position - origin) * 0.001f, irradiance, light, sceneInfo))
-			break;
+		{
+			//https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
+			//Bakery's "pysicall falloff"
+			auto distance2 = Utils::distance2(light.position, origin);
+			auto attenuationFactor = 1 / (distance2 + 1);
+
+			return attenuationFactor * irradiance;
+		}
 	}
 
 	return irradiance;
