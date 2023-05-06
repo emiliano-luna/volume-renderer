@@ -6,10 +6,8 @@
 /// <param name="L_total">Radiancia total en el punto de intersección, es la cantidad de energía lumínica emitida, 
 /// reflejada o transmitida en una dirección específica por unidad de área aparente. Es la cantidad que buscamos en el path tracing</param>
 /// <returns></returns>
-bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data, Vec3f& L_total) 
+bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data) 
 {
-	L_total = Vec3f(0.0f);
-
 	//Si estoy intersecando el mismo objeto, lo ignoro
 	if (data->previousObjectId == data->objectId)
 	{
@@ -36,13 +34,24 @@ bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data
 	//Superficie emisiva
 	if (material.emission[0] > 0 || material.emission[1] > 0 || material.emission[2] > 0) 
 	{
-		L_total += data->throughput * Vec3f(material.emission);
+		data->L_total_diffuse += data->throughput * Vec3f(material.emission);
 
 		return true;
 	}
 
 	//Superficie Difusa
-	L_total = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
+	//Calcular la irradiancia directa (E_directa)
+	
+	//Calcular el término de reflectancia difusa (rho_i)
+	auto rho_i = Vec3f(material.diffuse);
+	//Actualizar el total de radiancia difusa
+	//data->L_total_diffuse += data->throughput * (E_directa_i * rho_i);
+	//Actualizar el throughput para el siguiente rebote
+	data->throughput *= rho_i;
+	//Muestrear la nueva dirección y actualizar el rayo para el siguiente rebote (usar distribución coseno)
+
+
+	data->L_total_diffuse = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 
 	return true;
 }

@@ -1,6 +1,6 @@
 #include "ScratchPixel1IntersectionHandler.h"
 
-bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData *data, Vec3f &resultColor){
+bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData *data){
 
 	//Si estoy intersecando el mismo objeto, lo ignoro
 	//if (data->previousObjectId == data->objectId)
@@ -49,9 +49,9 @@ bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData
 	auto surfaceColor = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 
 	if (data->transmissionRemaining > 0)
-		resultColor = surfaceColor * data->transmissionRemaining + data->throughput;
+		data->L_total_diffuse = surfaceColor * data->transmissionRemaining + data->throughput;
 	else
-		resultColor = surfaceColor;
+		data->L_total_diffuse = surfaceColor;
 
 	return true;
 }

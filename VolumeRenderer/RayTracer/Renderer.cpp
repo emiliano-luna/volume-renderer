@@ -84,10 +84,8 @@ Vec3f Renderer::castRay(
 	HandleIntersectionData *data,
 	uint32_t depth)
 {
-	Vec3f hitColor = data->options.backgroundColor;
-	
 	if (depth > data->options.maxDepth) {
-		return hitColor;
+		return data->L_total_diffuse;
 	}
 
 	struct RTCRayQueryContext context;
@@ -115,19 +113,24 @@ Vec3f Renderer::castRay(
 
 		data->tFar = rayhit.ray.tfar;		
 		
-		if (intersectionHandler->HandleIntersection(data, hitColor)) {
-			return hitColor;
+		if (intersectionHandler->HandleIntersection(data)) {
+			return data->L_total_diffuse;
 		}
 
 		depth++;
 
 		return castRay(intersectionHandler, data, depth);
 	}
+	//No diffuse hits
+	else if (data->throughput == 1.0f) {
+		return data->options.backgroundColor;
+	}
 
+	//scratchpixel1
 	if (data->transmissionRemaining > 0)
-		hitColor = hitColor * data->transmissionRemaining + data->throughput;
+		data->L_total_diffuse = data->L_total_diffuse * data->transmissionRemaining + data->throughput;
 
-	return hitColor;
+	return data->L_total_diffuse;
 }
 
 // generate primary ray direction
@@ -144,6 +147,8 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	data->rayDirection = dir;
 	data->objectId = -1;
 	data->transmissionRemaining = 0;
+	data->L_total_diffuse = Vec3f(0.0f);
+	data->throughput = Vec3f(1.0f);
 
 	*(pix++) = castRay(intersectionHandler, data, 0);
 }

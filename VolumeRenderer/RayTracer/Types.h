@@ -50,6 +50,8 @@ public:
 	Vec3f operator + (const Vec3f &v) const { return Vec3f(x + v.x, y + v.y, z + v.z); }
 	Vec3f operator - () const { return Vec3f(-x, -y, -z); }
 	Vec3f& operator += (const Vec3f &v) { x += v.x, y += v.y, z += v.z; return *this; }
+	Vec3f& operator *= (const Vec3f &v) { x *= v.x, y *= v.y, z *= v.z; return *this; }
+	bool operator == (const float xyz) { return xyz == x && xyz == y && xyz == z; }
 	friend Vec3f operator * (const float &r, const Vec3f &v)
 	{
 		return Vec3f(v.x * r, v.y * r, v.z * r);

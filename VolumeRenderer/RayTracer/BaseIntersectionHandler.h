@@ -23,12 +23,14 @@ public:
     /// BRDF * cos(theta_i) / pdf
     /// </summary>
     Vec3f throughput;
+    //diffuse
+    Vec3f L_total_diffuse;
 };
 
 class BaseIntersectionHandler
 {
 public:
-	virtual bool HandleIntersection(HandleIntersectionData* data, Vec3f& resultColor) = 0;
+	virtual bool HandleIntersection(HandleIntersectionData* data) = 0;
 };
 
 #endif //VOLUMERENDERER_BASEINTERSECTIONHANDLER

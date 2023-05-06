@@ -1,6 +1,6 @@
 #include "BasicIntersectionHandler.h"
 
-bool BasicIntersectionHandler::HandleIntersection(HandleIntersectionData *data, Vec3f &resultColor){	
+bool BasicIntersectionHandler::HandleIntersection(HandleIntersectionData *data){	
 
 	//Si estoy intersecando el mismo objeto, lo ignoro
 	if (data->previousObjectId == data->objectId)
@@ -25,9 +25,7 @@ bool BasicIntersectionHandler::HandleIntersection(HandleIntersectionData *data, 
 	}
 
 	//Superficie Difusa
-	auto surfaceColor = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
-
-	resultColor = surfaceColor;
+	data->L_total_diffuse = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 
 	return true;
 }
