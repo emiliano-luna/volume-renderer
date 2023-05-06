@@ -22,7 +22,6 @@ struct RenderThreadData {
 	uint32_t* i;
 	SceneInfo* scene;
 	my_kd_tree_t* photons;
-	std::vector<PhotonData>* photonData;
 };
 
 struct SceneData {

@@ -1,3 +1,6 @@
+#ifndef VOLUMERENDERER_ONB
+#define VOLUMERENDERER_ONB
+
 #include "Utils.h"
 
 //orthonormal-basis
@@ -12,3 +15,4 @@ public:
 private:
 	Vec3f n;
 };
+#endif

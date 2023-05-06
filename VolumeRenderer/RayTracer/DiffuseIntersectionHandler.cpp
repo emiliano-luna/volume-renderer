@@ -41,17 +41,18 @@ bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data
 
 	//Superficie Difusa
 	//Calcular la irradiancia directa (E_directa)
-	//auto E_directa_i = 
+	auto E_directa_i = DirectLightSampler::Sample(data->hitPoint, data->sceneInfo);
 	//Calcular el término de reflectancia difusa (rho_i)
 	auto rho_i = Vec3f(material.diffuse);
 	//Actualizar el total de radiancia difusa
-	//data->L_total_diffuse += data->throughput * (E_directa_i * rho_i);
+	data->L_total_diffuse += data->throughput * (E_directa_i * rho_i);
 	//Actualizar el throughput para el siguiente rebote
 	data->throughput *= rho_i;
 	//Muestrear la nueva dirección y actualizar el rayo para el siguiente rebote (usar distribución coseno)
+	data->rayDirection = DirectionSampler::getCosineDistributionRebound(data->hitNormal);
+	data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
 
+	//data->L_total_diffuse = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 
-	data->L_total_diffuse = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
-
-	return true;
+	return false;
 }

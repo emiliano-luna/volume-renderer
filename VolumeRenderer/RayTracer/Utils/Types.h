@@ -90,16 +90,24 @@ struct Options
 	std::string intersectionHandler;
 };
 
+
+
+struct PointLight {
+	Vec3f position;
+	size_t shapeIndex;
+};
+
 struct SceneInfo {
 	RTCScene scene;
 	std::vector<unsigned int> primitives;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
+	/// <summary>
+	/// for now a single area light is represented as multiple point lights at its vertices
+	/// </summary>
+	std::vector<PointLight> lights;
 };
 
-struct PhotonData {
-	Vec3f color;
-};
 //struct PhotonMap {
 //	PointCould* cloud;
 //	std::vector<PhotonData> data;

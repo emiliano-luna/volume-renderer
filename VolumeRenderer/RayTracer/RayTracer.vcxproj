@@ -160,6 +160,8 @@
     <ClInclude Include="BaseIntersectionHandler.h" />
     <ClInclude Include="BasicIntersectionHandler.h" />
     <ClInclude Include="DiffuseIntersectionHandler.h" />
+    <ClInclude Include="Utils\DirectLightSampler.h" />
+    <ClInclude Include="Utils\DirectionSampler.h" />
     <ClInclude Include="IntersectionHandlerFactory.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
     <ClInclude Include="nanonflann\utils.h" />
@@ -183,6 +185,8 @@
   <ItemGroup>
     <ClCompile Include="BasicIntersectionHandler.cpp" />
     <ClCompile Include="DiffuseIntersectionHandler.cpp" />
+    <ClCompile Include="Utils\DirectLightSampler.cpp" />
+    <ClCompile Include="Utils\DirectionSampler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="IntersectionHandlerFactory.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
