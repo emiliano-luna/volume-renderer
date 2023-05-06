@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="BaseIntersectionHandler.h" />
     <ClInclude Include="BasicIntersectionHandler.h" />
+    <ClInclude Include="DiffuseIntersectionHandler.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="IntersectionHandlerFactory.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicIntersectionHandler.cpp" />
+    <ClCompile Include="DiffuseIntersectionHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="IntersectionHandlerFactory.cpp" />

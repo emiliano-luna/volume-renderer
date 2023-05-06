@@ -49,7 +49,7 @@ Vec3f Renderer::refract(const Vec3f &I, const Vec3f &N, const float &ior)
 	else { std::swap(etai, etat); n = -N; }
 	float eta = etai / etat;
 	float k = 1 - eta * eta * (1 - cosi * cosi);
-	return k < 0 ? 0 : eta * I + (eta * cosi - sqrtf(k)) * n;
+	return k < 0 ? 0.0f : eta * I + (eta * cosi - sqrtf(k)) * n;
 }
 
 //Compute Fresnel equation
@@ -125,7 +125,7 @@ Vec3f Renderer::castRay(
 	}
 
 	if (data->transmissionRemaining > 0)
-		hitColor = hitColor * data->transmissionRemaining + data->colorSoFar;
+		hitColor = hitColor * data->transmissionRemaining + data->throughput;
 
 	return hitColor;
 }
@@ -151,20 +151,26 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 void Renderer::renderPixel(int i, int j, Options &options,
 	SceneInfo* scene)
 {
-	//Vec3f *framebuffer = new Vec3f[1];
-	//Vec3f *pix = framebuffer;
+	Vec3f* framebuffer = new Vec3f[1];
+	Vec3f* pix = framebuffer;
 
-	//float scale = tan(Utils::deg2rad(options.fov * 0.5));
-	//float imageAspectRatio = options.width / (float)options.height;
-	//Vec3f orig(0, 1, 2.25);
+	BaseIntersectionHandler* intersectionHandler = IntersectionHandlerFactory::GetIntersectionHandler(options.intersectionHandler);
+	HandleIntersectionData* data = new HandleIntersectionData();
+		
+	data->sceneInfo = scene;
+	data->options = options;	
+	data->throughput = 1;
 
-	//Renderer::renderRay(i, j, pix, &orig, imageAspectRatio, scale, options, scene);
+	float scale = tan(Utils::deg2rad(options.fov * 0.5));
+	float imageAspectRatio = options.width / (float)options.height;
 
-	//std::cout << "Escena rendereada - tiempo transcurrido: " << std::endl;
-	//   
-	//saveFile(framebuffer, 1, 1, ("outPixel_" + std::to_string(i) + "_" + std::to_string(j) + ".png").c_str());
+	Renderer::renderRay(i, j, pix, &options.cameraPosition, imageAspectRatio, scale, intersectionHandler, data);
 
-	//delete[] framebuffer;
+	saveFile(framebuffer, 1, 1, "outPixel.png");
+
+	std::cout << "Renderer - Imagen Guardada.";
+
+	delete[] framebuffer;
 }
 
 
@@ -245,6 +251,7 @@ void Renderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint3
 		
 	data->sceneInfo = scene;
 	data->options = options;	
+	data->throughput = 1;
 
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {
 		for (uint32_t i = 0; i < options.width; ++i) {

@@ -19,7 +19,10 @@ public:
 
     //scratchpixel sample 1
     float transmissionRemaining;
-    Vec3f colorSoFar;
+    /// <summary>
+    /// BRDF * cos(theta_i) / pdf
+    /// </summary>
+    Vec3f throughput;
 };
 
 class BaseIntersectionHandler

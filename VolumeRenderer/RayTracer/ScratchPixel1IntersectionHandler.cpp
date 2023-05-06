@@ -25,7 +25,7 @@ bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData
 			auto transmission = exp(-distance * sigma_a);
 
 			data->transmissionRemaining = transmission;
-			data->colorSoFar = scatteringColor * (1 - transmission);
+			data->throughput = scatteringColor * (1 - transmission);
 
 			data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
 		}
@@ -49,7 +49,7 @@ bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData
 	auto surfaceColor = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 
 	if (data->transmissionRemaining > 0)
-		resultColor = surfaceColor * data->transmissionRemaining + data->colorSoFar;
+		resultColor = surfaceColor * data->transmissionRemaining + data->throughput;
 	else
 		resultColor = surfaceColor;
 
