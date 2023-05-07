@@ -1,6 +1,6 @@
 #include "ScratchPixel1IntersectionHandler.h"
 
-bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData *data){
+bool ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData *data, uint32_t depth){
 
 	//Si estoy intersecando el mismo objeto, lo ignoro
 	//if (data->previousObjectId == data->objectId)

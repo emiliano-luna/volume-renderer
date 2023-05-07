@@ -6,7 +6,7 @@
 /// <param name="L_total">Radiancia total en el punto de intersección, es la cantidad de energía lumínica emitida, 
 /// reflejada o transmitida en una dirección específica por unidad de área aparente. Es la cantidad que buscamos en el path tracing</param>
 /// <returns></returns>
-bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data) 
+bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data, uint32_t depth)
 {
 	//Si estoy intersecando el mismo objeto, lo ignoro
 	if (data->previousObjectId == data->objectId)
@@ -25,8 +25,10 @@ bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data
 		auto normal = Utils::normalize(data->hitNormal);
 		auto newDir = Utils::normalize(Utils::reflect(data->rayDirection, normal));
 
-		data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
 		data->rayDirection = newDir;
+		data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
+		
+		Renderer::castRay(this, data, ++depth);
 
 		return false;
 	}
@@ -48,11 +50,15 @@ bool DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* data
 	data->L_total_diffuse += data->throughput * (E_directa_i * rho_i);
 	//Actualizar el throughput para el siguiente rebote
 	data->throughput *= rho_i;
-	//Muestrear la nueva dirección y actualizar el rayo para el siguiente rebote (usar distribución coseno)
-	data->rayDirection = DirectionSampler::getCosineDistributionRebound(data->hitNormal);
-	data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
 
-	//data->L_total_diffuse = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
+	//for (size_t i = 0; i < data->options.diffuseReboundCount[depth]; i++)
+	//{
+		//Muestrear la nueva dirección y actualizar el rayo para el siguiente rebote (usar distribución coseno)
+		data->rayDirection = DirectionSampler::getCosineDistributionRebound(data->hitNormal);
+		data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
+
+		data->L_total_diffuse = Renderer::castRay(this, data, ++depth);
+	//}
 
 	return false;
 }

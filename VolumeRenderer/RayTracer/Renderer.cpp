@@ -113,17 +113,20 @@ Vec3f Renderer::castRay(
 
 		data->tFar = rayhit.ray.tfar;		
 		
-		if (intersectionHandler->HandleIntersection(data)) {
-			return data->L_total_diffuse;
-		}
+		//if (intersectionHandler->HandleIntersection(data, depth)) {
+		intersectionHandler->HandleIntersection(data, depth);
 
-		depth++;
+		//return data->L_total_diffuse;
+		//}
 
-		return castRay(intersectionHandler, data, depth);
+		//depth++;
+
+		//return castRay(intersectionHandler, data, depth);
 	}
+
 	//No diffuse hits
 	else if (data->throughput == 1.0f) {
-		return data->options.backgroundColor;
+		data->L_total_diffuse = data->options.backgroundColor;
 	}
 
 	//scratchpixel1

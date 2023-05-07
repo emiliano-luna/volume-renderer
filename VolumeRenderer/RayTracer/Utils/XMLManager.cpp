@@ -27,6 +27,13 @@ Options* XMLManager::GetRendererOptions() {
 		options->models.push_back(newModel);
 	}
 
+	auto rebounds = root.child("diffuseRebounds").children("rebound");
+
+	for (auto rebound : rebounds)
+	{
+		options->diffuseReboundCount.push_back(rebound.text().as_int());
+	}
+
 	options->intersectionHandler = root.child("intersectionHandler").text().as_string();
 
 	options->maxDepth = root.child("maxDepth").text().as_int();

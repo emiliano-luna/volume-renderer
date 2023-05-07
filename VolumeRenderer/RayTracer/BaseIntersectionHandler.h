@@ -30,7 +30,7 @@ public:
 class BaseIntersectionHandler
 {
 public:
-	virtual bool HandleIntersection(HandleIntersectionData* data) = 0;
+	virtual bool HandleIntersection(HandleIntersectionData* data, uint32_t depth) = 0;
 };
 
 #endif //VOLUMERENDERER_BASEINTERSECTIONHANDLER

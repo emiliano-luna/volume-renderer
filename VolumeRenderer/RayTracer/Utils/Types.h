@@ -71,6 +71,7 @@ struct Model {
 struct Options
 {	
 	std::vector<Model> models;
+	std::vector<int> diffuseReboundCount;
 	uint32_t width;
 	uint32_t height;
 	float fov;

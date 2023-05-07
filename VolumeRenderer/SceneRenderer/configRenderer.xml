@@ -4,6 +4,9 @@
     <!--<model baseDir="..\Models\">SphereOnly.obj</model>-->
     <model baseDir="..\Models\">CornellBox-Sphere.obj</model>    
   </models>
+  <diffuseRebounds>
+    <rebound>5</rebound>
+  </diffuseRebounds>
   <intersectionHandler>diffuse</intersectionHandler>
   <!--<intersectionHandler>scratchPixel1</intersectionHandler>-->
   <maxDepth>5</maxDepth>

@@ -1,6 +1,6 @@
 #include "BasicIntersectionHandler.h"
 
-bool BasicIntersectionHandler::HandleIntersection(HandleIntersectionData *data){	
+bool BasicIntersectionHandler::HandleIntersection(HandleIntersectionData *data, uint32_t depth){
 
 	//Si estoy intersecando el mismo objeto, lo ignoro
 	if (data->previousObjectId == data->objectId)

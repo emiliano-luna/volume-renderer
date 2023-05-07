@@ -6,12 +6,13 @@
 #include "Utils/Utils.h"
 #include "Utils/DirectionSampler.h"
 #include "Utils/DirectLightSampler.h"
+#include "Renderer.h"
 
 class DiffuseIntersectionHandler :
     public BaseIntersectionHandler
 {
 public:
-    virtual bool HandleIntersection(HandleIntersectionData* data);
+    virtual bool HandleIntersection(HandleIntersectionData* data, uint32_t depth);
 };
 #endif
 

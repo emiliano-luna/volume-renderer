@@ -9,7 +9,7 @@ class ScratchPixel1IntersectionHandler :
     public BaseIntersectionHandler
 {
 public:
-    virtual bool HandleIntersection(HandleIntersectionData* data);
+    virtual bool HandleIntersection(HandleIntersectionData* data, uint32_t depth);
 };
 
 #endif // !VOLUMERENDERER_SCRATCH1INTERSECTIONHANDLER
