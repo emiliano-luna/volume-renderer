@@ -7,9 +7,9 @@
   <maxDepth>5</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
-    <rebound>1</rebound>
-    <rebound>1</rebound>
-    <rebound>1</rebound>
+    <rebound>4</rebound>
+    <rebound>3</rebound>
+    <rebound>2</rebound>
     <rebound>1</rebound>
   </diffuseRebounds>
   <intersectionHandler>diffuse</intersectionHandler>

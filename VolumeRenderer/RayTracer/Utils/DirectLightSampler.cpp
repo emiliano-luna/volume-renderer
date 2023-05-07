@@ -15,7 +15,10 @@ Vec3f DirectLightSampler::Sample(Vec3f origin, SceneInfo* sceneInfo)
 
 	for (auto& light : sceneInfo->lights)
 	{
-		if (SampleLight(origin, (light.position - origin) * 0.001f, irradiance, light, sceneInfo))
+		auto direction = light.position - origin;
+		origin += direction * 0.001f;
+
+		if (SampleLight(origin, direction , irradiance, light, sceneInfo))
 		{
 			//https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
 			//Bakery's "pysicall falloff"
