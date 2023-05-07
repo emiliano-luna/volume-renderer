@@ -47,9 +47,13 @@ bool DirectLightSampler::SampleLight(Vec3f origin, Vec3f direction, Vec3f& irrad
 	rtcIntersect1(sceneInfo->scene, &rayhit);
 
 	//reached light
-	if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID &&
-		light.shapeIndex == sceneInfo->primitives[rayhit.hit.primID])
+	if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID)
 	{
+		auto hitPoint = rayhit.ray.tfar * direction + origin;
+
+		if (Utils::distance2(hitPoint, light.position) > 0.01)
+			return false;
+
 		auto material = sceneInfo->materials[sceneInfo->shapes[light.shapeIndex].mesh.material_ids[0]];
 
 		irradiance = Vec3f(material.emission[0], material.emission[1], material.emission[2]);

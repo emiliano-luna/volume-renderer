@@ -4,12 +4,16 @@
     <!--<model baseDir="..\Models\">SphereOnly.obj</model>-->
     <model baseDir="..\Models\">CornellBox-Sphere.obj</model>    
   </models>
+  <maxDepth>5</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
+    <rebound>1</rebound>
+    <rebound>1</rebound>
+    <rebound>1</rebound>
+    <rebound>1</rebound>
   </diffuseRebounds>
   <intersectionHandler>diffuse</intersectionHandler>
-  <!--<intersectionHandler>scratchPixel1</intersectionHandler>-->
-  <maxDepth>5</maxDepth>
+  <!--<intersectionHandler>scratchPixel1</intersectionHandler>-->  
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>false</multiThreaded>

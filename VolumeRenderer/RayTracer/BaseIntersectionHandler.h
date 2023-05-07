@@ -30,7 +30,7 @@ public:
 class BaseIntersectionHandler
 {
 public:
-	virtual bool HandleIntersection(HandleIntersectionData* data, uint32_t depth) = 0;
+	virtual Vec3f HandleIntersection(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor) = 0;
 };
 
 #endif //VOLUMERENDERER_BASEINTERSECTIONHANDLER

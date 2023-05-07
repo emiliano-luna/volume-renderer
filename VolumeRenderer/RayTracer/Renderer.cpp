@@ -82,10 +82,11 @@ void Renderer::fresnel(const Vec3f &I, const Vec3f &N, const float &ior, float &
 Vec3f Renderer::castRay(
 	BaseIntersectionHandler *intersectionHandler,
 	HandleIntersectionData *data,
-	uint32_t depth)
+	uint32_t depth, 
+	uint32_t reboundFactor)
 {
-	if (depth > data->options.maxDepth) {
-		return data->L_total_diffuse;
+	if (depth >= data->options.maxDepth) {
+		return Vec3f(0.0f);//data->L_total_diffuse;
 	}
 
 	struct RTCRayQueryContext context;
@@ -114,7 +115,7 @@ Vec3f Renderer::castRay(
 		data->tFar = rayhit.ray.tfar;		
 		
 		//if (intersectionHandler->HandleIntersection(data, depth)) {
-		intersectionHandler->HandleIntersection(data, depth);
+		return intersectionHandler->HandleIntersection(data, depth, reboundFactor);
 
 		//return data->L_total_diffuse;
 		//}
@@ -153,7 +154,7 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	data->L_total_diffuse = Vec3f(0.0f);
 	data->throughput = Vec3f(1.0f);
 
-	*(pix++) = castRay(intersectionHandler, data, 0);
+	*(pix++) = castRay(intersectionHandler, data, 0, 1);
 }
 
 void Renderer::renderPixel(int i, int j, Options &options,
