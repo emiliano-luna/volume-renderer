@@ -45,7 +45,7 @@ Vec3f DiffuseIntersectionHandler::HandleIntersection(HandleIntersectionData* dat
 	//Calcular el término de reflectancia difusa (rho_i)
 	auto rho_i = Vec3f(material.diffuse);
 	//Actualizar el total de radiancia difusa
-	data->L_total_diffuse += data->throughput * (E_directa_i * rho_i) * (1 / reboundFactor);
+	data->L_total_diffuse += data->throughput * (E_directa_i * rho_i) * (1.0f / reboundFactor);
 	//Actualizar el throughput para el siguiente rebote
 	data->throughput *= rho_i;
 
