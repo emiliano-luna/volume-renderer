@@ -7,7 +7,8 @@
 class ONB {
 
 public:
-	ONB(Vec3f normal);
+	ONB();
+	void Update(Vec3f normal);
 	Vec3f WorldToLocal(const Vec3f &v);
 	Vec3f LocalToWorld(const Vec3f &v);
 	Vec3f s;

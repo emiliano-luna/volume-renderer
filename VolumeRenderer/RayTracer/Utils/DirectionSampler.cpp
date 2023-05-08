@@ -1,7 +1,9 @@
 #include "DirectionSampler.h"
 
+ONB* DirectionSampler::onb = new ONB();
+
 Vec3f DirectionSampler::getCosineDistributionRebound(Vec3f normal) {
-	auto onb = new ONB(normal);
+	onb->Update(normal);
 
 	auto r1 = Utils::getRandomFloat(0, 1);
 	auto r2 = Utils::getRandomFloat(0, 1);

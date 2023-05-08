@@ -1,7 +1,9 @@
 #include "ONB.h"
 
-ONB::ONB(Vec3f normal)
-	: n(normal) {
+ONB::ONB() {}
+
+void ONB::Update(Vec3f normal) {
+	n = normal;
 
 	if (fabs(n.x) > fabs(n.z)) {
 		s.x = -n.y;
