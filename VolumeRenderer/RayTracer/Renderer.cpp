@@ -186,7 +186,13 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	data->L_total_diffuse = Vec3f(0.0f);
 	data->throughput = Vec3f(1.0f);
 
-	*(pix++) = castRay(intersectionHandler, data, 0, 1);
+	Vec3f color;
+	for (size_t i = 0; i < data->options.rayPerPixelCount; i++)
+	{
+		color += castRay(intersectionHandler, data, 0, 1);
+	}
+
+	*(pix++) = color / data->options.rayPerPixelCount;
 }
 
 void Renderer::renderPixel(int i, int j, Options &options,

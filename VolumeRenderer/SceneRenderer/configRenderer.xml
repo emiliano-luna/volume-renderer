@@ -1,17 +1,25 @@
 <?xml version="1.0"?>
 <options>
   <models>
-    <model baseDir="..\Models\">SphereOnly.obj</model>    
+    <!--<model baseDir="..\Models\">SphereOnly.obj</model>-->
+    <model baseDir="..\Models\">CornellBox-Sphere.obj</model>    
   </models>
-  <maxDepth>1</maxDepth>
+  <rayPerPixelCount>1</rayPerPixelCount>
+  <maxDepth>5</maxDepth>
   <diffuseRebounds>
+    <rebound>5</rebound>
+    <rebound>4</rebound>
+    <rebound>3</rebound>
+    <rebound>2</rebound>
     <rebound>1</rebound>
   </diffuseRebounds>
-  <intersectionHandler>scratchPixel2</intersectionHandler>
+  <intersectionHandler>diffuse</intersectionHandler>
+  <!--<intersectionHandler>scratchPixel1</intersectionHandler>-->  
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>false</multiThreaded>
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
-	<camera x="0" y="1" z="6.25" pitch="0" yaw="0" roll="0" fov="80"/>
+	<camera x="0" y="0.825" z="2.75" pitch="0" yaw="0" roll="0" fov="60"/>
+  <!--<camera x="0" y="1" z="6.25" pitch="0" yaw="0" roll="0" fov="80"/>-->
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
 </options>

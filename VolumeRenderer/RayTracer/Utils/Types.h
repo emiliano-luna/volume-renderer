@@ -56,6 +56,10 @@ public:
 	{
 		return Vec3f(v.x * r, v.y * r, v.z * r);
 	}
+	friend Vec3f operator / (const Vec3f& v, const int& r)
+	{
+		return Vec3f(v.x / r, v.y / r, v.z / r);
+	}
 	friend std::ostream & operator << (std::ostream &os, const Vec3f &v)
 	{
 		return os << v.x << ", " << v.y << ", " << v.z;
@@ -72,6 +76,7 @@ struct Options
 {	
 	std::vector<Model> models;
 	std::vector<int> diffuseReboundCount;
+	uint32_t rayPerPixelCount;
 	uint32_t width;
 	uint32_t height;
 	float fov;
