@@ -3,7 +3,7 @@
 #define VOLUMERENDERER_BASICINTERSECTIONHANDLER
 
 #include "BaseIntersectionHandler.h"
-#include "Utils\Utils.h"
+#include "..\Utils\Utils.h"
 
 class BasicIntersectionHandler :
     public BaseIntersectionHandler

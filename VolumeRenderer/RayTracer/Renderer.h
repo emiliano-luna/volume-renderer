@@ -5,8 +5,8 @@
 #include "Process.h"
 #include "Utils\Types.h"
 #include "Utils\Utils.h"
-#include "BaseIntersectionHandler.h"
-#include "IntersectionHandlerFactory.h"
+#include "IntersectionHandlers/BaseIntersectionHandler.h"
+#include "IntersectionHandlers/IntersectionHandlerFactory.h"
 #include "FreeImage.h"
 #include <vector>
 #include <rtcore.h>

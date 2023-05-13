@@ -157,22 +157,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BaseIntersectionHandler.h" />
-    <ClInclude Include="BasicIntersectionHandler.h" />
-    <ClInclude Include="DiffuseIntersectionHandler.h" />
+    <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
+    <ClInclude Include="IntersectionHandlers\BasicIntersectionHandler.h" />
+    <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
+    <ClInclude Include="IntersectionHandlers\IntersectionHandlerFactory.h" />
+    <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
     <ClInclude Include="Utils\DirectionSampler.h" />
-    <ClInclude Include="IntersectionHandlerFactory.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
     <ClInclude Include="nanonflann\utils.h" />
-    <ClInclude Include="Options.h" />
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp" />
     <ClInclude Include="pugixml-1.9\src\pugixml.hpp" />
     <ClInclude Include="RayTracer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneRenderer.h" />
-    <ClInclude Include="ScratchPixel1IntersectionHandler.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tinyobjloader\tiny_obj_loader.h" />
@@ -183,18 +182,18 @@
     <ClInclude Include="Utils\XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BasicIntersectionHandler.cpp" />
-    <ClCompile Include="DiffuseIntersectionHandler.cpp" />
+    <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp" />
+    <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
+    <ClCompile Include="IntersectionHandlers\IntersectionHandlerFactory.cpp" />
+    <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp" />
     <ClCompile Include="Utils\DirectLightSampler.cpp" />
     <ClCompile Include="Utils\DirectionSampler.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="IntersectionHandlerFactory.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
     <ClCompile Include="RayTracer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
-    <ClCompile Include="ScratchPixel1IntersectionHandler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

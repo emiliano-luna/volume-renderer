@@ -11,7 +11,6 @@ class FileManager
 private:
 	FileManager();
 public:
-	static PhotonMapOptions* GetPhotonMapOptions();
 	static Options* GetRendererOptions();
 };
 

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="IntersectionHandlers">
-      <UniqueIdentifier>{46985ebd-eef7-4c06-827e-6754dd020b63}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -28,9 +25,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SceneRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp">
@@ -54,21 +48,6 @@
     <ClInclude Include="nanonflann\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BasicIntersectionHandler.h">
-      <Filter>IntersectionHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseIntersectionHandler.h">
-      <Filter>IntersectionHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="IntersectionHandlerFactory.h">
-      <Filter>IntersectionHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="ScratchPixel1IntersectionHandler.h">
-      <Filter>IntersectionHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="DiffuseIntersectionHandler.h">
-      <Filter>IntersectionHandlers</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\XMLManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -88,6 +67,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\DirectLightSampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectionHandlers\BasicIntersectionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectionHandlers\IntersectionHandlerFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,18 +110,6 @@
     <ClCompile Include="SceneLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BasicIntersectionHandler.cpp">
-      <Filter>IntersectionHandlers</Filter>
-    </ClCompile>
-    <ClCompile Include="IntersectionHandlerFactory.cpp">
-      <Filter>IntersectionHandlers</Filter>
-    </ClCompile>
-    <ClCompile Include="ScratchPixel1IntersectionHandler.cpp">
-      <Filter>IntersectionHandlers</Filter>
-    </ClCompile>
-    <ClCompile Include="DiffuseIntersectionHandler.cpp">
-      <Filter>IntersectionHandlers</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -147,6 +129,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\DirectLightSampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlers\IntersectionHandlerFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
