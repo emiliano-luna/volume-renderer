@@ -16,6 +16,10 @@ public:
     SceneInfo* sceneInfo;
     Options options;
     float tFar;
+    /// <summary>
+    /// True if the ray hit geometry
+    /// </summary>
+    bool rayHit;
 
     //scratchpixel sample 1
     /*float transmissionRemaining;*/

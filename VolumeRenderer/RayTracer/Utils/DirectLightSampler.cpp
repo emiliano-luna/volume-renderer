@@ -1,7 +1,7 @@
 #include "DirectLightSampler.h"
 
 /// <summary>
-/// for now we assume with one light only with multiple vertices
+/// for now we assume area lights are point lights at each vertex
 /// </summary>
 /// <param name="origin"></param>
 /// <param name="sceneInfo"></param>

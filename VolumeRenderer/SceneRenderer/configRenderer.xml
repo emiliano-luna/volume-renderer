@@ -7,7 +7,7 @@
   <diffuseRebounds>
     <rebound>1</rebound>
   </diffuseRebounds>
-  <intersectionHandler>scratchPixel1</intersectionHandler>
+  <intersectionHandler>scratchPixel2</intersectionHandler>
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>false</multiThreaded>

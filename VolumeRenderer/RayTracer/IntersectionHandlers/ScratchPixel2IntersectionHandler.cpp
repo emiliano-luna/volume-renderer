@@ -10,18 +10,47 @@ Vec3f ScratchPixel2IntersectionHandler::HandleIntersection(HandleIntersectionDat
 		//exit intersection
 		if (data->previousObjectId == data->objectId)
 		{
+			float transparency = 1;
+			Vec3f result = Vec3f(0.0f);
 			auto distance = data->tFar;
+
+			Vec3f light_dir{ 0, 1, 0 };
+			Vec3f light_color{ 0.325, 0.075, 0.225 };
 			auto sigma_a = 1 - material.dissolve;
-			//for now we use the diffuse color of the object as the scattering color
-			auto scatteringColor = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
-			auto transmission = exp(-distance * sigma_a);
 
-			//data->transmissionRemaining = transmission;
-			data->throughput = scatteringColor * (1 - transmission);
+			float step_size = 0.2;
+			int ns = std::ceil(distance / step_size);
+			step_size = distance / ns;
 
-			//data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
+			auto rayDirection = Utils::normalize(data->rayDirection);
+			auto rayOrigin = data->rayOrigin;
 
-			return data->options.backgroundColor * transmission + scatteringColor * (1 - transmission);
+			for (size_t n = 0; n < ns; n++)
+			{
+				float t = step_size * (n + 0.5f);
+				Vec3f samplePosition = rayOrigin + rayDirection * t;
+
+				//current sample transparency
+				float sampleAttenuation = exp(-step_size * sigma_a);
+
+				// attenuate volume object transparency by current sample transmission value
+				transparency *= sampleAttenuation;
+
+				data->rayDirection = light_dir;
+				data->rayOrigin = samplePosition + data->rayDirection * 0.001;				
+				// In-Scattering. Find the distance traveled by light through 
+				// the volume to our sample point. Then apply Beer's law.							
+				if (Renderer::castSingleRay(data)){
+					auto distanceRayLightToExitInVolume = data->tFar;
+
+					float light_attenuation = exp(-distanceRayLightToExitInVolume * sigma_a);
+					// attenuate in-scattering contrib. by the transmission of all samples accumulated so far
+					result += transparency * light_color * light_attenuation * step_size;
+				}		
+			}						
+
+			// combine background color and volumetric object color
+			return data->options.backgroundColor * transparency + result;
 		}
 		else {
 			data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
