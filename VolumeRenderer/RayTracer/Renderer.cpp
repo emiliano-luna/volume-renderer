@@ -130,10 +130,6 @@ Vec3f Renderer::castRay(
 		data->L_total_diffuse = data->options.backgroundColor;
 	}
 
-	//scratchpixel1
-	if (data->transmissionRemaining > 0)
-		data->L_total_diffuse = data->L_total_diffuse * data->transmissionRemaining + data->throughput;
-
 	return data->L_total_diffuse;
 }
 
@@ -150,7 +146,7 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	data->rayOrigin = *orig;
 	data->rayDirection = dir;
 	data->objectId = -1;
-	data->transmissionRemaining = 0;
+	//data->transmissionRemaining = 0;
 	data->L_total_diffuse = Vec3f(0.0f);
 	data->throughput = Vec3f(1.0f);
 

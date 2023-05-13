@@ -4,6 +4,7 @@
 
 #include "BaseIntersectionHandler.h"
 #include "../Utils\Utils.h"
+#include "..\Renderer.h"
 
 class ScratchPixel1IntersectionHandler :
     public BaseIntersectionHandler

@@ -84,6 +84,9 @@
     <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -18,7 +18,7 @@ public:
     float tFar;
 
     //scratchpixel sample 1
-    float transmissionRemaining;
+    /*float transmissionRemaining;*/
     /// <summary>
     /// BRDF * cos(theta_i) / pdf
     /// </summary>
