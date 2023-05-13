@@ -4,7 +4,7 @@
     <!--<model baseDir="..\Models\">SphereOnly.obj</model>-->
     <model baseDir="..\Models\">CornellBox-Sphere.obj</model>    
   </models>
-  <rayPerPixelCount>1</rayPerPixelCount>
+  <rayPerPixelCount>3</rayPerPixelCount>
   <maxDepth>5</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>

@@ -179,16 +179,15 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 	//El orden y, x, z es para matchear con el pitch roll y yaw del método (usa otro sistemas de coordenadas)
 	Utils::rotate(data->options.cameraRotation.y, data->options.cameraRotation.x, data->options.cameraRotation.z, &dir);
 
-	data->rayOrigin = *orig;
-	data->rayDirection = dir;
-	data->objectId = -1;
-	//data->transmissionRemaining = 0;
-	data->L_total_diffuse = Vec3f(0.0f);
-	data->throughput = Vec3f(1.0f);
-
 	Vec3f color;
 	for (size_t i = 0; i < data->options.rayPerPixelCount; i++)
 	{
+		data->rayOrigin = *orig;
+		data->rayDirection = dir;
+		data->objectId = -1;
+		data->L_total_diffuse = Vec3f(0.0f);
+		data->throughput = Vec3f(1.0f);
+
 		color += castRay(intersectionHandler, data, 0, 1);
 	}
 
