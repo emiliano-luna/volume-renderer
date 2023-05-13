@@ -231,42 +231,42 @@ void Renderer::render(Options &options,
 	std::chrono::steady_clock::time_point begin;
 	begin = std::chrono::steady_clock::now();
 	
-	//if (options.multiThreaded && concurrentThreadsSupported > 1)
-	//{
-	//	int heightPerThread = options.height / concurrentThreadsSupported;
+	if (options.multiThreaded && concurrentThreadsSupported > 1)
+	{
+		int heightPerThread = options.height / concurrentThreadsSupported;
 
-	//	Renderer::scene.pix = pix;
-	//	Renderer::scene.options = options;
-	//	Renderer::scene.heightPerThread = heightPerThread;
-	//	Renderer::scene.orig = &options.cameraPosition;
+		Renderer::scene.pix = pix;
+		Renderer::scene.options = options;
+		Renderer::scene.heightPerThread = heightPerThread;
+		Renderer::scene.orig = &options.cameraPosition;
 
-	//	HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
+		HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
 
-	//	for (uint32_t i = 0; i < concurrentThreadsSupported; ++i) {
-	//		RenderThreadData* data = new RenderThreadData();
+		for (uint32_t i = 0; i < concurrentThreadsSupported; ++i) {
+			RenderThreadData* data = new RenderThreadData();
 
-	//		uint32_t* fromHeight = new uint32_t(heightPerThread * i);
-	//		uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
-	//		uint32_t* ipoint = new uint32_t(i);
+			uint32_t* fromHeight = new uint32_t(heightPerThread * i);
+			uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
+			uint32_t* ipoint = new uint32_t(i);
 
-	//		data->fromHeight = fromHeight;
-	//		data->toHeight = toHeight;
-	//		data->i = ipoint;
-	//		data->scene = scene;
+			data->fromHeight = fromHeight;
+			data->toHeight = toHeight;
+			data->i = ipoint;
+			data->scene = scene;
 
-	//		myhandle[i] = (HANDLE)_beginthreadex(0, 0, &Renderer::mythread, data, 0, 0);
-	//		SetThreadAffinityMask(myhandle[i], 1 << i);
-	//	}
+			myhandle[i] = (HANDLE)_beginthreadex(0, 0, &Renderer::mythread, data, 0, 0);
+			SetThreadAffinityMask(myhandle[i], 1 << i);
+		}
 
-	//	WaitForMultipleObjects(concurrentThreadsSupported, myhandle, true, INFINITE);
+		WaitForMultipleObjects(concurrentThreadsSupported, myhandle, true, INFINITE);
 
-	//	for (int i = 0; i < concurrentThreadsSupported; ++i)
-	//		CloseHandle(myhandle[i]);
-	//}
-	//else
-	//{		
+		for (int i = 0; i < concurrentThreadsSupported; ++i)
+			CloseHandle(myhandle[i]);
+	}
+	else
+	{		
 		Renderer::renderPartial(&options.cameraPosition, pix, 0, options.height - 1, options, scene);
-	//}
+	}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	std::cout << "Renderer - Escena rendereada en: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
