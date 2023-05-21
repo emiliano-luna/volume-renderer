@@ -5,10 +5,11 @@
 #include "BaseIntersectionHandler.h"
 #include "../Utils\Utils.h"
 #include "..\Renderer.h"
+#include "../Utils/PhaseFunction.h"
 
 /// <summary>
-/// Scratchpixel - Forward ray marcher
-/// https://www.scratchapixel.com/lessons/3d-basic-rendering/volume-rendering-for-developers/ray-marching-algorithm.html
+/// Scratchpixel - Improving forward ray marcher
+/// https://www.scratchapixel.com/lessons/3d-basic-rendering/volume-rendering-for-developers/ray-marching-get-it-right.html
 /// </summary>
 
 class ScratchPixel3IntersectionHandler :

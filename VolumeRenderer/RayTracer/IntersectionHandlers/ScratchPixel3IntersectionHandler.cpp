@@ -1,4 +1,5 @@
 #include "ScratchPixel3IntersectionHandler.h"
+#include <random>
 
 Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
 {
@@ -15,11 +16,16 @@ Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionDat
 			auto distance = data->tFar;
 
 			Vec3f light_dir{ 0, 1, 0 };
-			Vec3f light_color{ 0.325, 0.075, 0.225 };
+			Vec3f light_color{ 13.0f, 13.0f, 13.0f };
 			//absorption coefficient
 			auto sigma_a = 1 - material.dissolve;
 			//scattering coefficient
 			auto sigma_s = sigma_a;
+
+			auto density = 1.0f;
+
+			// asymmetry factor of the phase function
+			float g = 0.0; 
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);
@@ -30,11 +36,21 @@ Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionDat
 
 			for (size_t n = 0; n < ns; n++)
 			{
-				float t = step_size * (n + 0.5f);
+				static std::default_random_engine e;
+				static std::uniform_real_distribution<> dis(0, 1);
+				auto randomOffset = dis(e);
+				//float t = step_size * (n + 0.5f);
+				// 
+				//we use stochastic sampling to help with banding, even though it introduces noise
+				//Stochastic sampling is a Monte Carlo technique in which we sample 
+				//the function at appropriate non-uniformly spaced locations rather 
+				//than at regularly spaced locations.
+				float t = step_size * (n + randomOffset);
+
 				Vec3f samplePosition = rayOrigin + rayDirection * t;
 
 				//current sample transparency
-				float sampleAttenuation = exp(-step_size * (sigma_a + sigma_s));
+				float sampleAttenuation = exp(-step_size * density * (sigma_a + sigma_s));
 
 				// attenuate volume object transparency by current sample transmission value
 				transparency *= sampleAttenuation;
@@ -46,9 +62,11 @@ Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionDat
 				if (Renderer::castSingleRay(data)){
 					auto distanceRayLightToExitInVolume = data->tFar;
 
-					float light_attenuation = exp(-distanceRayLightToExitInVolume * (sigma_a + sigma_s));
+					float cos_theta = Utils::dotProduct(rayDirection, light_dir);
+					float light_attenuation = exp(-distanceRayLightToExitInVolume * density * (sigma_a + sigma_s));
 					// attenuate in-scattering contrib. by the transmission of all samples accumulated so far
-					result += transparency * light_color * light_attenuation * sigma_s * step_size;
+					//result += transparency * light_color * light_attenuation * sigma_s * density * step_size;
+					result += light_color * light_attenuation * density * sigma_s * PhaseFunction::heyney_greenstein(g, cos_theta) * transparency * step_size;
 				}		
 			}						
 

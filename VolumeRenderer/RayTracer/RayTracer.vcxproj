@@ -164,6 +164,7 @@
     <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
+    <ClInclude Include="Utils\PhaseFunction.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
     <ClInclude Include="Utils\DirectionSampler.h" />
     <ClInclude Include="nanonflann\nanoflann.hpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
+    <ClCompile Include="Utils\PhaseFunction.cpp" />
     <ClCompile Include="Utils\DirectLightSampler.cpp" />
     <ClCompile Include="Utils\DirectionSampler.cpp" />
     <ClCompile Include="dllmain.cpp" />
