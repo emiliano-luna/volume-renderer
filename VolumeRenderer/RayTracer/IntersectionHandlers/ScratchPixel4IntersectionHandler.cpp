@@ -1,9 +1,10 @@
-#include "ScratchPixel3IntersectionHandler.h"
+#include "ScratchPixel4IntersectionHandler.h"
 #include <random>
-#include "../Utils/DirectLightSampler.h"
 #include "../Utils/DirectionSampler.h"
+#include "../Utils/DirectLightSampler.h"
+#include "../Utils/PerlinNoiseSampler.h"
 
-Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
+Vec3f ScratchPixel4IntersectionHandler::HandleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
 {
 	auto material = data->sceneInfo->materials[data->sceneInfo->shapes[data->objectId].mesh.material_ids[0]];
 
@@ -13,25 +14,28 @@ Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionDat
 		//exit intersection
 		if (data->previousObjectId == data->objectId)
 		{
-			float transparency = 1;
-			Vec3f result = Vec3f(0.0f);
 			auto distance = data->tFar;
 
 			Vec3f light_dir{ 0, 1, 0 };
-			Vec3f light_color{ 13.0f, 13.0f, 13.0f };
+			Vec3f light_color{ 20.0f, 20.0f, 20.0f };
 			//absorption coefficient
+			//auto sigma_a = 1 - material.dissolve;
 			auto sigma_a = 1 - material.dissolve;
 			//scattering coefficient
 			auto sigma_s = sigma_a;
-
-			auto density = 1.0f;
-
-			// asymmetry factor of the phase function
+			//extinction coefficient
+			auto sigma_t = sigma_a + sigma_s;
+			// heyney-greenstein asymmetry factor of the phase function
 			float g = 0.0; 
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);
 			step_size = distance / ns;
+
+			//initialize transmission to 1 (fully transparent)
+			float transparency = 1;
+			//initialize volumetric sphere color to 0
+			Vec3f result = Vec3f(0.0f);
 
 			auto rayDirection = Utils::normalize(data->rayDirection);
 			auto rayOrigin = data->rayOrigin;
@@ -50,9 +54,11 @@ Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionDat
 				float t = step_size * (n + randomOffset);
 
 				Vec3f samplePosition = rayOrigin + rayDirection * t;
+				//evaluate the density at the sample location (space varying density)
+				auto density = PerlinNoiseSampler::getInstance()->eval_density(samplePosition);//eval_density(samplePosition);
 
 				//current sample transparency
-				float sampleAttenuation = exp(-step_size * density * (sigma_a + sigma_s));
+				float sampleAttenuation = exp(-step_size * density * sigma_t);
 
 				// attenuate volume object transparency by current sample transmission value
 				transparency *= sampleAttenuation;
@@ -61,14 +67,30 @@ Vec3f ScratchPixel3IntersectionHandler::HandleIntersection(HandleIntersectionDat
 				data->rayOrigin = samplePosition + data->rayDirection * 0.001;				
 				// In-Scattering. Find the distance traveled by light through 
 				// the volume to our sample point. Then apply Beer's law.							
-				if (Renderer::castSingleRay(data)){
+				if (density > 0 &&
+					Renderer::castSingleRay(data)){
+					float tau = 0;
 					auto distanceRayLightToExitInVolume = data->tFar;
+					auto num_steps_light = std::ceil(distanceRayLightToExitInVolume / step_size);
+
+					for (size_t nl = 0; nl < num_steps_light; ++nl) {
+						float tLight = step_size * (nl + 0.5);
+						Vec3f samplePosLight = samplePosition + tLight * light_dir;
+						tau += PerlinNoiseSampler::getInstance()->eval_density(samplePosLight);
+					}
 
 					float cos_theta = Utils::dotProduct(rayDirection, light_dir);
-					float light_attenuation = exp(-distanceRayLightToExitInVolume * density * (sigma_a + sigma_s));
+					float light_attenuation = exp(-tau * step_size * sigma_t);
 					// attenuate in-scattering contrib. by the transmission of all samples accumulated so far
 					//result += transparency * light_color * light_attenuation * sigma_s * density * step_size;
-					result += light_color * light_attenuation * density * sigma_s * PhaseFunction::heyney_greenstein(g, cos_theta) * transparency * step_size;
+					result += 
+						light_color *										//light color
+						light_attenuation *									// light ray transmission value
+						density *											// volume density at the sample position
+						sigma_s *											// scattering coefficient
+						PhaseFunction::heyney_greenstein(g, cos_theta) *	// phase function
+						transparency *										// ray current transmission value
+						step_size;											// dx in our Riemann sum
 				}		
 			}						
 

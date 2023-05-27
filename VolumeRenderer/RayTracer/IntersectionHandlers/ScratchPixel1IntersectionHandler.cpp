@@ -1,4 +1,6 @@
 #include "ScratchPixel1IntersectionHandler.h"
+#include "../Utils/DirectionSampler.h"
+#include "../Utils/DirectLightSampler.h"
 
 Vec3f ScratchPixel1IntersectionHandler::HandleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
 {

@@ -4,11 +4,6 @@
 
 #include <string>
 #include "BaseIntersectionHandler.h"
-#include "BasicIntersectionHandler.h"
-#include "ScratchPixel1IntersectionHandler.h"
-#include "ScratchPixel2IntersectionHandler.h"
-#include "ScratchPixel3IntersectionHandler.h"
-#include "DiffuseIntersectionHandler.h"
 
 class IntersectionHandlerFactory
 {

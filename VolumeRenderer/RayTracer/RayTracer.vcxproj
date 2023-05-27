@@ -147,6 +147,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\embree-4.0.1.x64.windows\include\embree4;..\..\FreeImage\x64</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +165,8 @@
     <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
+    <ClInclude Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.h" />
+    <ClInclude Include="Utils\PerlinNoiseSampler.h" />
     <ClInclude Include="Utils\PhaseFunction.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
     <ClInclude Include="Utils\DirectionSampler.h" />
@@ -191,6 +194,8 @@
     <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
+    <ClCompile Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.cpp" />
+    <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
     <ClCompile Include="Utils\PhaseFunction.cpp" />
     <ClCompile Include="Utils\DirectLightSampler.cpp" />
     <ClCompile Include="Utils\DirectionSampler.cpp" />

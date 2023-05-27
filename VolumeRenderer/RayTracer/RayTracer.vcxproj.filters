@@ -93,6 +93,12 @@
     <ClInclude Include="Utils\PhaseFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PerlinNoiseSampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -159,6 +165,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\PhaseFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PerlinNoiseSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
