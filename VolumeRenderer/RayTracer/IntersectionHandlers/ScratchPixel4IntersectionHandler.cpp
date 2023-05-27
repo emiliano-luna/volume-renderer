@@ -17,7 +17,7 @@ Vec3f ScratchPixel4IntersectionHandler::HandleIntersection(HandleIntersectionDat
 			auto distance = data->tFar;
 
 			Vec3f light_dir{ 0, 1, 0 };
-			Vec3f light_color{ 20.0f, 20.0f, 20.0f };
+			Vec3f light_color{ 25.0f, 25.0f, 25.0f };
 			//absorption coefficient
 			//auto sigma_a = 1 - material.dissolve;
 			auto sigma_a = 1 - material.dissolve;
