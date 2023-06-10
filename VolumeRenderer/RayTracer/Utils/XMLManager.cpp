@@ -27,6 +27,15 @@ Options* XMLManager::GetRendererOptions() {
 		options->models.push_back(newModel);
 	}
 
+	Model densityFieldModel;
+
+	auto densityFieldNode = root.child("densityField");
+
+	densityFieldModel.baseDir = densityFieldNode.attribute("baseDir").as_string();
+	densityFieldModel.fileName = densityFieldNode.text().as_string();
+
+	options->densityField = densityFieldModel;
+
 	auto rebounds = root.child("diffuseRebounds").children("rebound");
 
 	for (auto rebound : rebounds)

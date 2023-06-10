@@ -204,5 +204,7 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device, Options options)
 	info->primitives = primitives;
 	info->lights = lights;
 
+	info->nanovdbGridHandle = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName);
+	
 	return info;
 }

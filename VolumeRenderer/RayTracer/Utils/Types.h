@@ -16,6 +16,8 @@
 #include <iostream>
 #include <algorithm>
 #include "rtcore.h"
+#include "..\nanovdb\NanoVDB.h"
+#include "..\nanovdb\util\GridHandle.h"
 #include "..\tinyobjloader\tiny_obj_loader.h"
 
 enum MaterialType { DIFFUSE_AND_GLOSSY, REFLECTION_AND_REFRACTION, REFLECTION };
@@ -75,6 +77,7 @@ struct Model {
 struct Options
 {	
 	std::vector<Model> models;
+	Model densityField;
 	std::vector<int> diffuseReboundCount;
 	uint32_t rayPerPixelCount;
 	uint32_t width;
@@ -112,6 +115,7 @@ struct SceneInfo {
 	/// for now a single area light is represented as multiple point lights at its vertices
 	/// </summary>
 	std::vector<PointLight> lights;
+	nanovdb::GridHandle<nanovdb::HostBuffer> nanovdbGridHandle;
 };
 
 //struct PhotonMap {

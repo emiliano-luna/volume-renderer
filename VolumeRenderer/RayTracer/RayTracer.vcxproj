@@ -92,6 +92,9 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\embree-4.0.1.x64.windows\include\embree4;..\..\FreeImage\x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CallingConvention>Cdecl</CallingConvention>
+      <AdditionalOptions>-DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
+      <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,6 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;RAYTRACER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>-DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,6 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;RAYTRACER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>-DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,6 +153,7 @@
       <AdditionalIncludeDirectories>..\..\embree-4.0.1.x64.windows\include\embree4;..\..\FreeImage\x64</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>-DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,6 +172,30 @@
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.h" />
+    <ClInclude Include="nanovdb\NanoVDB.h" />
+    <ClInclude Include="nanovdb\util\CSampleFromVoxels.h" />
+    <ClInclude Include="nanovdb\util\CudaDeviceBuffer.h" />
+    <ClInclude Include="nanovdb\util\DitherLUT.h" />
+    <ClInclude Include="nanovdb\util\ForEach.h" />
+    <ClInclude Include="nanovdb\util\GridBuilder.h" />
+    <ClInclude Include="nanovdb\util\GridChecksum.h" />
+    <ClInclude Include="nanovdb\util\GridHandle.h" />
+    <ClInclude Include="nanovdb\util\GridStats.h" />
+    <ClInclude Include="nanovdb\util\GridValidator.h" />
+    <ClInclude Include="nanovdb\util\HDDA.h" />
+    <ClInclude Include="nanovdb\util\HostBuffer.h" />
+    <ClInclude Include="nanovdb\util\IndexGridBuilder.h" />
+    <ClInclude Include="nanovdb\util\Invoke.h" />
+    <ClInclude Include="nanovdb\util\IO.h" />
+    <ClInclude Include="nanovdb\util\NanoToOpenVDB.h" />
+    <ClInclude Include="nanovdb\util\NodeManager.h" />
+    <ClInclude Include="nanovdb\util\OpenToNanoVDB.h" />
+    <ClInclude Include="nanovdb\util\Primitives.h" />
+    <ClInclude Include="nanovdb\util\Range.h" />
+    <ClInclude Include="nanovdb\util\Ray.h" />
+    <ClInclude Include="nanovdb\util\Reduce.h" />
+    <ClInclude Include="nanovdb\util\SampleFromVoxels.h" />
+    <ClInclude Include="nanovdb\util\Stencils.h" />
     <ClInclude Include="Utils\PerlinNoiseSampler.h" />
     <ClInclude Include="Utils\PhaseFunction.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
