@@ -172,6 +172,7 @@
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.h" />
+    <ClInclude Include="nanovdb\fog_example\common.h" />
     <ClInclude Include="nanovdb\NanoVDB.h" />
     <ClInclude Include="nanovdb\util\CSampleFromVoxels.h" />
     <ClInclude Include="nanovdb\util\CudaDeviceBuffer.h" />

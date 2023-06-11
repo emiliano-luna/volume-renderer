@@ -171,6 +171,9 @@
     <ClInclude Include="nanovdb\util\GridBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nanovdb\fog_example\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

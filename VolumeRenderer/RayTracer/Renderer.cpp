@@ -1,4 +1,9 @@
 #include "Renderer.h"
+#include "nanovdb/NanoVDB.h"
+#include "nanovdb/util/Ray.h"
+#include "nanovdb/util/IO.h"
+#include "nanovdb/util/Primitives.h"
+#include "nanovdb/fog_example/common.h"
 
 SceneData Renderer::scene;
 
@@ -135,6 +140,105 @@ Vec3f Renderer::castRay(
 	return data->L_total_diffuse;
 }
 
+Vec3f Renderer::castRayNanoVDB(
+	BaseIntersectionHandler* intersectionHandler,
+	HandleIntersectionData* data,
+	uint32_t depth,
+	uint32_t reboundFactor)
+{
+	//try {
+		//if (data->sceneInfo->nanovdbGridHandle.gridMetaData()->isFogVolume() == false) {
+		//	throw std::runtime_error("Grid must be a fog volume");
+		//}
+
+		//const int numIterations = 50;
+
+		//const int width = 1024;
+		//const int height = 1024;
+		//nanovdb::HostBuffer   imageBuffer;
+		//imageBuffer.init(width * height * sizeof(float));
+
+	//runNanoVDB(data->sceneInfo->nanovdbGridHandle, numIterations, width, height, imageBuffer);
+	return runNanoVDB(data->sceneInfo->nanovdbGridHandle, data);
+	//}
+	//catch (const std::exception& e) {
+	//	std::cerr << "An exception occurred: \"" << e.what() << "\"" << std::endl;
+	//}
+}
+
+//void Renderer::runNanoVDB(nanovdb::GridHandle<nanovdb::HostBuffer>& handle, int numIterations, int width, int height, nanovdb::HostBuffer& imageBuffer)
+Vec3f Renderer::runNanoVDB(nanovdb::GridHandle<nanovdb::HostBuffer>& handle, HandleIntersectionData* data)
+{
+	using GridT = nanovdb::FloatGrid;
+	using CoordT = nanovdb::Coord;
+	using RealT = float;
+	using Vec3T = nanovdb::Vec3<RealT>;
+	using RayT = nanovdb::Ray<RealT>;
+
+	auto width = data->options.width;
+	auto height = data->options.height;
+
+	auto* h_grid = handle.grid<float>();
+	if (!h_grid)
+		throw std::runtime_error("GridHandle does not contain a valid host grid");
+
+	//float* h_outImage = reinterpret_cast<float*>(imageBuffer.data());
+
+	float              wBBoxDimZ = (float)h_grid->worldBBox().dim()[2] * 2;
+	Vec3T              wBBoxCenter = Vec3T(h_grid->worldBBox().min() + h_grid->worldBBox().dim() * 0.5f);
+	nanovdb::CoordBBox treeIndexBbox = h_grid->tree().bbox();
+	/*std::cout << "Bounds: "
+		<< "[" << treeIndexBbox.min()[0] << "," << treeIndexBbox.min()[1] << "," << treeIndexBbox.min()[2] << "] -> ["
+		<< treeIndexBbox.max()[0] << "," << treeIndexBbox.max()[1] << "," << treeIndexBbox.max()[2] << "]" << std::endl;*/
+
+	RayGenOp<Vec3T> rayGenOp(wBBoxDimZ, wBBoxCenter);
+	CompositeOp     compositeOp;
+
+	//auto renderOp = [width, height, rayGenOp, compositeOp, treeIndexBbox] __hostdev__(int start, int end, float* image, const GridT * grid) {
+		// get an accessor.
+	auto acc = h_grid->tree().getAccessor();
+
+	//for (int i = start; i < end; ++i) {
+	Vec3T rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
+	Vec3T rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
+	//rayGenOp(i, width, height, rayEye, rayDir);
+	// generate ray.
+	RayT wRay(rayEye, rayDir);
+	// transform the ray to the grid's index-space.
+	RayT iRay = wRay.worldToIndexF(*h_grid);
+	// clip to bounds.
+	if (iRay.clip(treeIndexBbox) == false) {
+		//compositeOp(image, i, width, height, 0.0f, 0.0f);
+		return Vec3f(0.0f);
+	}
+	// integrate...
+	const float dt = 0.5f;
+	float       transmittance = 1.0f;
+	for (float t = iRay.t0(); t < iRay.t1(); t += dt) {
+		float sigma = acc.getValue(CoordT::Floor(iRay(t))) * 0.1f;
+		transmittance *= 1.0f - sigma * dt;
+	}
+	// write transmittance.
+	//compositeOp(image, i, width, height, 0.0f, 1.0f - transmittance);	
+	//}
+
+	return Vec3f(1.0f - transmittance);
+	//};
+
+	//{
+	//	float durationAvg = 0;
+	//	for (int i = 0; i < numIterations; ++i) {
+	//		float duration = renderImage(false, renderOp, width, height, h_outImage, h_grid);
+	//		//std::cout << "Duration(NanoVDB-Host) = " << duration << " ms" << std::endl;
+	//		durationAvg += duration;
+	//	}
+	//	durationAvg /= numIterations;
+	//	std::cout << "Average Duration(NanoVDB-Host) = " << durationAvg << " ms" << std::endl;
+
+	//	saveImage("raytrace_fog_volume-nanovdb-host.pfm", width, height, (float*)imageBuffer.data());
+	//}
+}
+
 bool Renderer::castSingleRay(
 	HandleIntersectionData* data)
 {
@@ -188,7 +292,8 @@ void Renderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspe
 		data->L_total_diffuse = Vec3f(0.0f);
 		data->throughput = Vec3f(1.0f);
 
-		color += castRay(intersectionHandler, data, 0, 1);
+		color += castRayNanoVDB(intersectionHandler, data, 0, 1);
+		//color += castRay(intersectionHandler, data, 0, 1);
 	}
 
 	*(pix++) = color / data->options.rayPerPixelCount;

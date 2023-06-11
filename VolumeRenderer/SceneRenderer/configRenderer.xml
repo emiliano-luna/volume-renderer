@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <options>
   <models>
-    <model baseDir="..\Models\">SphereOnly.obj</model>
+    <!-- <model baseDir="..\Models\">SphereOnly.obj</model> -->
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
-  <rayPerPixelCount>12</rayPerPixelCount>
+  <rayPerPixelCount>1</rayPerPixelCount>
   <maxDepth>5</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
@@ -21,6 +21,6 @@
 	<multiThreaded>true</multiThreaded>
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
 	<!-- <camera x="0" y="0.825" z="2.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
-  <camera x="0" y="1" z="6.25" pitch="0" yaw="0" roll="0" fov="80"/>
+  <camera x="-3.0" y="12.0" z="40.0" pitch="0" yaw="0" roll="0" fov="80"/>
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
 </options>

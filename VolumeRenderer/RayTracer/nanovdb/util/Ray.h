@@ -10,7 +10,7 @@
 #ifndef NANOVDB_RAY_H_HAS_BEEN_INCLUDED
 #define NANOVDB_RAY_H_HAS_BEEN_INCLUDED
 
-#include <nanovdb/NanoVDB.h> // for Vec3
+#include "../NanoVDB.h" // for Vec3
 
 namespace nanovdb {
 
