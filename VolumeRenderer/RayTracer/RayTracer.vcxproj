@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\BasicIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="nanovdb\util\Reduce.h" />
     <ClInclude Include="nanovdb\util\SampleFromVoxels.h" />
     <ClInclude Include="nanovdb\util\Stencils.h" />
+    <ClInclude Include="renderers\RendererFactory.h" />
     <ClInclude Include="Utils\PerlinNoiseSampler.h" />
     <ClInclude Include="Utils\PhaseFunction.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
@@ -206,7 +208,7 @@
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp" />
     <ClInclude Include="pugixml-1.9\src\pugixml.hpp" />
     <ClInclude Include="RayTracer.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="renderers\BaseRenderer.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="stdafx.h" />
@@ -219,6 +221,7 @@
     <ClInclude Include="Utils\XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\IntersectionHandlerFactory.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.cpp" />
+    <ClCompile Include="renderers\RendererFactory.cpp" />
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
     <ClCompile Include="Utils\PhaseFunction.cpp" />
     <ClCompile Include="Utils\DirectLightSampler.cpp" />
@@ -233,7 +237,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
     <ClCompile Include="RayTracer.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="renderers\BaseRenderer.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="stdafx.cpp">

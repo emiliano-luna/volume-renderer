@@ -22,7 +22,6 @@ public:
     bool rayHit;
 
     //scratchpixel sample 1
-    /*float transmissionRemaining;*/
     /// <summary>
     /// BRDF * cos(theta_i) / pdf
     /// </summary>
@@ -31,11 +30,11 @@ public:
     Vec3f L_total_diffuse;
 };
 
-class BaseIntersectionHandler
-{
-public:
-	virtual Vec3f HandleIntersection(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor) = 0;
-};
+//class BaseIntersectionHandler
+//{
+//public:
+//	virtual Vec3f HandleIntersection(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor) = 0;
+//};
 
 #endif //VOLUMERENDERER_BASEINTERSECTIONHANDLER
 
