@@ -44,7 +44,7 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 	RayT iRay = wRay.worldToIndexF(*h_grid);
 	// clip to bounds.
 	if (iRay.clip(treeIndexBbox) == false) {		
-		return Vec3f(0.0f);
+		return Vec3f(data->options.backgroundColor);
 	}
 	// integrate...
 	const float dt = 0.5f;
@@ -54,5 +54,5 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 		transmittance *= 1.0f - sigma * dt;
 	}
 
-	return Vec3f(1.0f - transmittance);
+	return Vec3f(transmittance * data->options.backgroundColor);
 }
