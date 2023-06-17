@@ -8,6 +8,8 @@
 RTC_NAMESPACE_OPEN
 #endif
 
+#include "SceneLoader.h"
+
 void SceneRenderer::RenderScene(Options options)
 {
 	/* Initialization. All of this may fail, but we will be notified by

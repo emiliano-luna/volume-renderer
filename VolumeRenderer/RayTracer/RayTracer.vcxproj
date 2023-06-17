@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="renderers\RendererNanoVDBSimple.h" />
     <ClInclude Include="renderers\RendererScratchPixel4.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
@@ -173,7 +174,6 @@
     <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
-    <ClInclude Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.h" />
     <ClInclude Include="nanovdb\fog_example\common.h" />
     <ClInclude Include="nanovdb\NanoVDB.h" />
     <ClInclude Include="nanovdb\util\CSampleFromVoxels.h" />
@@ -222,6 +222,7 @@
     <ClInclude Include="Utils\XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="renderers\RendererNanoVDBSimple.cpp" />
     <ClCompile Include="renderers\RendererScratchPixel4.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp" />
@@ -230,7 +231,6 @@
     <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
-    <ClCompile Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.cpp" />
     <ClCompile Include="renderers\RendererFactory.cpp" />
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
     <ClCompile Include="Utils\PhaseFunction.cpp" />

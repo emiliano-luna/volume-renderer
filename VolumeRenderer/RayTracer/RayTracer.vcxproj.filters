@@ -93,9 +93,6 @@
     <ClInclude Include="Utils\PhaseFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\PerlinNoiseSampler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -183,6 +180,9 @@
     <ClInclude Include="renderers\RendererScratchPixel4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="renderers\RendererNanoVDBSimple.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -251,9 +251,6 @@
     <ClCompile Include="Utils\PhaseFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntersectionHandlers\ScratchPixel4IntersectionHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -264,6 +261,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="renderers\RendererScratchPixel4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\RendererNanoVDBSimple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

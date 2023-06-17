@@ -15,7 +15,7 @@
     <rebound>1</rebound>
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <intersectionHandler>scratchPixel4</intersectionHandler>  
+  <renderer>nanoVDBSimple</renderer>  
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>

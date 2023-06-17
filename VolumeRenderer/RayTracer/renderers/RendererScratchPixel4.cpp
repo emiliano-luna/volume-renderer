@@ -1,9 +1,4 @@
 #include "RendererScratchPixel4.h"
-#include "../nanovdb/NanoVDB.h"
-#include "../nanovdb/util/Ray.h"
-#include "../nanovdb/util/IO.h"
-#include "../nanovdb/util/Primitives.h"
-#include "../nanovdb/fog_example/common.h"
 #include <random>
 #include "../Utils/PerlinNoiseSampler.h"
 #include "../Utils/EmbreeHelper.h"
