@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <options>
   <models>
-    <!-- <model baseDir="..\Models\">SphereOnly.obj</model> -->
+    <model baseDir="..\Models\">SphereOnly.obj</model>
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>

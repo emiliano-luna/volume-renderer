@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="renderers\RendererScratchPixel4.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\BasicIntersectionHandler.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Utils\XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="renderers\RendererScratchPixel4.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />

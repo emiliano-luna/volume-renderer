@@ -15,7 +15,7 @@ void SceneRenderer::RenderScene(Options options)
 	RTCDevice device = SceneLoader::initializeDevice();
 	SceneInfo* sceneInfo = SceneLoader::initializeScene(device, options);
 
-	BaseRenderer* renderer = RendererFactory::GetRenderer("");
+	BaseRenderer* renderer = RendererFactory::GetRenderer(options.renderer);
 
 	renderer->render(options, sceneInfo);
 	//Renderer::renderPixel(320, 345, options, sceneInfo);

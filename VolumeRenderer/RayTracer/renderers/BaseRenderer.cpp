@@ -5,12 +5,6 @@
 #include "../nanovdb/util/Primitives.h"
 #include "../nanovdb/fog_example/common.h"
 
-SceneData BaseRenderer::scene;
-
-//BaseRenderer::BaseRenderer()
-//{
-//}
-
 void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const char* fileName) {
 	FreeImage_Initialise();
 
@@ -34,110 +28,6 @@ void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const cha
 	FreeImage_DeInitialise(); //Cleanup !
 }
 
-Vec3f BaseRenderer::castRay(
-	HandleIntersectionData *data,
-	uint32_t depth, 
-	uint32_t reboundFactor)
-{
-	if (depth >= data->options.maxDepth) {
-		return Vec3f(0.0f);//data->L_total_diffuse;
-	}
-
-	struct RTCRayQueryContext context;
-	rtcInitRayQueryContext(&context);
-
-	struct RTCRayHit rayhit;
-	rayhit.ray.org_x = data->rayOrigin.x;rayhit.ray.org_y = data->rayOrigin.y;rayhit.ray.org_z = data->rayOrigin.z;
-	rayhit.ray.dir_x = data->rayDirection.x;rayhit.ray.dir_y = data->rayDirection.y;rayhit.ray.dir_z = data->rayDirection.z;
-	rayhit.ray.tnear = 0;rayhit.ray.tfar = std::numeric_limits<float>::infinity();
-	rayhit.ray.mask = -1;rayhit.ray.flags = 0;
-	rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;rayhit.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
-
-	//Intersects a single ray with the scene
-	rtcIntersect1(data->sceneInfo->scene, &rayhit);
-
-	data->rayHit = rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID;
-
-	if (data->rayHit)
-	{
-		data->previousObjectId = data->objectId;
-		data->previousHitPoint = data->hitPoint;
-		
-		data->objectId = data->sceneInfo->primitives[rayhit.hit.primID];
-		data->hitPoint = rayhit.ray.tfar * data->rayDirection + data->rayOrigin;
-
-		data->hitNormal = Vec3f(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z);
-
-		data->tFar = rayhit.ray.tfar;		
-				
-		return Vec3f(0.0f);//intersectionHandler->HandleIntersection(this, data, depth, reboundFactor);
-	}
-
-	//No diffuse hits
-	else if (data->throughput == 1.0f) {
-		data->L_total_diffuse = data->options.backgroundColor;
-	}
-
-	return data->L_total_diffuse;
-}
-
-Vec3f BaseRenderer::castRayNanoVDB(
-	HandleIntersectionData* data,
-	uint32_t depth,
-	uint32_t reboundFactor)
-{
-	return runNanoVDB(data->sceneInfo->nanovdbGridHandle, data);
-}
-
-Vec3f BaseRenderer::runNanoVDB(nanovdb::GridHandle<nanovdb::HostBuffer>& handle, HandleIntersectionData* data)
-{
-	using GridT = nanovdb::FloatGrid;
-	using CoordT = nanovdb::Coord;
-	using RealT = float;
-	using Vec3T = nanovdb::Vec3<RealT>;
-	using RayT = nanovdb::Ray<RealT>;
-
-	auto width = data->options.width;
-	auto height = data->options.height;
-
-	auto* h_grid = handle.grid<float>();
-	if (!h_grid)
-		throw std::runtime_error("GridHandle does not contain a valid host grid");
-
-	float              wBBoxDimZ = (float)h_grid->worldBBox().dim()[2] * 2;
-	Vec3T              wBBoxCenter = Vec3T(h_grid->worldBBox().min() + h_grid->worldBBox().dim() * 0.5f);
-	nanovdb::CoordBBox treeIndexBbox = h_grid->tree().bbox();
-	/*std::cout << "Bounds: "
-		<< "[" << treeIndexBbox.min()[0] << "," << treeIndexBbox.min()[1] << "," << treeIndexBbox.min()[2] << "] -> ["
-		<< treeIndexBbox.max()[0] << "," << treeIndexBbox.max()[1] << "," << treeIndexBbox.max()[2] << "]" << std::endl;*/
-
-	RayGenOp<Vec3T> rayGenOp(wBBoxDimZ, wBBoxCenter);
-	CompositeOp     compositeOp;
-
-	// get an accessor.
-	auto acc = h_grid->tree().getAccessor();
-
-	Vec3T rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
-	Vec3T rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
-	// generate ray.
-	RayT wRay(rayEye, rayDir);
-	// transform the ray to the grid's index-space.
-	RayT iRay = wRay.worldToIndexF(*h_grid);
-	// clip to bounds.
-	if (iRay.clip(treeIndexBbox) == false) {		
-		return Vec3f(0.0f);
-	}
-	// integrate...
-	const float dt = 0.5f;
-	float       transmittance = 1.0f;
-	for (float t = iRay.t0(); t < iRay.t1(); t += dt) {
-		float sigma = acc.getValue(CoordT::Floor(iRay(t))) * 0.1f;
-		transmittance *= 1.0f - sigma * dt;
-	}
-
-	return Vec3f(1.0f - transmittance);
-}
-
 // generate primary ray direction
 void BaseRenderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, HandleIntersectionData* data) {
 	float x = (2 * (i + 0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
@@ -145,7 +35,7 @@ void BaseRenderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float image
 	
 	Vec3f dir = Utils::normalize(Vec3f(x, y, -1));
 
-	//El orden y, x, z es para matchear con el pitch roll y yaw del método (usa otro sistemas de coordenadas)
+	//El orden y, x, z es para matchear con el pitch roll y yaw del mï¿½todo (usa otro sistemas de coordenadas)
 	Utils::rotate(data->options.cameraRotation.y, data->options.cameraRotation.x, data->options.cameraRotation.z, &dir);
 
 	Vec3f color;
@@ -157,12 +47,68 @@ void BaseRenderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float image
 		data->L_total_diffuse = Vec3f(0.0f);
 		data->throughput = Vec3f(1.0f);
 
-		color += castRayNanoVDB(data, 0, 1);
-		//color += castRay(intersectionHandler, data, 0, 1);
+		//color += castRayNanoVDB(data, 0, 1);
+		color += castRay(data, 0, 1);
 	}
 
 	*(pix++) = color / data->options.rayPerPixelCount;
 }
+//Vec3f BaseRenderer::castRayNanoVDB(
+//	HandleIntersectionData* data,
+//	uint32_t depth,
+//	uint32_t reboundFactor)
+//{
+//	return runNanoVDB(data->sceneInfo->nanovdbGridHandle, data);
+//}
+//
+//Vec3f BaseRenderer::runNanoVDB(nanovdb::GridHandle<nanovdb::HostBuffer>& handle, HandleIntersectionData* data)
+//{
+//	using GridT = nanovdb::FloatGrid;
+//	using CoordT = nanovdb::Coord;
+//	using RealT = float;
+//	using Vec3T = nanovdb::Vec3<RealT>;
+//	using RayT = nanovdb::Ray<RealT>;
+//
+//	auto width = data->options.width;
+//	auto height = data->options.height;
+//
+//	auto* h_grid = handle.grid<float>();
+//	if (!h_grid)
+//		throw std::runtime_error("GridHandle does not contain a valid host grid");
+//
+//	float              wBBoxDimZ = (float)h_grid->worldBBox().dim()[2] * 2;
+//	Vec3T              wBBoxCenter = Vec3T(h_grid->worldBBox().min() + h_grid->worldBBox().dim() * 0.5f);
+//	nanovdb::CoordBBox treeIndexBbox = h_grid->tree().bbox();
+//	/*std::cout << "Bounds: "
+//		<< "[" << treeIndexBbox.min()[0] << "," << treeIndexBbox.min()[1] << "," << treeIndexBbox.min()[2] << "] -> ["
+//		<< treeIndexBbox.max()[0] << "," << treeIndexBbox.max()[1] << "," << treeIndexBbox.max()[2] << "]" << std::endl;*/
+//
+//	RayGenOp<Vec3T> rayGenOp(wBBoxDimZ, wBBoxCenter);
+//	CompositeOp     compositeOp;
+//
+//	// get an accessor.
+//	auto acc = h_grid->tree().getAccessor();
+//
+//	Vec3T rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
+//	Vec3T rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
+//	// generate ray.
+//	RayT wRay(rayEye, rayDir);
+//	// transform the ray to the grid's index-space.
+//	RayT iRay = wRay.worldToIndexF(*h_grid);
+//	// clip to bounds.
+//	if (iRay.clip(treeIndexBbox) == false) {		
+//		return Vec3f(0.0f);
+//	}
+//	// integrate...
+//	const float dt = 0.5f;
+//	float       transmittance = 1.0f;
+//	for (float t = iRay.t0(); t < iRay.t1(); t += dt) {
+//		float sigma = acc.getValue(CoordT::Floor(iRay(t))) * 0.1f;
+//		transmittance *= 1.0f - sigma * dt;
+//	}
+//
+//	return Vec3f(1.0f - transmittance);
+//}
 
 void BaseRenderer::renderPixel(int i, int j, Options &options,
 	SceneInfo* scene)
@@ -180,7 +126,7 @@ void BaseRenderer::renderPixel(int i, int j, Options &options,
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
 
-	BaseRenderer::renderRay(i, j, pix, &options.cameraPosition, imageAspectRatio, scale, data);
+	renderRay(i, j, pix, &options.cameraPosition, imageAspectRatio, scale, data);
 
 	saveFile(framebuffer, 1, 1, "outPixel.png");
 
@@ -204,11 +150,11 @@ void BaseRenderer::render(Options &options,
 	if (options.multiThreaded && concurrentThreadsSupported > 1)
 	{
 		int heightPerThread = options.height / concurrentThreadsSupported;
-
-		BaseRenderer::scene.pix = pix;
-		BaseRenderer::scene.options = options;
-		BaseRenderer::scene.heightPerThread = heightPerThread;
-		BaseRenderer::scene.orig = &options.cameraPosition;
+		
+		sceneData.pix = pix;
+		sceneData.options = options;
+		sceneData.heightPerThread = heightPerThread;
+		sceneData.orig = &options.cameraPosition;
 
 		HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
 
@@ -219,6 +165,7 @@ void BaseRenderer::render(Options &options,
 			uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
 			uint32_t* ipoint = new uint32_t(i);
 
+			data->renderer = this;
 			data->fromHeight = fromHeight;
 			data->toHeight = toHeight;
 			data->i = ipoint;
@@ -251,9 +198,10 @@ void BaseRenderer::render(Options &options,
 unsigned int __stdcall BaseRenderer::mythread(void* data)
 {
 	RenderThreadData* threadData = static_cast<RenderThreadData*>(data);
+	BaseRenderer* renderer = threadData->renderer;
 
-	BaseRenderer::renderPartial(BaseRenderer::scene.orig, &BaseRenderer::scene.pix[BaseRenderer::scene.options.width * BaseRenderer::scene.heightPerThread * *threadData->i],
-		*threadData->fromHeight, *threadData->toHeight, BaseRenderer::scene.options, threadData->scene);
+	renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * renderer->sceneData.heightPerThread * *threadData->i],
+		*threadData->fromHeight, *threadData->toHeight, renderer->sceneData.options, threadData->scene);
 
 	return 0;
 }
@@ -271,7 +219,7 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {
 		for (uint32_t i = 0; i < options.width; ++i) {
-			BaseRenderer::renderRay(i, j, pix, orig, imageAspectRatio, scale, data);
+			renderRay(i, j, pix, orig, imageAspectRatio, scale, data);
 		}
 	}
 }
