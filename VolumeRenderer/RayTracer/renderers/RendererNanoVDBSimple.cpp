@@ -54,6 +54,7 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 	}
 
 	float density = 0.5f;
+	float lightRayDensity = density * 0.5f;
 	// integrate...
 	const float step_size = 0.5f;
 	//transparency
@@ -89,7 +90,7 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 				for (size_t nl = 0; nl < num_steps_light; ++nl) {
 					float tLight = light_step_size * (nl + 0.5);
 					//Vec3f samplePosLight = samplePosition + tLight * light_dir;
-					tau += acc.getValue(CoordT::Floor(data->nanoVDBRay(data->nanoVDBRay.t0() + tLight))) * density; //PerlinNoiseSampler::getInstance()->eval_density(samplePosLight);
+					tau += acc.getValue(CoordT::Floor(data->nanoVDBRay(data->nanoVDBRay.t0() + tLight))) * lightRayDensity; //PerlinNoiseSampler::getInstance()->eval_density(samplePosLight);
 				}
 
 				float cos_theta = Utils::dotProduct(rayDirection, light_dir);
