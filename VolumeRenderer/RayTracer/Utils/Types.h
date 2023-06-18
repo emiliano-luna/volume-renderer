@@ -118,9 +118,4 @@ struct SceneInfo {
 	nanovdb::GridHandle<nanovdb::HostBuffer> nanovdbGridHandle;
 };
 
-//struct PhotonMap {
-//	PointCould* cloud;
-//	std::vector<PhotonData> data;
-//};
-
 #endif // !RAYTRACER_TYPES

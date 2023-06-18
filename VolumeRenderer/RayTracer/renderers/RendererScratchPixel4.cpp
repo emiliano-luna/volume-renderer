@@ -109,6 +109,7 @@ Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, ui
 				// attenuate volume object transparency by current sample transmission value
 				transparency *= sampleAttenuation;
 
+				//prepare light ray
 				data->rayDirection = light_dir;
 				data->rayOrigin = samplePosition + data->rayDirection * 0.001;				
 				// In-Scattering. Find the distance traveled by light through 

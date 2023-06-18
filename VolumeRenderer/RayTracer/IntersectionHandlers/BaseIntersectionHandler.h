@@ -3,6 +3,7 @@
 #define VOLUMERENDERER_BASEINTERSECTIONHANDLER
 
 #include "..\Utils\Types.h"
+#include "..\nanovdb\util\Ray.h"
 
 class HandleIntersectionData {
 public:
@@ -28,6 +29,8 @@ public:
     Vec3f throughput;
     //diffuse
     Vec3f L_total_diffuse;
+        
+    nanovdb::Ray<float> nanoVDBRay;
 };
 
 //class BaseIntersectionHandler

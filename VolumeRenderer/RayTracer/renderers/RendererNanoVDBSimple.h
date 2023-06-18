@@ -24,6 +24,7 @@ class RendererNanoVDBSimple : public BaseRenderer
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);
+	bool castLightRay(HandleIntersectionData* data);
 };
 
 #endif
