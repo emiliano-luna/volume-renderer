@@ -47,12 +47,34 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 		return Vec3f(data->options.backgroundColor);
 	}
 	// integrate...
-	const float dt = 0.5f;
+	const float step_size = 0.5f;
+	//transparency
 	float       transmittance = 1.0f;
-	for (float t = iRay.t0(); t < iRay.t1(); t += dt) {
+	//initialize volumetric color to 0
+	Vec3f result = Vec3f(0.0f);
+
+	for (float t = iRay.t0(); t < iRay.t1(); t += step_size) {
+		//cast light ray
+
 		float sigma = acc.getValue(CoordT::Floor(iRay(t))) * 0.1f;
-		transmittance *= 1.0f - sigma * dt;
+
+		//current sample transparency
+		float sampleAttenuation = exp(-step_size * sigma);
+
+		// attenuate volume object transparency by current sample transmission value
+		transmittance *= sampleAttenuation;
+
+		if (sigma > 0) {
+			result +=
+				//light_color *										//light color
+				//light_attenuation *									// light ray transmission value
+				//density *											// volume density at the sample position
+				sigma *											// scattering coefficient
+				//PhaseFunction::heyney_greenstein(g, cos_theta) *	// phase function
+				transmittance *										// ray current transmission value
+				step_size;
+		}		
 	}
 
-	return Vec3f(transmittance * data->options.backgroundColor);
+	return Vec3f(result + transmittance * data->options.backgroundColor);
 }
