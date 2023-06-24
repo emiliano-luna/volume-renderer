@@ -23,7 +23,7 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
-	nanovdb::GridHandle<nanovdb::HostBuffer>& handle = data->sceneInfo->nanovdbGridHandle;
+	nanovdb::GridHandle<nanovdb::HostBuffer>& handle = data->sceneInfo->densityGrid;
 
 	auto* h_grid = handle.grid<float>();
 	if (!h_grid)
@@ -136,7 +136,7 @@ bool RendererNanoVDBSimple::castLightRay(HandleIntersectionData* data) {
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
-	nanovdb::GridHandle<nanovdb::HostBuffer>& handle = data->sceneInfo->nanovdbGridHandle;
+	nanovdb::GridHandle<nanovdb::HostBuffer>& handle = data->sceneInfo->densityGrid;
 
 	auto* h_grid = handle.grid<float>();
 	if (!h_grid)

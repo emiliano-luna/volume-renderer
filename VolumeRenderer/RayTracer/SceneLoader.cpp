@@ -204,8 +204,10 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device, Options options)
 	info->primitives = primitives;
 	info->lights = lights;
 
-	if (!options.densityField.baseDir.empty())
-		info->nanovdbGridHandle = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName);
+	if (!options.densityField.baseDir.empty()) {
+		info->densityGrid = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName);
+		info->temperatureGrid = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "temperature");
+	}
 	
 	return info;
 }

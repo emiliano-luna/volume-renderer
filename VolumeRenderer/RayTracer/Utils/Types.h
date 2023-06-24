@@ -115,7 +115,8 @@ struct SceneInfo {
 	/// for now a single area light is represented as multiple point lights at its vertices
 	/// </summary>
 	std::vector<PointLight> lights;
-	nanovdb::GridHandle<nanovdb::HostBuffer> nanovdbGridHandle;
+	nanovdb::GridHandle<nanovdb::HostBuffer> densityGrid;
+	nanovdb::GridHandle<nanovdb::HostBuffer> temperatureGrid;
 };
 
 #endif // !RAYTRACER_TYPES

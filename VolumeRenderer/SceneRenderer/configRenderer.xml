@@ -4,7 +4,7 @@
     <model baseDir="..\Models\">SphereOnly.obj</model>
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
-  <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
+  <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
   <rayPerPixelCount>1</rayPerPixelCount>
   <maxDepth>5</maxDepth>
   <diffuseRebounds>
@@ -15,12 +15,12 @@
     <rebound>1</rebound>
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <renderer>nanoVDBSimple</renderer>  
+  <renderer>nanoVDBEmission</renderer>  
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
 	<!-- <camera x="0" y="0.825" z="2.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
-  <camera x="-1.0" y="18.5" z="48.0" pitch="0" yaw="0" roll="0" fov="80"/>
+  <camera x="-1.0" y="28" z="55.0" pitch="0" yaw="0" roll="0" fov="80"/>
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
 </options>
