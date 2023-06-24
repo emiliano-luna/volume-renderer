@@ -22,18 +22,50 @@ void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const cha
 }
 
 // generate primary ray direction
-void BaseRenderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, HandleIntersectionData* data) {
+void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, HandleIntersectionData* data) {
 	float x = (2 * (i + 0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
 	float y = (1 - 2 * (j + 0.5) / (float)data->options.height) * scale;
+
+	auto raysPerPixel = data->options.rayPerPixelCount;
 	
-	Vec3f dir = Utils::normalize(Vec3f(x, y, -1));
+	Vec3f dir; //= Utils::normalize(Vec3f(x, y, -1));
+	if (raysPerPixel != 4 && raysPerPixel != 16)
+		dir = Utils::normalize(Vec3f(x, y, -1));
 
 	//El orden y, x, z es para matchear con el pitch roll y yaw del m�todo (usa otro sistemas de coordenadas)
 	Utils::rotate(data->options.cameraRotation.y, data->options.cameraRotation.x, data->options.cameraRotation.z, &dir);
 
 	Vec3f color;
-	for (size_t i = 0; i < data->options.rayPerPixelCount; i++)
+	
+	for (size_t i = 0; i < raysPerPixel; i++)
 	{
+		if (raysPerPixel == 4)
+		{
+			if (i == 0)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25, y + pixelHeight * 0.25, -1));
+			if (i == 1)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25, y - pixelHeight * 0.25, -1));
+			if (i == 2)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25, y + pixelHeight * 0.25, -1));
+			if (i == 3)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25, y - pixelHeight * 0.25, -1));
+		}
+		if (raysPerPixel == 16)
+		{
+			if (i == 0)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 1)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 2)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 3)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 4)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 5)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 6)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 7)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 8)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 9)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 10)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 11)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 12)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 13)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
+			if (i == 14)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+			if (i == 15)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
+		}
+
 		data->rayOrigin = *orig;
 		data->rayDirection = dir;
 		data->objectId = -1;
@@ -44,7 +76,7 @@ void BaseRenderer::renderRay(int i, int j, Vec3f* &pix, Vec3f* orig, float image
 		color += castRay(data, 0, 1);
 	}
 
-	*(pix++) = color / data->options.rayPerPixelCount;
+	*(pix++) = color / raysPerPixel;
 }
 
 
@@ -63,7 +95,16 @@ void BaseRenderer::renderPixel(int i, int j, Options &options,
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
 
-	renderRay(i, j, pix, &options.cameraPosition, imageAspectRatio, scale, data);
+	float x = (2 * (0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float y = (1 - 2 * (0.5) / (float)data->options.height) * scale;
+
+	float xPlusOne = (2 * (1.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float pixelWidth = xPlusOne - x;
+
+	float yPlusOne = (1 - 2 * (1.5) / (float)data->options.height) * scale;
+	float pixelHeight = yPlusOne - y;
+
+	renderRay(i, j, pixelWidth, pixelHeight, pix, &options.cameraPosition, imageAspectRatio, scale, data);
 
 	saveFile(framebuffer, 1, 1, "outPixel.png");
 
@@ -137,8 +178,16 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 	RenderThreadData* threadData = static_cast<RenderThreadData*>(data);
 	BaseRenderer* renderer = threadData->renderer;
 
+	std::stringstream stream;
+	stream << "Rendering thread " << *threadData->i << " - Starting" << std::endl;
+	std::cout << stream.str();
+
 	renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * renderer->sceneData.heightPerThread * *threadData->i],
 		*threadData->fromHeight, *threadData->toHeight, renderer->sceneData.options, threadData->scene);
+
+	std::stringstream stream2;
+	stream2 << "Rendering thread " << *threadData->i << " - Done" << std::endl;
+	std::cout << stream2.str();
 
 	return 0;
 }
@@ -153,9 +202,19 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 	data->options = options;	
 	data->throughput = 1;
 
+	float x = (2 * (0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float y = (1 - 2 * (0.5) / (float)data->options.height) * scale;
+
+	float xPlusOne = (2 * (1.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float pixelWidth = xPlusOne - x;
+
+	float yPlusOne = (1 - 2 * (1.5) / (float)data->options.height) * scale;
+	float pixelHeight = yPlusOne - y;
+
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {
 		for (uint32_t i = 0; i < options.width; ++i) {
-			renderRay(i, j, pix, orig, imageAspectRatio, scale, data);
+			renderRay(i, j, pixelWidth, pixelHeight, pix, orig, imageAspectRatio, scale, data);
 		}
 	}
 }
+
