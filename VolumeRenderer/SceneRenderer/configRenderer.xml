@@ -5,8 +5,8 @@
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
   <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
-  <rayPerPixelCount>1</rayPerPixelCount>
-  <maxDepth>2</maxDepth>
+  <rayPerPixelCount>16</rayPerPixelCount>
+  <maxDepth>16</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
     <rebound>4</rebound>
@@ -19,6 +19,7 @@
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>
+  <multiThreadedChunkSize>16</multiThreadedChunkSize>
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
 	<!-- <camera x="0" y="0.825" z="2.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
   <camera x="-1.0" y="28" z="55.0" pitch="0" yaw="0" roll="0" fov="80"/>

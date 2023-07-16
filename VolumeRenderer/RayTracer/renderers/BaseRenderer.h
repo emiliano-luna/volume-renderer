@@ -17,6 +17,7 @@
 #include "../nanonflann\utils.h"
 #include <chrono>
 #include <thread>
+#include "../Utils\MultithreadingHelper.h"
 
 struct SceneData {
 	Vec3f* pix;
@@ -42,10 +43,11 @@ public:
 
 struct RenderThreadData {
 	BaseRenderer* renderer;
-	uint32_t* fromHeight;
-	uint32_t* toHeight;
+	uint32_t* chunkHeight;
+	//uint32_t* toHeight;
 	uint32_t* i;
 	SceneInfo* scene;
 	my_kd_tree_t* photons;
+	MultithreadingHelper* multiThreadingHelper;
 };
 #endif

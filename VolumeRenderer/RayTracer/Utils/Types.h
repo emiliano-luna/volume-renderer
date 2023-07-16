@@ -89,6 +89,7 @@ struct Options
 	Vec3f ambientLight;
 	float bias;
 	bool multiThreaded;
+	uint32_t multiThreadedChunkSize;
 	bool antiAliasing;
 	float colorDiffThreshold;
 	bool auxImages;

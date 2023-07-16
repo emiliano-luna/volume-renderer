@@ -1,4 +1,5 @@
 #include "BaseRenderer.h"
+#include "..\Utils\MultithreadingHelper.h"
 
 void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const char* fileName) {
 	FreeImage_Initialise();
@@ -127,30 +128,36 @@ void BaseRenderer::render(Options &options,
 	
 	if (options.multiThreaded && concurrentThreadsSupported > 1)
 	{
-		int heightPerThread = options.height / concurrentThreadsSupported;
+		int heightPerThread = options.multiThreadedChunkSize > 0 ? 
+			options.multiThreadedChunkSize : 
+			options.height / concurrentThreadsSupported;
 		
 		sceneData.pix = pix;
 		sceneData.options = options;
 		sceneData.heightPerThread = heightPerThread;
 		sceneData.orig = &options.cameraPosition;
 
+		auto multithreadingHelper = new MultithreadingHelper(heightPerThread, options.height / heightPerThread);
+
 		HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
 
 		for (uint32_t i = 0; i < concurrentThreadsSupported; ++i) {
 			RenderThreadData* data = new RenderThreadData();
 
-			uint32_t* fromHeight = new uint32_t(heightPerThread * i);
-			uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
+			//uint32_t* fromHeight = new uint32_t(heightPerThread * i);
+			//uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
 			uint32_t* ipoint = new uint32_t(i);
 
 			data->renderer = this;
-			data->fromHeight = fromHeight;
-			data->toHeight = toHeight;
+			//data->fromHeight = fromHeight;
+			//data->toHeight = toHeight;
+			data->chunkHeight = new uint32_t(heightPerThread);
 			data->i = ipoint;
 			data->scene = scene;
+			data->multiThreadingHelper = multithreadingHelper;
 
 			myhandle[i] = (HANDLE)_beginthreadex(0, 0, &BaseRenderer::mythread, data, 0, 0);
-			SetThreadAffinityMask(myhandle[i], 1 << i);
+			SetThreadAffinityMask(myhandle[i], static_cast<DWORD_PTR>(1) << i);
 		}
 
 		WaitForMultipleObjects(concurrentThreadsSupported, myhandle, true, INFINITE);
@@ -182,8 +189,18 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 	stream << "Rendering thread " << *threadData->i << " - Starting" << std::endl;
 	std::cout << stream.str();
 
-	renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * renderer->sceneData.heightPerThread * *threadData->i],
-		*threadData->fromHeight, *threadData->toHeight, renderer->sceneData.options, threadData->scene);
+	uint32_t chunkOffset;
+	while (threadData->multiThreadingHelper->tryReservingChunk(chunkOffset)) {
+		auto fromHeight = chunkOffset;
+		auto toHeight = chunkOffset + *threadData->chunkHeight;
+
+		//std::stringstream stream3;
+		//stream3 << "	Rendering chunk " << *threadData->i << " from " << fromHeight << " to " << toHeight << std::endl;
+		//std::cout << stream3.str();
+
+		renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * fromHeight],
+			fromHeight, toHeight, renderer->sceneData.options, threadData->scene);
+	}
 
 	std::stringstream stream2;
 	stream2 << "Rendering thread " << *threadData->i << " - Done" << std::endl;

@@ -25,7 +25,8 @@ class RendererParticipatingMedia1 : public BaseRenderer
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);
 	bool castLightRay(HandleIntersectionData* data);
-	void handleIntersection(HandleIntersectionData* data, float absorptionChance, float emissionChance, nanovdb::FloatGrid* grid);
+	void handleIntersection(HandleIntersectionData* data, float absorptionChance, float emissionChance, nanovdb::DefaultReadAccessor<float> gridAccesor, float sigmaMax);
+	float directLightningRayMarch(HandleIntersectionData* data, nanovdb::DefaultReadAccessor<float> gridAccesor, float maxStepSize, float sigmaMax);
 };
 
 #endif

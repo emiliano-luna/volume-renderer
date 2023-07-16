@@ -55,6 +55,7 @@ Options* XMLManager::GetRendererOptions() {
 	options->width = root.child("width").text().as_int();
 	options->height = root.child("height").text().as_int();
 	options->multiThreaded = root.child("multiThreaded").text().as_bool();
+	options->multiThreadedChunkSize = root.child("multiThreadedChunkSize").text().as_int();
 	//options->antiAliasing = root.child("antiAliasing").text().as_bool();
 	//options->colorDiffThreshold = root.child("antiAliasing").attribute("colorDiff").as_float();
 	//options->auxImages = root.child("auxImages").text().as_bool();
