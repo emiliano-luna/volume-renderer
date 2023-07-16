@@ -29,8 +29,13 @@ public:
     Vec3f throughput;
     //diffuse
     Vec3f L_total_diffuse;
+    
+    //participatingMediaDeltaTracking
+    float rayWeight;
+    int depthRemaining;
+    nanovdb::CoordBBox* bbox;
         
-    nanovdb::Ray<float> nanoVDBRay;
+    nanovdb::Ray<float> iRay;
 };
 
 //class BaseIntersectionHandler

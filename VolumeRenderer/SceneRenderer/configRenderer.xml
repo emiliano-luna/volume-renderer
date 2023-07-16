@@ -6,7 +6,7 @@
   </models>
   <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
   <rayPerPixelCount>1</rayPerPixelCount>
-  <maxDepth>5</maxDepth>
+  <maxDepth>2</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
     <rebound>4</rebound>
@@ -15,7 +15,7 @@
     <rebound>1</rebound>
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <renderer>nanoVDBEmission</renderer>  
+  <renderer>participatingMedia1</renderer>  
 	<width>640</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>

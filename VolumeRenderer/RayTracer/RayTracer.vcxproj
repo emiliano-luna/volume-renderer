@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="renderers\RendererNanoVDBEmission.h" />
     <ClInclude Include="renderers\RendererNanoVDBSimple.h" />
+    <ClInclude Include="renderers\RendererParticipatingMedia1.h" />
     <ClInclude Include="renderers\RendererScratchPixel4.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
@@ -225,6 +226,7 @@
   <ItemGroup>
     <ClCompile Include="renderers\RendererNanoVDBEmission.cpp" />
     <ClCompile Include="renderers\RendererNanoVDBSimple.cpp" />
+    <ClCompile Include="renderers\RendererParticipatingMedia1.cpp" />
     <ClCompile Include="renderers\RendererScratchPixel4.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp" />

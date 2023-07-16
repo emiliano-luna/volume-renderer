@@ -85,12 +85,12 @@ Vec3f RendererNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t dept
 
 				float light_step_size = step_size * 20.0f;
 				//auto distanceRayLightToExitInVolume = data->tFar;
-				auto num_steps_light = std::ceil(data->nanoVDBRay.t1() / light_step_size);
+				auto num_steps_light = std::ceil(data->iRay.t1() / light_step_size);
 
 				for (size_t nl = 0; nl < num_steps_light; ++nl) {
 					float tLight = light_step_size * (nl + 0.5);
 					//Vec3f samplePosLight = samplePosition + tLight * light_dir;
-					tau += acc.getValue(CoordT::Floor(data->nanoVDBRay(data->nanoVDBRay.t0() + tLight))) * lightRayDensity; //PerlinNoiseSampler::getInstance()->eval_density(samplePosLight);
+					tau += acc.getValue(CoordT::Floor(data->iRay(data->iRay.t0() + tLight))) * lightRayDensity; //PerlinNoiseSampler::getInstance()->eval_density(samplePosLight);
 				}
 
 				float cos_theta = Utils::dotProduct(rayDirection, light_dir);
@@ -164,7 +164,7 @@ bool RendererNanoVDBSimple::castLightRay(HandleIntersectionData* data) {
 	}
 
 	//data->tFar = iRay.t1();
-	data->nanoVDBRay = iRay;
+	data->iRay = iRay;
 
 	return true;
 }
