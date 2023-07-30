@@ -9,7 +9,7 @@
 class DirectionSampler
 {
 public:
-	static Vec3f getCosineDistributionRebound(Vec3f normal);
+	static Vec3f getCosineDistributionRebound(Vec3f normal, unsigned int randSeed);
 private:
 	static ONB* onb;
 };

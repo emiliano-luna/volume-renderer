@@ -194,7 +194,7 @@ Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, ui
 	for (size_t i = 0; i < data->options.diffuseReboundCount[depth]; i++)
 	{
 		//Muestrear la nueva dirección y actualizar el rayo para el siguiente rebote (usar distribución coseno)
-		data->rayDirection = DirectionSampler::getCosineDistributionRebound(data->hitNormal);
+		data->rayDirection = DirectionSampler::getCosineDistributionRebound(data->hitNormal, data->randSeed);
 		data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
 
 		castRay(data, depth + 1, reboundFactor);

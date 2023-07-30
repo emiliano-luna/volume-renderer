@@ -78,6 +78,7 @@ void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, 
 		data->objectId = -1;
 		data->L_total_diffuse = Vec3f(0.0f);
 		data->throughput = Vec3f(1.0f);
+		data->randSeed = i * 10000 + j;
 
 		//color += castRayNanoVDB(data, 0, 1);
 		color += castRay(data, 0, 1);

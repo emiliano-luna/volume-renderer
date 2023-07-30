@@ -38,6 +38,11 @@ public:
     nanovdb::CoordBBox* bbox;
         
     nanovdb::Ray<float> iRay;
+
+    /// <summary>
+    /// unique per pixel
+    /// </summary>
+    unsigned int randSeed;
 };
 
 //class BaseIntersectionHandler

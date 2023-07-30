@@ -85,7 +85,7 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 
 	while (data->depthRemaining > 0) {
 		//sample free path length
-		float pathLength = -log(Utils::getRandomFloat(0,1)) / sigmaMax;		
+		float pathLength = -log(Utils::getRandomFloat(0,1, data->randSeed)) / sigmaMax;
 		//pathLength *= 0.1f;
 				
 		data->tFar += pathLength;
@@ -115,7 +115,7 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 		sigma *= density;
 
 		//do delta tracking
-		if (Utils::getRandomFloat(0, 1) < sigma / sigmaMax) {
+		if (Utils::getRandomFloat(0, 1, data->randSeed) < sigma / sigmaMax) {
 			//true collision
 			data->depthRemaining--;
 
@@ -146,7 +146,7 @@ void RendererParticipatingMedia1::handleIntersection(HandleIntersectionData* dat
 	float pScattering = 1.0f - pEmission - pAbsorption;
 
 	//we take a random chance
-	auto random = Utils::getRandomFloat(0, 1);
+	auto random = Utils::getRandomFloat(0, 1, data->randSeed);
 
 	//absorption
 	if (random < pAbsorption) {		
@@ -164,7 +164,7 @@ void RendererParticipatingMedia1::handleIntersection(HandleIntersectionData* dat
 		//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
 		float g = 0.0f;
 
-		float xi = Utils::getRandomFloat(-1, 1);
+		float xi = Utils::getRandomFloat(-1, 1, data->randSeed);
 
 		//get random theta and phi
 		//theta using Henyey-Greenstein function
@@ -172,7 +172,7 @@ void RendererParticipatingMedia1::handleIntersection(HandleIntersectionData* dat
 		float cos_theta = 1 / (2 * g) * (1 + g * g - (aux * aux));
 		float theta = std::acos(cos_theta);
 		//phi randomly with uniform distribution in [0, 2*pi0]
-		float phi = Utils::getRandomFloat(0, 1) * 2 * M_PI;
+		float phi = Utils::getRandomFloat(0, 1, data->randSeed) * 2 * M_PI;
 
 		//polar to cartesian coordinates
 		nanovdb::Vec3<float> iRayOrigin = { data->iRay(data->tFar)};

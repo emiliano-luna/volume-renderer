@@ -78,7 +78,9 @@ float Utils::deg2rad(const float &deg)
 	return deg * M_PI / 180;
 }
 
-float Utils::getRandomFloat(float low, float high) {
+float Utils::getRandomFloat(float low, float high, unsigned int seed) {
+	srand(seed);
+
 	return low + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (high - low)));
 }
 
