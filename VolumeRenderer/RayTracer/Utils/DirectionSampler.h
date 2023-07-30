@@ -5,11 +5,12 @@
 #include "Types.h"
 #include "Utils.h"
 #include "ONB.h"
+#include "RandomGenerator.h"
 
 class DirectionSampler
 {
 public:
-	static Vec3f getCosineDistributionRebound(Vec3f normal, unsigned int randSeed);
+	static Vec3f getCosineDistributionRebound(Vec3f normal, RandomGenerator* generator);
 private:
 	static ONB* onb;
 };

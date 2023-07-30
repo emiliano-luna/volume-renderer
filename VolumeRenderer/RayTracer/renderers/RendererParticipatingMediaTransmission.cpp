@@ -80,13 +80,14 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 
 	data->iRay = iRay;
 	data->tFar = iRay.t0();	
+	auto t1 = data->iRay.t1();
 
 	data->radiance = Vec3f(0.0f);
 	data->transmission = 1.0f;
 
 	while (data->depthRemaining > 0) {
 		//sample free path length
-		float pathLength = -log(Utils::getRandomFloat(0,1, data->randSeed)) / sigmaMax;
+		float pathLength = -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
 		//pathLength *= 0.1f;
 				
 		data->tFar += pathLength;
@@ -97,6 +98,8 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 
 		//move ray sampled length in the participating medium
 		//data->rayOrigin = data->rayOrigin + data->rayDirection * pathLength;
+
+		t1 = data->iRay.t1();
 				
 		//if ray is outside medium return its weight
 		if (data->tFar > data->iRay.t1()) { 			
@@ -116,7 +119,7 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 		sigma *= density;
 
 		//do delta tracking
-		if (Utils::getRandomFloat(0, 1, data->randSeed) < sigma / sigmaMax) {
+		if (data->randomGenerator->getFloat(0, 1) < sigma / sigmaMax) {
 			//true collision
 			data->depthRemaining--;
 
@@ -164,7 +167,7 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 	float pScattering = 1.0f - pEmission - pAbsorption;
 
 	//we take a random chance
-	auto random = Utils::getRandomFloat(0, 1, data->randSeed);
+	auto random = data->randomGenerator->getFloat(0, 1);
 
 	//absorption
 	if (random < pAbsorption) {		
@@ -180,15 +183,22 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 		//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
 		float g = 0.0f;
 
-		float xi = Utils::getRandomFloat(-1, 1, data->randSeed);
+		float theta;
+		if (g != 0.0f) {
+			float xi = data->randomGenerator->getFloat(-1, 1);
 
-		//get random theta and phi
-		//theta using Henyey-Greenstein function
-		float aux = ((1 - g * g) / (1 + g - 2 * g * xi));
-		float cos_theta = 1 / (2 * g) * (1 + g * g - (aux * aux));
-		float theta = std::acos(cos_theta);
+			//get random theta and phi
+			//theta using Henyey-Greenstein function
+			float aux = ((1 - g * g) / (1 + g - 2 * g * xi));
+			float cos_theta = 1 / (2 * g) * (1 + g * g - (aux * aux));
+			theta = std::acos(cos_theta);
+		}
+		else {
+			theta = data->randomGenerator->getFloat(0, 1) * 2 * M_PI;
+		}
+
 		//phi randomly with uniform distribution in [0, 2*pi0]
-		float phi = Utils::getRandomFloat(0, 1, data->randSeed) * 2 * M_PI;
+		float phi = data->randomGenerator->getFloat(0, 1) * 2 * M_PI;
 
 		//polar to cartesian coordinates
 		nanovdb::Vec3<float> iRayOrigin = { data->iRay(data->tFar)};
@@ -202,6 +212,7 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 
 		// clip to bounds.
 		if (data->iRay.clip(*data->bbox) == false) {
+			std::cout << "scattering failed";
 			//return Vec3f(data->options.backgroundColor);
 		}
 

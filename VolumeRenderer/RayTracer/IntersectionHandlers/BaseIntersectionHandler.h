@@ -4,6 +4,7 @@
 
 #include "..\Utils\Types.h"
 #include "..\nanovdb\util\Ray.h"
+#include "..\Utils\RandomGenerator.h"
 
 class HandleIntersectionData {
 public:
@@ -38,11 +39,7 @@ public:
     nanovdb::CoordBBox* bbox;
         
     nanovdb::Ray<float> iRay;
-
-    /// <summary>
-    /// unique per pixel
-    /// </summary>
-    unsigned int randSeed;
+    RandomGenerator* randomGenerator;;
 };
 
 //class BaseIntersectionHandler

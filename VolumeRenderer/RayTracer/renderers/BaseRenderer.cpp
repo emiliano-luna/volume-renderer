@@ -78,7 +78,6 @@ void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, 
 		data->objectId = -1;
 		data->L_total_diffuse = Vec3f(0.0f);
 		data->throughput = Vec3f(1.0f);
-		data->randSeed = i * 10000 + j;
 
 		//color += castRayNanoVDB(data, 0, 1);
 		color += castRay(data, 0, 1);
@@ -99,6 +98,7 @@ void BaseRenderer::renderPixel(int i, int j, Options &options,
 	data->sceneInfo = scene;
 	data->options = options;	
 	data->throughput = 1;
+	data->randomGenerator = new RandomGenerator(0);
 
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
 	float imageAspectRatio = options.width / (float)options.height;
@@ -246,6 +246,7 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 	data->sceneInfo = scene;
 	data->options = options;	
 	data->throughput = 1;
+	data->randomGenerator = new RandomGenerator(fromHeight);
 
 	float x = (2 * (0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
 	float y = (1 - 2 * (0.5) / (float)data->options.height) * scale;

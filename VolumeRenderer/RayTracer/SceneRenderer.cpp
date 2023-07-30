@@ -20,7 +20,7 @@ void SceneRenderer::RenderScene(Options options)
 	BaseRenderer* renderer = RendererFactory::GetRenderer(options.renderer);
 
 	renderer->render(options, sceneInfo);
-	//renderer->renderPixel(207, 475, options, sceneInfo);
+	//renderer->renderPixel(254, 10, options, sceneInfo);
 
 	/* Though not strictly necessary in this example, you should
 	 * always make sure to release resources allocated through Embree. */

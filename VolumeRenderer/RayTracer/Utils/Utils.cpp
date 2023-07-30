@@ -1,6 +1,15 @@
 #include "Utils.h"
 #include <random>
-#include <functional>
+
+//std::_Binder<std::_Unforced, std::uniform_real_distribution<float>&, std::mt19937&> initializeRandomDistrubution() {
+//	std::uniform_real_distribution<float> dice_distribution(0, 1);
+//	std::mt19937 random_number_engine;
+//
+//	return std::bind(dice_distribution, random_number_engine);
+//}
+//
+//std::_Binder<std::_Unforced, std::uniform_real_distribution<float>&, std::mt19937&> Utils::randomDistribution = 
+//	initializeRandomDistrubution();
 
 Vec3f Utils::crossProduct(const Vec3f &a, const Vec3f &b)
 {
@@ -80,16 +89,35 @@ float Utils::deg2rad(const float &deg)
 	return deg * M_PI / 180;
 }
 
-float Utils::getRandomFloat(float low, float high, unsigned int seed) {
-	//srand(seed);
+///// <summary>
+///// returns float from [0, 1)
+///// </summary>
+///// <param name="low"></param>
+///// <param name="high"></param>
+///// <param name="seed"></param>
+///// <returns></returns>
+//float Utils::getRandomFloat() {	
+//	return Utils::randomDistribution();
+//}
 
-	std::uniform_real_distribution<float> dice_distribution(low, high);
-	std::mt19937 random_number_engine; // pseudorandom number generator
-	auto dice_roller = std::bind(dice_distribution, random_number_engine);
-	return dice_roller();  
-
-	//return low + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (high - low)));
-}
+//float Utils::getRandomFloat(float min, float max) {
+//	static thread_local std::mt19937* generator = nullptr;
+//	if (!generator) 
+//		generator = new std::mt19937(clock());
+//	std::uniform_real_distribution<float> distribution(min, max);
+//
+//	return distribution(*generator);
+//
+//	//std::random_device rd;
+//	//std::mt19937_64 mt(rd());
+//	//std::uniform_real_distribution<float> dist(min, max);
+//
+//	//return dist(mt);
+//
+//	//auto value = getRandomFloat();
+//
+//	//return min + (value * (max - min));
+//}
 
 inline
 Vec3f Utils::mix(const Vec3f &a, const Vec3f& b, const float &mixValue)

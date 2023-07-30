@@ -6,6 +6,8 @@
 #include "Types.h"
 #include <ctime>    // For time()
 #include <cstdlib>  // For srand() and rand()
+#include <random>
+#include <functional>
 
 class Utils
 {
@@ -20,7 +22,7 @@ public:
 	static float deg2rad(const float & deg);
 	static bool solveQuadratic(const float &a, const float &b, const float &c, float &x0, float &x1);
 	static float distance2(const Vec3f &a, const Vec3f &b);
-	static float getRandomFloat(float from, float to, unsigned int seed);
+	/*static float getRandomFloat(float min, float max);*/
 	static Vec3f reflect(const Vec3f &I, const Vec3f &N);
 	Vec3f mix(const Vec3f & a, const Vec3f & b, const float & mixValue);
 	~Utils();

@@ -221,6 +221,7 @@
     <ClInclude Include="tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Utils\FileManager.h" />
     <ClInclude Include="Utils\ONB.h" />
+    <ClInclude Include="Utils\RandomGenerator.h" />
     <ClInclude Include="Utils\Types.h" />
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Utils\XMLManager.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="tinyobjloader\tiny_obj_loader.cc" />
     <ClCompile Include="Utils\FileManager.cpp" />
     <ClCompile Include="Utils\ONB.cpp" />
+    <ClCompile Include="Utils\RandomGenerator.cpp" />
     <ClCompile Include="Utils\Types.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
     <ClCompile Include="Utils\XMLManager.cpp" />

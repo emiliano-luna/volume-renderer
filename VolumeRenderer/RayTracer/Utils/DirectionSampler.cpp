@@ -2,11 +2,11 @@
 
 ONB* DirectionSampler::onb = new ONB();
 
-Vec3f DirectionSampler::getCosineDistributionRebound(Vec3f normal, unsigned int randSeed) {
+Vec3f DirectionSampler::getCosineDistributionRebound(Vec3f normal, RandomGenerator *generator) {
 	onb->Update(normal);
 
-	auto r1 = Utils::getRandomFloat(0, 1, randSeed);
-	auto r2 = Utils::getRandomFloat(0, 1, randSeed);
+	auto r1 = generator->getFloat(0, 1);
+	auto r2 = generator->getFloat(0, 1);
 
 	auto sin_theta = sqrt(r1);
 	auto cos_theta = sqrt(1 - sin_theta * sin_theta);

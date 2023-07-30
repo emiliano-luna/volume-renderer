@@ -195,6 +195,9 @@
     <ClInclude Include="renderers\RendererParticipatingMediaTransmission.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\RandomGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -288,6 +291,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="renderers\RendererParticipatingMediaTransmission.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\RandomGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -21,6 +21,7 @@
   <width>640</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>
+  <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
   <multiThreadedChunkSize>16</multiThreadedChunkSize>
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
 	<!-- <camera x="0" y="0.825" z="2.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
