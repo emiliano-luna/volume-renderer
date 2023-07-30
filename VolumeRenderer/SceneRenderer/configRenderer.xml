@@ -5,8 +5,8 @@
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
   <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
-  <rayPerPixelCount>16</rayPerPixelCount>
-  <maxDepth>16</maxDepth>
+  <rayPerPixelCount>1</rayPerPixelCount>
+  <maxDepth>4</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
     <rebound>4</rebound>
@@ -15,8 +15,10 @@
     <rebound>1</rebound>
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <renderer>participatingMedia1</renderer>  
-	<width>640</width>
+  <renderer>participatingMediaTransmission</renderer>  
+	<!-- <width startOffset="200" reference="640">256</width>
+	<height startOffset="460" reference="640">256</height> -->
+  <width>640</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>
   <multiThreadedChunkSize>16</multiThreadedChunkSize>

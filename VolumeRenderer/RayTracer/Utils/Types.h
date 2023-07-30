@@ -81,7 +81,11 @@ struct Options
 	std::vector<int> diffuseReboundCount;
 	uint32_t rayPerPixelCount;
 	uint32_t width;
+	uint32_t widthStartOffset;
+	uint32_t widthReference;
 	uint32_t height;
+	uint32_t heightStartOffset;
+	uint32_t heightReference;
 	float fov;
 	float imageAspectRatio;
 	uint8_t maxDepth;

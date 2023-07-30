@@ -29,6 +29,8 @@ public:
     Vec3f throughput;
     //diffuse
     Vec3f L_total_diffuse;
+    Vec3f radiance;
+    float transmission;
     
     //participatingMediaDeltaTracking
     float rayWeight;

@@ -53,7 +53,11 @@ Options* XMLManager::GetRendererOptions() {
 	options->fileName = root.child("fileName").text().as_string();
 
 	options->width = root.child("width").text().as_int();
+	options->widthStartOffset = root.child("width").attribute("startOffset").as_int();
+	options->widthReference = root.child("width").attribute("reference").as_int();
 	options->height = root.child("height").text().as_int();
+	options->heightStartOffset = root.child("height").attribute("startOffset").as_int();
+	options->heightReference = root.child("height").attribute("reference").as_int();
 	options->multiThreaded = root.child("multiThreaded").text().as_bool();
 	options->multiThreadedChunkSize = root.child("multiThreadedChunkSize").text().as_int();
 	//options->antiAliasing = root.child("antiAliasing").text().as_bool();

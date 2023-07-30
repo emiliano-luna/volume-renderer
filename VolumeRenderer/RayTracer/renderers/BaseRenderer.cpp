@@ -1,5 +1,8 @@
 #include "BaseRenderer.h"
 #include "..\Utils\MultithreadingHelper.h"
+#include <ctime>
+#include <algorithm>
+#include <string>
 
 void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const char* fileName) {
 	FreeImage_Initialise();
@@ -24,8 +27,11 @@ void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const cha
 
 // generate primary ray direction
 void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, HandleIntersectionData* data) {
-	float x = (2 * (i + 0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
-	float y = (1 - 2 * (j + 0.5) / (float)data->options.height) * scale;
+	auto width = data->options.widthReference > 0 ? data->options.widthReference : data->options.width;
+	auto height = data->options.heightReference > 0 ? data->options.heightReference : data->options.height;
+	
+	float x = (2 * (i + 0.5) / (float)width - 1) * imageAspectRatio * scale;
+	float y = (1 - 2 * (j + 0.5) / (float)height) * scale;
 
 	auto raysPerPixel = data->options.rayPerPixelCount;
 	
@@ -167,13 +173,34 @@ void BaseRenderer::render(Options &options,
 	}
 	else
 	{		
-		BaseRenderer::renderPartial(&options.cameraPosition, pix, 0, options.height - 1, options, scene);
+		BaseRenderer::renderPartial(&options.cameraPosition, pix, options.heightStartOffset + 0, options.heightStartOffset + options.height, options, scene);
 	}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	std::cout << "Renderer - Escena rendereada en: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
 	
-	saveFile(framebuffer, options.height, options.width, "out.png");
+	std::time_t end_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	char dateChars[26];
+	ctime_s(dateChars, sizeof dateChars, &end_time);
+	std::string dateString = std::string(dateChars);
+	dateString = dateString.substr(4, 15);
+	std::replace(dateString.begin(), dateString.end(), ':', '_');
+	std::replace(dateString.begin(), dateString.end(), ' ', '_');
+
+	bool isAreaImage = options.widthStartOffset > 0 || options.heightStartOffset > 0;
+	
+	std::stringstream fileNameStream;
+	fileNameStream << dateString << "_";
+	fileNameStream << options.renderer << "_";
+	if (isAreaImage)
+		fileNameStream << "area" << options.widthStartOffset << "_" << options.heightStartOffset << "_";
+	else
+		fileNameStream << "full" << "_";
+	fileNameStream << "ray" << options.rayPerPixelCount << "_";
+	fileNameStream << "boun" << (int)options.maxDepth;
+	fileNameStream << ".png";
+
+	saveFile(framebuffer, options.height, options.width, fileNameStream.str().c_str());
 
 	std::cout << "Renderer - Imagen Guardada.";
 
@@ -229,7 +256,7 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 	float pixelHeight = yPlusOne - y;
 
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {
-		for (uint32_t i = 0; i < options.width; ++i) {
+		for (uint32_t i = options.widthStartOffset; i < options.width + options.widthStartOffset; ++i) {
 			renderRay(i, j, pixelWidth, pixelHeight, pix, orig, imageAspectRatio, scale, data);
 		}
 	}
