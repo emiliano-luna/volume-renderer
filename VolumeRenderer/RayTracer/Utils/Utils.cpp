@@ -1,4 +1,6 @@
 #include "Utils.h"
+#include <random>
+#include <functional>
 
 Vec3f Utils::crossProduct(const Vec3f &a, const Vec3f &b)
 {
@@ -79,9 +81,14 @@ float Utils::deg2rad(const float &deg)
 }
 
 float Utils::getRandomFloat(float low, float high, unsigned int seed) {
-	srand(seed);
+	//srand(seed);
 
-	return low + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (high - low)));
+	std::uniform_real_distribution<float> dice_distribution(low, high);
+	std::mt19937 random_number_engine; // pseudorandom number generator
+	auto dice_roller = std::bind(dice_distribution, random_number_engine);
+	return dice_roller();  
+
+	//return low + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (high - low)));
 }
 
 inline
