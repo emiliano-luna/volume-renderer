@@ -100,16 +100,19 @@ void BaseRenderer::renderPixel(int i, int j, Options &options,
 	data->throughput = 1;
 	data->randomGenerator = new RandomGenerator(0);
 
+	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
+	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
+
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
-	float imageAspectRatio = options.width / (float)options.height;
+	float imageAspectRatio = width / height;
 
-	float x = (2 * (0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
-	float y = (1 - 2 * (0.5) / (float)data->options.height) * scale;
+	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
+	float y = (1 - 2 * (0.5) / height) * scale;
 
-	float xPlusOne = (2 * (1.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float xPlusOne = (2 * (1.5) / width - 1) * imageAspectRatio * scale;
 	float pixelWidth = xPlusOne - x;
 
-	float yPlusOne = (1 - 2 * (1.5) / (float)data->options.height) * scale;
+	float yPlusOne = (1 - 2 * (1.5) / height) * scale;
 	float pixelHeight = yPlusOne - y;
 
 	renderRay(i, j, pixelWidth, pixelHeight, pix, &options.cameraPosition, imageAspectRatio, scale, data);
@@ -238,8 +241,11 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 }
 
 void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint32_t toHeight, const Options &options, SceneInfo* scene) {
+	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
+	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
+	
 	float scale = tan(Utils::deg2rad(options.fov * 0.5));
-	float imageAspectRatio = options.width / (float)options.height;
+	float imageAspectRatio = width / height;
 
 	HandleIntersectionData* data = new HandleIntersectionData();
 		
@@ -248,13 +254,13 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 	data->throughput = 1;
 	data->randomGenerator = new RandomGenerator(fromHeight);
 
-	float x = (2 * (0.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
-	float y = (1 - 2 * (0.5) / (float)data->options.height) * scale;
+	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
+	float y = (1 - 2 * (0.5) / height) * scale;
 
-	float xPlusOne = (2 * (1.5) / (float)data->options.width - 1) * imageAspectRatio * scale;
+	float xPlusOne = (2 * (1.5) / width - 1) * imageAspectRatio * scale;
 	float pixelWidth = xPlusOne - x;
 
-	float yPlusOne = (1 - 2 * (1.5) / (float)data->options.height) * scale;
+	float yPlusOne = (1 - 2 * (1.5) / height) * scale;
 	float pixelHeight = yPlusOne - y;
 
 	for (uint32_t j = fromHeight; j < toHeight; ++j) {

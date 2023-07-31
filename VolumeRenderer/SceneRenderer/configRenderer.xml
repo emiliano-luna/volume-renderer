@@ -16,15 +16,15 @@
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
   <renderer>participatingMediaTransmission</renderer>  
-	<!-- <width startOffset="200" reference="640">256</width>
-	<height startOffset="460" reference="640">256</height> -->
-  <width>640</width>
+	<!-- <width startOffset="0" reference="640">640</width>
+	<height startOffset="0" reference="640">16</height> -->
+  <width startOffset="160" reference="640">320</width>
 	<height>640</height>
 	<multiThreaded>true</multiThreaded>
   <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
   <multiThreadedChunkSize>16</multiThreadedChunkSize>
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
 	<!-- <camera x="0" y="0.825" z="2.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
-  <camera x="-1.0" y="28" z="55.0" pitch="0" yaw="0" roll="0" fov="80"/>
+  <camera x="-1.0" y="40" z="75.0" pitch="0" yaw="0" roll="0" fov="80"/>
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
 </options>

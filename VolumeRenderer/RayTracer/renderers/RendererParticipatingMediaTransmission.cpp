@@ -68,7 +68,7 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 	float density = 64.0f;
 	float lightRayDensity = density * 0.5f;
 	// integrate...
-	const float step_size = 0.5f;
+	//const float step_size = 0.5f;
 	//transparency
 	//float       transmittance = 1.0f;
 	//initialize volumetric color to 0
@@ -118,6 +118,12 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 		float sigma = acc.getValue(CoordT::Floor(data->iRay(data->tFar)));
 		sigma *= density;
 
+		if (sigma <= 0.0f)
+			continue;
+
+		float stepAttenuation = exp(-pathLength * sigma / sigmaMax);
+		data->transmission *= stepAttenuation;
+
 		//do delta tracking
 		if (data->randomGenerator->getFloat(0, 1) < sigma / sigmaMax) {
 			//true collision
@@ -126,11 +132,7 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 			float emission = accEmission.getValue(CoordT::Floor(data->iRay(data->tFar)));
 			//float emission = accEmission.getValue(CoordT::Floor(data->nanoVDBRay(data->tFar)));
 
-			float stepAttenuation = exp(-step_size * sigma);
-
-			data->transmission *= stepAttenuation;
-
-			float cos_theta = Utils::dotProduct(rayDirection, light_dir);
+			float cos_theta = Utils::dotProduct(data->rayDirection, light_dir);
 
 			nanovdb::Vec3<float> lightRayOrigin = { data->iRay(data->tFar) };
 			nanovdb::Vec3<float> lightRayDirection = { light_dir.x, light_dir.y, light_dir.z };
@@ -142,16 +144,22 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 				data->transmission * 
 				lightTransmission *
 				light_color * 
-				sigma * 
+				2.0f *
+				//sigma * 
+				//pathLength *
 				PhaseFunction::heyney_greenstein(g, cos_theta);
 
 			//sample new direction
-			handleIntersection(data, sigma * 16.0f / sigmaMax, emission / emissionMax, acc, sigmaMax);
+			handleIntersection(data, sigma / sigmaMax * 0.25f * 0.25f, emission / emissionMax, acc, sigmaMax);
 
 			//data->L_total_diffuse += light_color * data->throughput;
 
 			//TODO return ray weight
 			//return;
+
+			//if i run out of rebounds possible assume absorption
+			if (data->depthRemaining <= 0)
+				data->transmission = 0.0f;
 		}
 	}
 
@@ -174,6 +182,7 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 
 		//data->rayWeight = 0;
 		//end path
+		data->transmission = 0;
 		data->depthRemaining = 0;
 	}
 	//scattering
@@ -205,6 +214,8 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 		nanovdb::Vec3<float> rayDir = { 1 * sin(theta) * cos(phi),
 			1 * sin(theta) * sin(phi),
 			1 * cos(theta) };
+
+		data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
 		// generate ray.
 		data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
 		// transform the ray to the grid's index-space.
@@ -221,7 +232,8 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 	//emission
 	else {
 		//data->rayWeight = emissionChance;
-		data->radiance += data->transmission * /*(1 / emissionChance)*/ emissionColor * 4;
+		data->radiance += data->transmission * /*(1 / emissionChance)*/ emissionColor * 2.0f;
+		data->transmission = 0;
 		//end path
 		data->depthRemaining = 0;
 	}
