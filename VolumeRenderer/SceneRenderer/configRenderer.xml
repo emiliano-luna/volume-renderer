@@ -15,7 +15,7 @@
     <rebound>1</rebound>
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <renderer>deltaTracking2</renderer>  
+  <renderer>participatingMediaTransmission</renderer>  
 	<!-- <width startOffset="0" reference="640">640</width>
 	<height startOffset="0" reference="640">16</height> -->
   <width startOffset="160" reference="640">320</width>
