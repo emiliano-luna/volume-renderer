@@ -1,4 +1,4 @@
-#include "RendererParticipatingMediaTransmission.h"
+#include "RendererDeltaTracking2.h"
 #include "../nanovdb/NanoVDB.h"
 #include "../nanovdb/util/Ray.h"
 #include "../nanovdb/util/IO.h"
@@ -7,7 +7,7 @@
 #include "../nanovdb/fog_example/common.h"
 #include "../Utils/PhaseFunction.h"
 
-Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
+Vec3f RendererDeltaTracking2::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
 	Vec3f light_color{ 1, 1, 1 };
 	Vec3f light_dir{ 0, 1, 0 };
@@ -68,10 +68,8 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 	float density = 64.0f;
 	float lightRayDensity = density * 0.5f;
 	// integrate...
-	//const float step_size = 0.5f;
-	//transparency
-	//float       transmittance = 1.0f;
-	//initialize volumetric color to 0
+	const float step_size = 0.5f;
+
 	Vec3f result = Vec3f(0.0f);
 	
 	//find sigmaMax, max density in the entire medium	
@@ -80,37 +78,21 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 
 	data->iRay = iRay;
 	data->tFar = iRay.t0();	
-	auto t1 = data->iRay.t1();
+	//auto t1 = data->iRay.t1();
 
 	data->radiance = Vec3f(0.0f);
 	data->transmission = 1.0f;
 
-	while (data->depthRemaining > 0) {
+	while (data->depthRemaining > 0 && data->transmission > 0.01f) {
 		//sample free path length
 		float pathLength = -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
-		//pathLength *= 0.1f;
 				
 		data->tFar += pathLength;
-		//auto iNextPosition = data->iRay(data->tFar);
 
-		//verify if ray intersecs geometry 
-		//TODO
-
-		//move ray sampled length in the participating medium
-		//data->rayOrigin = data->rayOrigin + data->rayDirection * pathLength;
-
-		t1 = data->iRay.t1();
+		//t1 = data->iRay.t1();
 				
 		//if ray is outside medium return its weight
-		if (data->tFar > data->iRay.t1()) { 			
-			//I'm outside the narrow band
-			
-			//TODO return ray weight
-			//return;
-			//return Vec3f(data->options.backgroundColor);
-			
-			//?????????
-			//return Vec3f(data->options.backgroundColor * data->throughput + data->L_total_diffuse);
+		if (data->tFar > data->iRay.t1()) {
 			break;
 		}
 
@@ -118,18 +100,12 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 		float sigma = acc.getValue(CoordT::Floor(data->iRay(data->tFar)));
 		sigma *= density;
 
-		if (sigma <= 0.0f)
-			continue;
-
-		float stepAttenuation = exp(-pathLength * sigma / sigmaMax);
-		data->transmission *= stepAttenuation;
-
+		//do delta tracking
 		if (data->randomGenerator->getFloat(0, 1) < sigma / sigmaMax) {
 			//true collision
 			data->depthRemaining--;
 
 			float emission = accEmission.getValue(CoordT::Floor(data->iRay(data->tFar)));
-			//float emission = accEmission.getValue(CoordT::Floor(data->nanoVDBRay(data->tFar)));
 
 			float cos_theta = Utils::dotProduct(data->rayDirection, light_dir);
 
@@ -139,33 +115,24 @@ Vec3f RendererParticipatingMediaTransmission::castRay(HandleIntersectionData* da
 
 			//add direct light contribution to radiance
 			auto lightTransmission = directLightningRayMarch(data, lightRay, acc, 5.0f, sigmaMax);
-			data->radiance += 
-				data->transmission * 
+			data->radiance +=
+				//data->transmission *
 				lightTransmission *
-				light_color * 
-				2.0f *
+				light_color *
+				//2.0f *
 				//sigma * 
 				//pathLength *
 				PhaseFunction::heyney_greenstein(g, cos_theta);
 
 			//sample new direction
-			handleIntersection(data, sigma / sigmaMax * 0.25f * 0.25f, emission / emissionMax, acc, sigmaMax);
-
-			//data->L_total_diffuse += light_color * data->throughput;
-
-			//TODO return ray weight
-			//return;
-
-			//if i run out of rebounds possible assume absorption
-			if (data->depthRemaining <= 0)
-				data->transmission = 0.0f;
+			handleIntersection(data, sigma / sigmaMax, emission / emissionMax, acc, sigmaMax);
 		}
 	}
 
-	return Vec3f(data->radiance + data->transmission * data->options.backgroundColor);
+	return Vec3f(data->radiance + data->options.backgroundColor * data->transmission);
 }
 
-void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersectionData* data, float absorptionChance, float emissionChance, nanovdb::DefaultReadAccessor<float> gridAccesor, float sigmaMax) {
+void RendererDeltaTracking2::handleIntersection(HandleIntersectionData* data, float absorptionChance, float emissionChance, nanovdb::DefaultReadAccessor<float> gridAccesor, float sigmaMax) {
 	Vec3f emissionColor{ 1, 0.5f, 0.1f };		
 	
 	//photon interacts with medium, decide intersection type		
@@ -178,11 +145,12 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 
 	//absorption
 	if (random < pAbsorption) {		
+		//auto transmission = directLightningRayMarch(data, gridAccesor, 5.0f, sigmaMax);
 
+		//data->L_total_diffuse = transmission * light_color;
 		//data->rayWeight = 0;
 		//end path
-		data->transmission = 0;
-		data->depthRemaining = 0;
+		data->transmission = 0.0f;
 	}
 	//scattering
 	else if (random < pAbsorption + pScattering) {
@@ -217,35 +185,23 @@ void RendererParticipatingMediaTransmission::handleIntersection(HandleIntersecti
 		data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
 		// generate ray.
 		data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
-		// transform the ray to the grid's index-space.
-		//data->iRay = wRay.worldToIndexF(*densityGrid);
 
 		// clip to bounds.
-		if (data->iRay.clip(*data->bbox) == false) {
-			std::cout << "scattering failed";
-			//return Vec3f(data->options.backgroundColor);
-		}
+		if (data->iRay.clip(*data->bbox) == false) {}
 
 		data->tFar = data->iRay.t0();
 	}
 	//emission
 	else {
 		//data->rayWeight = emissionChance;
-		data->radiance += data->transmission * /*(1 / emissionChance)*/ emissionColor * 2.0f;
-		data->transmission = 0;
+		data->radiance += emissionColor;
 		//end path
-		data->depthRemaining = 0;
+		data->transmission = 0.0f;
 	}
 }
 
-float RendererParticipatingMediaTransmission::directLightningRayMarch(HandleIntersectionData* data, nanovdb::Ray<float> lightRay, nanovdb::DefaultReadAccessor<float> gridAccesor, float maxStepSize, float sigmaMax) {
-	//Verificar intersecciones con superficies al principio
-		//interseccion = intersectar_superficie(rayo)
-		//if interseccion is not None:
-			//# El rayo choca con una superficie antes de llegar a la luz
-			//return 0.0 # No hay contribución de la luz
-		//transmision_total = 1.0
-	auto transmission = data->transmission;
+float RendererDeltaTracking2::directLightningRayMarch(HandleIntersectionData* data, nanovdb::Ray<float> lightRay, nanovdb::DefaultReadAccessor<float> gridAccesor, float maxStepSize, float sigmaMax) {
+	auto transmission = 1.0f;
 
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
@@ -274,7 +230,7 @@ float RendererParticipatingMediaTransmission::directLightningRayMarch(HandleInte
 /// </summary>
 /// <param name="data"></param>
 /// <returns></returns>
-bool RendererParticipatingMediaTransmission::castLightRay(HandleIntersectionData* data) {
+bool RendererDeltaTracking2::castLightRay(HandleIntersectionData* data) {
 	//using GridT = nanovdb::FloatGrid;
 	//using CoordT = nanovdb::Coord;
 	//using RealT = float;

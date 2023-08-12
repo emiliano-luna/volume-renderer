@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="renderers\RendererDeltaTracking2.h" />
     <ClInclude Include="renderers\RendererParticipatingMediaTransmission.h" />
     <ClInclude Include="Utils\MultithreadingHelper.h" />
     <ClInclude Include="renderers\RendererNanoVDBEmission.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="Utils\XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="renderers\RendererDeltaTracking2.cpp" />
     <ClCompile Include="renderers\RendererParticipatingMediaTransmission.cpp" />
     <ClCompile Include="Utils\MultithreadingHelper.cpp" />
     <ClCompile Include="renderers\RendererNanoVDBEmission.cpp" />
