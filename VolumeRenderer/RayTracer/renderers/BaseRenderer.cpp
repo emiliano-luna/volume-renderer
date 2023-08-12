@@ -138,10 +138,10 @@ void BaseRenderer::render(Options &options,
 	
 	if (options.multiThreaded && concurrentThreadsSupported > 1)
 	{
-		int heightPerThread = options.multiThreadedChunkSize > 0 ? 
-			options.multiThreadedChunkSize : 
+		int heightPerThread = options.multiThreadedChunkSize > 0 ?
+			options.multiThreadedChunkSize :
 			options.height / concurrentThreadsSupported;
-		
+
 		sceneData.pix = pix;
 		sceneData.options = options;
 		sceneData.heightPerThread = heightPerThread;
@@ -176,8 +176,13 @@ void BaseRenderer::render(Options &options,
 			CloseHandle(myhandle[i]);
 	}
 	else
-	{		
-		BaseRenderer::renderPartial(&options.cameraPosition, pix, options.heightStartOffset + 0, options.heightStartOffset + options.height, options, scene);
+	{
+		ThreadInfo* threadInfo = new ThreadInfo();
+
+		threadInfo->fromHeight = options.heightStartOffset + 0;
+		threadInfo->toHeight = options.heightStartOffset + options.height;
+
+		BaseRenderer::renderPartial(&options.cameraPosition, pix, threadInfo, options, scene);
 	}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -220,17 +225,19 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 	stream << "Rendering thread " << *threadData->i << " - Starting" << std::endl;
 	std::cout << stream.str();
 
+	ThreadInfo* threadInfo = new ThreadInfo();
+
 	uint32_t chunkOffset;
-	while (threadData->multiThreadingHelper->tryReservingChunk(chunkOffset)) {
-		auto fromHeight = chunkOffset;
-		auto toHeight = chunkOffset + *threadData->chunkHeight;
+	while (threadData->multiThreadingHelper->tryReservingChunk(chunkOffset)) {		
+		threadInfo->fromHeight = chunkOffset;
+		threadInfo->toHeight = chunkOffset + *threadData->chunkHeight;
 
 		//std::stringstream stream3;
 		//stream3 << "	Rendering chunk " << *threadData->i << " from " << fromHeight << " to " << toHeight << std::endl;
 		//std::cout << stream3.str();
 
-		renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * fromHeight],
-			fromHeight, toHeight, renderer->sceneData.options, threadData->scene);
+		renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * threadInfo->fromHeight],
+			threadInfo, renderer->sceneData.options, threadData->scene);
 	}
 
 	std::stringstream stream2;
@@ -240,7 +247,7 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 	return 0;
 }
 
-void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint32_t toHeight, const Options &options, SceneInfo* scene) {
+void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadInfo, const Options &options, SceneInfo* scene) {
 	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
 	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
 	
@@ -252,7 +259,8 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 	data->sceneInfo = scene;
 	data->options = options;	
 	data->throughput = 1;
-	data->randomGenerator = new RandomGenerator(fromHeight);
+	data->randomGenerator = new RandomGenerator(threadInfo->fromHeight);
+	data->threadInfo = threadInfo;
 
 	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
 	float y = (1 - 2 * (0.5) / height) * scale;
@@ -263,7 +271,7 @@ void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, u
 	float yPlusOne = (1 - 2 * (1.5) / height) * scale;
 	float pixelHeight = yPlusOne - y;
 
-	for (uint32_t j = fromHeight; j < toHeight; ++j) {
+	for (uint32_t j = threadInfo->fromHeight; j < threadInfo->toHeight; ++j) {
 		for (uint32_t i = options.widthStartOffset; i < options.width + options.widthStartOffset; ++i) {
 			renderRay(i, j, pixelWidth, pixelHeight, pix, orig, imageAspectRatio, scale, data);
 		}

@@ -34,7 +34,7 @@ public:
 	void saveFile(Vec3f * framebuffer, int height, int width, const char* fileName);	
 	virtual Vec3f castRay(HandleIntersectionData* intersectionData, uint32_t depth, uint32_t reboundFactor) = 0;
 	void renderRay(int i, int j, float pixelWidth, float pixelHeight, Vec3f * &pix, Vec3f * orig, float imageAspectRatio, float scale, HandleIntersectionData* data);
-	void renderPartial(Vec3f* orig, Vec3f* pix, uint32_t fromHeight, uint32_t toHeight, const Options &options, SceneInfo* scene);
+	void renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadInfo, const Options &options, SceneInfo* scene);
 	void renderPixel(int i, int j, Options &options, SceneInfo* scene);
 	void render(Options &options, SceneInfo* scene);
 

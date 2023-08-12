@@ -19,6 +19,7 @@
 #include "..\nanovdb\NanoVDB.h"
 #include "..\nanovdb\util\GridHandle.h"
 #include "..\tinyobjloader\tiny_obj_loader.h"
+#include "../nanovdb/util/GridStats.h"
 
 enum MaterialType { DIFFUSE_AND_GLOSSY, REFLECTION_AND_REFRACTION, REFLECTION };
 
@@ -120,8 +121,20 @@ struct SceneInfo {
 	/// for now a single area light is represented as multiple point lights at its vertices
 	/// </summary>
 	std::vector<PointLight> lights;
-	nanovdb::GridHandle<nanovdb::HostBuffer> densityGrid;
-	nanovdb::GridHandle<nanovdb::HostBuffer> temperatureGrid;
+	//don't remove this handles, I need to keep them alive or density/temperature grids won't work
+	nanovdb::GridHandle<nanovdb::HostBuffer> densityGridHandle;
+	nanovdb::GridHandle<nanovdb::HostBuffer> temperatureGridHandle;
+	nanovdb::FloatGrid* densityGrid;
+	nanovdb::FloatGrid* temperatureGrid;
+	nanovdb::Extrema<float> densityExtrema;
+	nanovdb::Extrema<float> temperatureExtrema;
+	nanovdb::CoordBBox gridBoundingBox;
+};
+
+class ThreadInfo {
+public:
+	uint32_t fromHeight;
+	uint32_t toHeight;
 };
 
 #endif // !RAYTRACER_TYPES

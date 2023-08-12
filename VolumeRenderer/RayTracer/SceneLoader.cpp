@@ -207,8 +207,35 @@ SceneInfo* SceneLoader::initializeScene(RTCDevice device, Options options)
 	if (!options.densityField.baseDir.empty()) {
 		//auto grids = nanovdb::io::readGrids<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName);
 
-		info->densityGrid = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "density");
-		info->temperatureGrid = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "temperature");
+		//info->densityGrid = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "density");
+		info->densityGridHandle = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "density");
+		//info->temperatureGrid = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "temperature");
+		info->temperatureGridHandle = nanovdb::io::readGrid<nanovdb::HostBuffer>(options.densityField.baseDir + options.densityField.fileName, "temperature");
+
+		info->densityGrid = info->densityGridHandle.grid<float>();
+		if (!info->densityGrid)
+			throw std::runtime_error("GridHandle does not contain a valid host grid");
+
+		info->temperatureGrid = info->temperatureGridHandle.grid<float>();
+		if (!info->temperatureGrid)
+			throw std::runtime_error("handleEmission does not contain a valid host grid");
+
+		//get grid stats
+		info->densityExtrema = nanovdb::getExtrema(*info->densityGrid, info->densityGrid->indexBBox());
+		info->temperatureExtrema = nanovdb::getExtrema(*info->temperatureGrid, info->temperatureGrid->indexBBox());
+
+		float                wBBoxDimZ = (float)info->densityGrid->worldBBox().dim()[2] * 2;
+		nanovdb::Vec3<float> wBBoxCenter = nanovdb::Vec3<float>(info->densityGrid->worldBBox().min() + info->densityGrid->worldBBox().dim() * 0.5f);
+		nanovdb::CoordBBox treeIndexBbox = info->densityGrid->tree().bbox();
+
+		info->gridBoundingBox = treeIndexBbox;
+
+		//RayGenOp<Vec3T> rayGenOp(wBBoxDimZ, wBBoxCenter);
+		//CompositeOp     compositeOp;
+
+		// get an accessor.
+		//auto acc = densityGrid->tree().getAccessor();
+		//auto accEmission = emissionGrid->tree().getAccessor();
 	}
 	
 	return info;

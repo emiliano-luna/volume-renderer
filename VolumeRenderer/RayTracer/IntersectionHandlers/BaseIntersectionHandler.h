@@ -36,10 +36,11 @@ public:
     //participatingMediaDeltaTracking
     float rayWeight;
     int depthRemaining;
-    nanovdb::CoordBBox* bbox;
+    //nanovdb::CoordBBox* bbox;
         
     nanovdb::Ray<float> iRay;
-    RandomGenerator* randomGenerator;;
+    RandomGenerator* randomGenerator;
+    ThreadInfo* threadInfo;
 };
 
 //class BaseIntersectionHandler

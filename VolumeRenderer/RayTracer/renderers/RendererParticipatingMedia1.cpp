@@ -23,44 +23,23 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
-	nanovdb::GridHandle<nanovdb::HostBuffer>& handle = data->sceneInfo->densityGrid;
-	nanovdb::GridHandle<nanovdb::HostBuffer>& handleEmission = data->sceneInfo->temperatureGrid;
+	auto densityAccesor = data->sceneInfo->densityGrid->tree().getAccessor();
+	auto temperatureAccesor = data->sceneInfo->temperatureGrid->tree().getAccessor();
 
-	auto* densityGrid = handle.grid<float>();
-	if (!densityGrid)
-		throw std::runtime_error("GridHandle does not contain a valid host grid");
-
-	auto* emissionGrid = handleEmission.grid<float>();
-	if (!emissionGrid)
-		throw std::runtime_error("handleEmission does not contain a valid host grid");
-
-	//get grid stats
-	nanovdb::Extrema<float> ext = nanovdb::getExtrema(*densityGrid, densityGrid->indexBBox());
-	nanovdb::Extrema<float> extEmission = nanovdb::getExtrema(*emissionGrid, emissionGrid->indexBBox());
-
-	float              wBBoxDimZ = (float)densityGrid->worldBBox().dim()[2] * 2;
-	Vec3T              wBBoxCenter = Vec3T(densityGrid->worldBBox().min() + densityGrid->worldBBox().dim() * 0.5f);
-	nanovdb::CoordBBox treeIndexBbox = densityGrid->tree().bbox();
-
-	data->bbox = &treeIndexBbox;
-
-	RayGenOp<Vec3T> rayGenOp(wBBoxDimZ, wBBoxCenter);
-	CompositeOp     compositeOp;
-
-	// get an accessor.
-	auto acc = densityGrid->tree().getAccessor();
-	auto accEmission = emissionGrid->tree().getAccessor();
-
-	Vec3T rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
-	Vec3T rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
+	nanovdb::Vec3<float> rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
+	nanovdb::Vec3<float> rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
 	// generate ray.
-	RayT wRay(rayEye, rayDir);
+	nanovdb::Ray<float> wRay(rayEye, rayDir);
 	// transform the ray to the grid's index-space.
-	RayT iRay = wRay.worldToIndexF(*densityGrid);
+	nanovdb::Ray<float> iRay = wRay.worldToIndexF(*data->sceneInfo->densityGrid);
 	// clip to bounds.
-	if (iRay.clip(treeIndexBbox) == false) {		
+	if (iRay.clip(data->sceneInfo->gridBoundingBox) == false) {
 		return Vec3f(data->options.backgroundColor);
 	}
+
+	//find sigmaMax, max density in the entire medium	
+	float sigmaMax = data->sceneInfo->densityExtrema.max();
+	float emissionMax = data->sceneInfo->temperatureExtrema.max();
 
 	float density = 64.0f;
 	float lightRayDensity = density * 0.5f;
@@ -70,10 +49,6 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 	//float       transmittance = 1.0f;
 	//initialize volumetric color to 0
 	Vec3f result = Vec3f(0.0f);
-	
-	//find sigmaMax, max density in the entire medium	
-	float sigmaMax = ext.max();
-	float emissionMax = ext.max();
 
 	data->iRay = iRay;
 	data->tFar = iRay.t0();	
@@ -111,7 +86,7 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 		}
 
 		//get density at current position in the medium
-		float sigma = acc.getValue(CoordT::Floor(data->iRay(data->tFar)));
+		float sigma = densityAccesor.getValue(CoordT::Floor(data->iRay(data->tFar)));
 		sigma *= density;
 
 		//do delta tracking
@@ -119,11 +94,11 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 			//true collision
 			data->depthRemaining--;
 
-			float emission = accEmission.getValue(CoordT::Floor(data->iRay(data->tFar)));
+			float emission = temperatureAccesor.getValue(CoordT::Floor(data->iRay(data->tFar)));
 			//float emission = accEmission.getValue(CoordT::Floor(data->nanoVDBRay(data->tFar)));
 
 			//sample new direction
-			handleIntersection(data, sigma * 16.0f / sigmaMax, 0.5f * emission / emissionMax, acc, sigmaMax);
+			handleIntersection(data, sigma * 16.0f / sigmaMax, 0.5f * emission / emissionMax, densityAccesor, sigmaMax);
 
 			//data->L_total_diffuse += light_color * data->throughput;
 
@@ -185,7 +160,7 @@ void RendererParticipatingMedia1::handleIntersection(HandleIntersectionData* dat
 		//data->iRay = wRay.worldToIndexF(*densityGrid);
 
 		// clip to bounds.
-		if (data->iRay.clip(*data->bbox) == false) {
+		if (data->iRay.clip(data->sceneInfo->gridBoundingBox) == false) {
 			//return Vec3f(data->options.backgroundColor);
 		}
 
@@ -226,7 +201,7 @@ float RendererParticipatingMedia1::directLightningRayMarch(HandleIntersectionDat
 		ray = nanovdb::Ray<float>(ray(ray.t0() + stepSize), ray.dir());
 
 		// clip to bounds.
-		if (ray.clip(*data->bbox) == false) {
+		if (ray.clip(data->sceneInfo->gridBoundingBox) == false) {
 			//ray is outside participating media so we assume it's reached the directional light
 			return transmission;
 		}
