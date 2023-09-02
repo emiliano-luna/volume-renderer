@@ -5,8 +5,10 @@
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
   <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
-  <rayPerPixelCount>1</rayPerPixelCount>
-  <maxDepth>4</maxDepth>
+  <sigma_a>200</sigma_a>
+  <sigma_s>200</sigma_s>
+  <rayPerPixelCount>16</rayPerPixelCount>
+  <maxDepth>16</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
     <rebound>4</rebound>

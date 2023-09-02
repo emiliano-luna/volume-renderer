@@ -36,6 +36,9 @@ Options* XMLManager::GetRendererOptions() {
 
 	options->densityField = densityFieldModel;
 
+	options->sigma_s = root.child("sigma_s").text().as_float();
+	options->sigma_a = root.child("sigma_a").text().as_float();
+
 	auto rebounds = root.child("diffuseRebounds").children("rebound");
 
 	for (auto rebound : rebounds)
