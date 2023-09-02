@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="renderers\RendererDeltaTracking2.h" />
     <ClInclude Include="renderers\RendererParticipatingMediaTransmission.h" />
+    <ClInclude Include="renderers\RendererPBRTSimple.h" />
     <ClInclude Include="Utils\MultithreadingHelper.h" />
     <ClInclude Include="renderers\RendererNanoVDBEmission.h" />
     <ClInclude Include="renderers\RendererNanoVDBSimple.h" />
@@ -230,6 +231,7 @@
   <ItemGroup>
     <ClCompile Include="renderers\RendererDeltaTracking2.cpp" />
     <ClCompile Include="renderers\RendererParticipatingMediaTransmission.cpp" />
+    <ClCompile Include="renderers\RendererPBRTSimple.cpp" />
     <ClCompile Include="Utils\MultithreadingHelper.cpp" />
     <ClCompile Include="renderers\RendererNanoVDBEmission.cpp" />
     <ClCompile Include="renderers\RendererNanoVDBSimple.cpp" />

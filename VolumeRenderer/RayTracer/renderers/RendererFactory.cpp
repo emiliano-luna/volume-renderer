@@ -6,6 +6,7 @@
 #include "RendererParticipatingMedia1.h"
 #include "RendererParticipatingMediaTransmission.h"
 #include "RendererDeltaTracking2.h"
+#include "RendererPBRTSimple.h"
 
 BaseRenderer* RendererFactory::GetRenderer(std::string name)
 {
@@ -15,5 +16,6 @@ BaseRenderer* RendererFactory::GetRenderer(std::string name)
     if (name._Equal("participatingMedia1")) return new RendererParticipatingMedia1();
     if (name._Equal("participatingMediaTransmission")) return new RendererParticipatingMediaTransmission();
     if (name._Equal("deltaTracking2")) return new RendererDeltaTracking2();
-    return new RendererScratchPixel4();
+    if (name._Equal("pbrtSimple")) return new RendererPBRTSimple();
+        return new RendererScratchPixel4();
 }
