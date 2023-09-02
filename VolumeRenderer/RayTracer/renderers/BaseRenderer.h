@@ -37,6 +37,7 @@ public:
 	void renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadInfo, const Options &options, SceneInfo* scene);
 	void renderPixel(int i, int j, Options &options, SceneInfo* scene);
 	void render(Options &options, SceneInfo* scene);
+	Vec3f assignPointToQuadrant(int i, int total);
 
 	static unsigned int __stdcall mythread(void * data);
 };

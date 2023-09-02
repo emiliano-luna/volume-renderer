@@ -72,6 +72,8 @@ void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, 
 			if (i == 14)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
 			if (i == 15)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
 		}
+		if (raysPerPixel == 256)
+			assignPointToQuadrant(i, 256);
 
 		data->rayOrigin = *orig;
 		data->rayDirection = dir;
@@ -84,6 +86,23 @@ void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, 
 	}
 
 	*(pix++) = color / raysPerPixel;
+}
+
+Vec3f BaseRenderer::assignPointToQuadrant(int i, int total) {
+	if (total < 4)
+		return Vec3f(0.0f);
+	if (total == 4) {
+		if (i == 0)	return Vec3f(0.25, 0.25, -1);
+		if (i == 1)	return Vec3f(0.25, -0.25, -1);
+		if (i == 2)	return Vec3f(-0.25, 0.25, -1);
+		if (i == 3)	return Vec3f(-0.25, -0.25, -1);
+	}
+	else {
+		if (i < total / 4)		return Vec3f(1 / total, 1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
+		if (i < 2 * total / 4)	return Vec3f(1 / total, -1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
+		if (i < 3 * total / 4)	return Vec3f(-1 / total, 1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
+		if (i <= total)			return Vec3f(-1 / total, -1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
+	}
 }
 
 
