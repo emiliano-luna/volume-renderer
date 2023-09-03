@@ -7,6 +7,7 @@
 #include "RendererParticipatingMediaTransmission.h"
 #include "RendererDeltaTracking2.h"
 #include "RendererPBRTSimple.h"
+#include "RendererPBRTVolume.h"
 
 BaseRenderer* RendererFactory::GetRenderer(std::string name)
 {
@@ -17,5 +18,6 @@ BaseRenderer* RendererFactory::GetRenderer(std::string name)
     if (name._Equal("participatingMediaTransmission")) return new RendererParticipatingMediaTransmission();
     if (name._Equal("deltaTracking2")) return new RendererDeltaTracking2();
     if (name._Equal("pbrtSimple")) return new RendererPBRTSimple();
+    if (name._Equal("pbrtVolume")) return new RendererPBRTVolume();
         return new RendererScratchPixel4();
 }

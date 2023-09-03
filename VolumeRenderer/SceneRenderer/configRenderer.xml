@@ -7,7 +7,7 @@
   <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
   <sigma_a>200</sigma_a>
   <sigma_s>200</sigma_s>
-  <rayPerPixelCount>256</rayPerPixelCount>
+  <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
@@ -17,7 +17,7 @@
     <rebound>1</rebound>
   </diffuseRebounds>
   <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <renderer>pbrtSimple</renderer>  
+  <renderer>pbrtVolume</renderer>  
 	<!-- <width startOffset="0" reference="640">640</width>
 	<height startOffset="0" reference="640">16</height> -->
   <width startOffset="160" reference="640">320</width>
