@@ -20,11 +20,15 @@
 #include <thread>
 #include "BaseRenderer.h"
 
+/// <summary>
+/// Based on VolPathIntegrator from PBRT 4.0
+/// </summary>
 class RendererPBRTVolume : public BaseRenderer
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);
 	Vec3f getEmission(HandleIntersectionData* data, float emissionWeight);
+	float directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigmaMax);
 };
 
 #endif

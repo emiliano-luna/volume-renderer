@@ -7,7 +7,7 @@
   <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
   <sigma_a>200</sigma_a>
   <sigma_s>200</sigma_s>
-  <rayPerPixelCount>16</rayPerPixelCount>
+  <rayPerPixelCount>256</rayPerPixelCount>
   <maxDepth>16</maxDepth>
   <diffuseRebounds>
     <rebound>5</rebound>
