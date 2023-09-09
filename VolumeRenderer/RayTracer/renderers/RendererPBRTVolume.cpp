@@ -57,6 +57,16 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 	bool terminated = false;
 
 	while (!terminated && data->depthRemaining > 0) {
+		// terminar temprano usando ruleta rusa?
+		if (data->transmission < 0.05f) {
+			float q = 0.75f;
+
+			if (data->randomGenerator->getFloat(0.0f, 1.0f) < q)
+				data->transmission = 0.0f;
+			else
+				data->transmission /= 1.0f - q;
+		}
+
 		if (data->transmission <= 0.0f) {
 			terminated = true;
 
@@ -202,13 +212,24 @@ float RendererPBRTVolume::directLightningRayMarch(HandleIntersectionData* data, 
 		float sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax; //std::min(maxStepSize, maxStepSize * sigma / sigmaMax);
 
-		if (sigma > 0.0f) {
-			//	# Calcular la transmisión del paso actual
-			float transmissionStep = exp(-stepSize * sigma);
+		//	# Calcular la transmisión del paso actual
+		float transmissionStep = exp(-stepSize * sigma);
 
-			//	# Actualizar la transmisión total
-			transmission *= transmissionStep;
+		//	# Actualizar la transmisión total
+		transmission *= transmissionStep;
+
+		// terminar temprano usando ruleta rusa?
+		if (transmission < 0.05f) {
+			float q = 0.75f;
+
+			if (data->randomGenerator->getFloat(0.0f, 1.0f) < q)
+				transmission = 0.0f;
+			else
+				transmission /= 1.0f - q;
 		}
+
+		if (transmission <= 0.0f)
+			return transmission;
 
 		//	# Avanzar el rayo
 		lightRay = nanovdb::Ray<float>(lightRay(lightRay.t0() + stepSize), lightRay.dir());
