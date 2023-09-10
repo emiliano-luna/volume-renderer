@@ -9,7 +9,7 @@
 
 Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	Vec3f light_color{ 1, 1, 1 };
+	Vec3f light_color{ 9, 2.25f, 0 };
 	Vec3f light_dir{ 0, 1, 0 };
 
 	data->depthRemaining = data->options.maxDepth;
@@ -142,7 +142,12 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 			if (data->transmission > 0.0f && data->r_u > 0.0f) {
 				//Sample direct lighting at volume-scattering event
 				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigmaMax);
-				data->radiance += lightTransmission * light_color;
+				float cos_theta = Utils::dotProduct(data->rayDirection, light_dir);
+
+				data->radiance += 
+					lightTransmission * 
+					light_color * 
+					PhaseFunction::heyney_greenstein(g, cos_theta);
 
 				//use Henyey-Greenstein to get scattering direction
 				//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
