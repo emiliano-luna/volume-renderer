@@ -168,6 +168,7 @@
     <ClInclude Include="renderers\RendererParticipatingMediaTransmission.h" />
     <ClInclude Include="renderers\RendererPBRTSimple.h" />
     <ClInclude Include="renderers\RendererPBRTVolume.h" />
+    <ClInclude Include="renderers\IntegratorDensitySampling.h" />
     <ClInclude Include="Utils\MultithreadingHelper.h" />
     <ClInclude Include="renderers\RendererNanoVDBEmission.h" />
     <ClInclude Include="renderers\RendererNanoVDBSimple.h" />
@@ -234,6 +235,7 @@
     <ClCompile Include="renderers\RendererParticipatingMediaTransmission.cpp" />
     <ClCompile Include="renderers\RendererPBRTSimple.cpp" />
     <ClCompile Include="renderers\RendererPBRTVolume.cpp" />
+    <ClCompile Include="renderers\IntegratorDensitySampling.cpp" />
     <ClCompile Include="Utils\MultithreadingHelper.cpp" />
     <ClCompile Include="renderers\RendererNanoVDBEmission.cpp" />
     <ClCompile Include="renderers\RendererNanoVDBSimple.cpp" />

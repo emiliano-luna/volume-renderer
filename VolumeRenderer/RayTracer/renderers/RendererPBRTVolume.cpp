@@ -9,7 +9,7 @@
 
 Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	Vec3f light_color{ 9, 2.25f, 0 };
+	Vec3f light_color{ 9.0f * 4.0f, 2.25f * 4.0f, 0 };
 	Vec3f light_dir{ 0, 1, 0 };
 
 	data->depthRemaining = data->options.maxDepth;
@@ -82,17 +82,23 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 			break;
 		}
 
-		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));		
 		if (sigma <= 0.0f)
 			continue;
 
-		//get density at current position in the medium 
-		float sigma_maj = 
-			((1 / sigma) / sigmaMax) *
-			(data->options.sigma_a + data->options.sigma_s);
+		auto node = acc.getNodeInfo(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
-		float pAbsorption = data->options.sigma_a / sigma_maj;
-		float pScattering = data->options.sigma_s / sigma_maj;
+		//get density at current position in the medium 
+		//sigma maj is wildly loose sigmaMax aprox 1.5 vs 0.001 sigma or less at most points
+		float sigma_maj = sigmaMax * (data->options.sigma_a + data->options.sigma_s); 
+		
+		//why does this work????	
+		/*
+		float sigma_maj =//((1 / sigma) / sigmaMax) *
+			//(data->options.sigma_a + data->options.sigma_s);*/
+
+		float pAbsorption = sigma * data->options.sigma_a / sigma_maj;
+		float pScattering = sigma * data->options.sigma_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
 
 		float sample = data->randomGenerator->getFloat(0, 1);
@@ -101,16 +107,17 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 		float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
 		if (emission > 0.0f) {
-			// Compute $\beta'$ at new path vertex
-			float pdf = sigma_maj * data->transmission;
-			auto betap = data->transmission * data->transmission / pdf;
+			//// Compute $\beta'$ at new path vertex
+			//float pdf = sigma_maj * data->transmission;
+			//auto betap = data->transmission * data->transmission / pdf;
 
-			//compute rescaled path probability for absorption at path vertex
-			float r_e = data->r_u * sigma_maj * data->transmission / pdf;
+			////compute rescaled path probability for absorption at path vertex
+			//float r_e = data->r_u * sigma_maj * data->transmission / pdf;
 
-			// Update radiance for medium emission
-			if (r_e > 0.0f)
-				data->radiance += betap * data->options.sigma_a * getEmission(data, emission / emissionMax) / r_e;
+			//// Update radiance for medium emission
+			//if (r_e > 0.0f)
+			//	data->radiance += betap * data->options.sigma_a * getEmission(data, emission / emissionMax) / r_e;
+			data->radiance += data->transmission * pAbsorption * getEmission(data, emission / emissionMax);
 		}		
 
 		//null-scattering

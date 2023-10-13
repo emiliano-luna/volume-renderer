@@ -81,6 +81,7 @@ struct Options
 	Model densityField;
 	float sigma_s;
 	float sigma_a;
+	float sigma_n;
 	std::vector<int> diffuseReboundCount;
 	uint32_t rayPerPixelCount;
 	uint32_t width;
