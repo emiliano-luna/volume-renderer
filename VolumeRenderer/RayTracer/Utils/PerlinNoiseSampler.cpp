@@ -93,37 +93,6 @@ PerlinNoiseSampler* PerlinNoiseSampler::getInstance()
 // [/comment]
 float PerlinNoiseSampler::eval_density(const Vec3f& p)
 {
-    float freq = 1.5;
+    float freq = 1.8;
     return (1 + noise(p.x * freq, p.y * freq, p.z * freq)) * 0.5;
 }
-
-// [comment]
-// Return the density of our volume object at position p. Uses a Perlin noise procedural
-// texture to create this space varying density field. We need to remap the noise() function
-// to the range [0,1].
-// [/comment]
-//float PerlinNoiseSampler::eval_density(const Vec3f& p)
-//{
-//    Vec3f vp = p - center;
-//    Vec3f vp_xform;
-//
-//    float theta = (frame - 1) / 120.f * 2 * M_PI;
-//    vp_xform.x = cos(theta) * vp.x + sin(theta) * vp.z;
-//    vp_xform.y = vp.y;
-//    vp_xform.z = -sin(theta) * vp.x + cos(theta) * vp.z;
-//
-//    float dist = std::min(1.f, sqrt(Utils::distance2(p, center)) / radius);
-//    float falloff = smoothstep(0.8, 1, dist);
-//    float freq = 0.5;
-//    size_t octaves = 5;
-//    float lacunarity = 2;
-//    float H = 0.4;
-//    vp_xform *= freq;
-//    float fbmResult = 0;
-//    float offset = 0.75;
-//    for (size_t k = 0; k < octaves; k++) {
-//        fbmResult += noise(vp_xform.x, vp_xform.y, vp_xform.z) * pow(lacunarity, -H * k);
-//        vp_xform *= lacunarity;
-//    }
-//    return std::max(0.f, fbmResult) * (1 - falloff);//(1 - falloff);//std::max(0.f, fbmResult);// * (1 - falloff));
-//}

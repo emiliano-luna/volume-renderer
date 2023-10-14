@@ -4,6 +4,10 @@
 #include "../Utils/DirectionSampler.h"
 #include "../Utils/EmbreeHelper.h"
 
+//Uses Embree for collision detection
+//Aproximated Method - Forward ray marcher - Homogeneous Media - Next Event Estimation
+//based on https://www.scratchapixel.com/lessons/3d-basic-rendering/volume-rendering-for-developers/ray-marching-get-it-right.html
+
 Vec3f IntegratorHomogeneousRayMarcherImproved::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
 	if (depth >= data->options.maxDepth) {
