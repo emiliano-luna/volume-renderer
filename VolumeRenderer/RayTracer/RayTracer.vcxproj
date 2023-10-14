@@ -173,7 +173,7 @@
     <ClInclude Include="integrators\RendererNanoVDBEmission.h" />
     <ClInclude Include="integrators\RendererNanoVDBSimple.h" />
     <ClInclude Include="integrators\RendererParticipatingMedia1.h" />
-    <ClInclude Include="integrators\RendererScratchPixel4.h" />
+    <ClInclude Include="integrators\IntegratorHeterogeneousPerlinNoise.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
@@ -235,7 +235,7 @@
     <ClCompile Include="integrators\RendererNanoVDBEmission.cpp" />
     <ClCompile Include="integrators\RendererNanoVDBSimple.cpp" />
     <ClCompile Include="integrators\RendererParticipatingMedia1.cpp" />
-    <ClCompile Include="integrators\RendererScratchPixel4.cpp" />
+    <ClCompile Include="integrators\IntegratorHeterogeneousPerlinNoise.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp" />

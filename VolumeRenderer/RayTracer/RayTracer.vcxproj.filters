@@ -162,7 +162,7 @@
     <ClInclude Include="Utils\EmbreeHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererScratchPixel4.h">
+    <ClInclude Include="integrators\IntegratorHeterogeneousPerlinNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="integrators\RendererNanoVDBSimple.h">
@@ -263,7 +263,7 @@
     <ClCompile Include="Utils\EmbreeHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererScratchPixel4.cpp">
+    <ClCompile Include="integrators\IntegratorHeterogeneousPerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\RendererNanoVDBSimple.cpp">

@@ -1,8 +1,8 @@
 #define NOMINMAX
 
 #pragma once
-#ifndef VOLUMERENDERER_RENDERERSCRATCHPIXEL4
-#define VOLUMERENDERER_RENDERERSCRATCHPIXEL4
+#ifndef VOLUMERENDERER_INTEGRATORHETEROGENEOUSPERLINNOISE
+#define VOLUMERENDERER_INTEGRATORHETEROGENEOUSPERLINNOISE
 
 #include <Windows.h>
 #include "Process.h"
@@ -16,7 +16,7 @@
 #include <math.h>
 #include "BaseRenderer.h"
 
-class RendererScratchPixel4 : public BaseRenderer
+class IntegratorHeterogeneousPerlinNoise : public BaseRenderer
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

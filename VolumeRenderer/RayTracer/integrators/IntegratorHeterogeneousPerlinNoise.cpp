@@ -1,4 +1,4 @@
-#include "RendererScratchPixel4.h"
+#include "IntegratorHeterogeneousPerlinNoise.h"
 #include <random>
 #include "../Utils/PerlinNoiseSampler.h"
 #include "../Utils/EmbreeHelper.h"
@@ -6,7 +6,10 @@
 #include "../Utils/DirectLightSampler.h"
 #include "../Utils/DirectionSampler.h"
 
-Vec3f RendererScratchPixel4::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
+//Uses Embree for collision detection
+//Aproximated Method - Forward ray marcher - Heterogeneous Media with Perlin Noise
+//based on https://www.scratchapixel.com/lessons/3d-basic-rendering/volume-rendering-for-developers/volume-rendering-3D-density-field.html
+Vec3f IntegratorHeterogeneousPerlinNoise::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
 	if (depth >= data->options.maxDepth) {
 		return Vec3f(0.0f);
@@ -50,7 +53,7 @@ Vec3f RendererScratchPixel4::castRay(HandleIntersectionData* data, uint32_t dept
 	return data->L_total_diffuse;
 }
 
-Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
+Vec3f IntegratorHeterogeneousPerlinNoise::handleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
 {
 	auto material = data->sceneInfo->materials[data->sceneInfo->shapes[data->objectId].mesh.material_ids[0]];
 
@@ -63,7 +66,10 @@ Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, ui
 			auto distance = data->tFar;
 
 			Vec3f light_dir{ 0, 1, 0 };
-			Vec3f light_color{ 25.0f, 25.0f, 25.0f };
+			//Vec3f light_color{ 25.0f, 25.0f, 25.0f };
+			Vec3f light_color{ 0.655, 0.15, 0.45 };
+			light_color *= 60;
+
 			//absorption coefficient
 			//auto sigma_a = 1 - material.dissolve;
 			auto sigma_a = 1 - material.dissolve;
@@ -76,7 +82,7 @@ Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, ui
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);
-			step_size = distance / ns;
+			//step_size = distance / ns;
 
 			//initialize transmission to 1 (fully transparent)
 			float transparency = 1;
@@ -131,13 +137,24 @@ Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, ui
 					// attenuate in-scattering contrib. by the transmission of all samples accumulated so far
 					//result += transparency * light_color * light_attenuation * sigma_s * density * step_size;
 					result += 
-						light_color *										//light color
+						light_color *										// light color
 						light_attenuation *									// light ray transmission value
 						density *											// volume density at the sample position
 						sigma_s *											// scattering coefficient
 						PhaseFunction::heyney_greenstein(g, cos_theta) *	// phase function
 						transparency *										// ray current transmission value
 						step_size;											// dx in our Riemann sum
+
+					// the greater the value the more often we will break out from the marching loop
+					int d = 2;
+					if (transparency < 1e-3) {
+						// break
+						if (data->randomGenerator->getFloat(0, 1) > 1.f / d)
+							n = ns;
+						// we continue but compensate
+						else
+							transparency *= d;
+					}
 				}		
 			}						
 
@@ -158,47 +175,4 @@ Vec3f RendererScratchPixel4::handleIntersection(HandleIntersectionData *data, ui
 
 		return castRay(data, depth + 1, reboundFactor);
 	}
-
-	//Superficie Especular
-	//Asumimos que no son emisivos
-	if (material.diffuse[0] == 0 && material.diffuse[1] == 0 && material.diffuse[2] == 0)
-	{
-		auto normal = Utils::normalize(data->hitNormal);
-		auto newDir = Utils::normalize(Utils::reflect(data->rayDirection, normal));
-
-		data->rayDirection = newDir;
-		data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
-
-		return castRay(data, depth + 1, reboundFactor);
-	}
-
-	//Superficie emisiva
-	if (material.emission[0] > 0 || material.emission[1] > 0 || material.emission[2] > 0)
-	{
-		return data->throughput * Vec3f(material.emission);
-	}
-
-	//Superficie Difusa	
-	//Calcular la irradiancia directa (E_directa)
-	auto E_directa_i = DirectLightSampler::Sample(data->hitPoint, data->sceneInfo);
-	//Calcular el término de reflectancia difusa (rho_i)
-	auto rho_i = Vec3f(material.diffuse);
-	//Actualizar el total de radiancia difusa
-	data->L_total_diffuse += data->throughput * (E_directa_i * rho_i) * (1.0f / reboundFactor);
-	//Actualizar el throughput para el siguiente rebote
-	data->throughput *= rho_i;
-
-	//TODO: deberia tomar el rebound count del último rebote difuso y no del rebote anterior siempre
-	reboundFactor *= data->options.diffuseReboundCount[depth];
-
-	for (size_t i = 0; i < data->options.diffuseReboundCount[depth]; i++)
-	{
-		//Muestrear la nueva dirección y actualizar el rayo para el siguiente rebote (usar distribución coseno)
-		data->rayDirection = DirectionSampler::getCosineDistributionRebound(data->hitNormal, data->randomGenerator);
-		data->rayOrigin = data->hitPoint + data->rayDirection * 0.001;
-
-		castRay(data, depth + 1, reboundFactor);
-	}
-
-	return data->L_total_diffuse;
 }
