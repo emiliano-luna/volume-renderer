@@ -14,7 +14,6 @@
 #include <rtcore.h>
 #include <stdio.h>
 #include <math.h>
-#include "../nanonflann\utils.h"
 #include <chrono>
 #include <thread>
 #include "../Utils\MultithreadingHelper.h"
@@ -48,7 +47,6 @@ struct RenderThreadData {
 	//uint32_t* toHeight;
 	uint32_t* i;
 	SceneInfo* scene;
-	my_kd_tree_t* photons;
 	MultithreadingHelper* multiThreadingHelper;
 };
 #endif

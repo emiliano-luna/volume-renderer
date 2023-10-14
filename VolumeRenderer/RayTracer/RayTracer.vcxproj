@@ -164,22 +164,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="renderers\RendererDeltaTracking2.h" />
-    <ClInclude Include="renderers\RendererParticipatingMediaTransmission.h" />
-    <ClInclude Include="renderers\RendererPBRTSimple.h" />
-    <ClInclude Include="renderers\RendererPBRTVolume.h" />
-    <ClInclude Include="renderers\IntegratorDensitySampling.h" />
+    <ClInclude Include="integrators\RendererDeltaTracking2.h" />
+    <ClInclude Include="integrators\RendererParticipatingMediaTransmission.h" />
+    <ClInclude Include="integrators\RendererPBRTSimple.h" />
+    <ClInclude Include="integrators\RendererPBRTVolume.h" />
+    <ClInclude Include="integrators\IntegratorDensitySampling.h" />
     <ClInclude Include="Utils\MultithreadingHelper.h" />
-    <ClInclude Include="renderers\RendererNanoVDBEmission.h" />
-    <ClInclude Include="renderers\RendererNanoVDBSimple.h" />
-    <ClInclude Include="renderers\RendererParticipatingMedia1.h" />
-    <ClInclude Include="renderers\RendererScratchPixel4.h" />
+    <ClInclude Include="integrators\RendererNanoVDBEmission.h" />
+    <ClInclude Include="integrators\RendererNanoVDBSimple.h" />
+    <ClInclude Include="integrators\RendererParticipatingMedia1.h" />
+    <ClInclude Include="integrators\RendererScratchPixel4.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
-    <ClInclude Include="IntersectionHandlers\BasicIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
-    <ClInclude Include="IntersectionHandlers\IntersectionHandlerFactory.h" />
-    <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
     <ClInclude Include="nanovdb\fog_example\common.h" />
@@ -207,17 +204,15 @@
     <ClInclude Include="nanovdb\util\Reduce.h" />
     <ClInclude Include="nanovdb\util\SampleFromVoxels.h" />
     <ClInclude Include="nanovdb\util\Stencils.h" />
-    <ClInclude Include="renderers\RendererFactory.h" />
+    <ClInclude Include="integrators\RendererFactory.h" />
     <ClInclude Include="Utils\PerlinNoiseSampler.h" />
     <ClInclude Include="Utils\PhaseFunction.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
     <ClInclude Include="Utils\DirectionSampler.h" />
-    <ClInclude Include="nanonflann\nanoflann.hpp" />
-    <ClInclude Include="nanonflann\utils.h" />
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp" />
     <ClInclude Include="pugixml-1.9\src\pugixml.hpp" />
     <ClInclude Include="RayTracer.h" />
-    <ClInclude Include="renderers\BaseRenderer.h" />
+    <ClInclude Include="integrators\BaseRenderer.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="stdafx.h" />
@@ -231,24 +226,21 @@
     <ClInclude Include="Utils\XMLManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="renderers\RendererDeltaTracking2.cpp" />
-    <ClCompile Include="renderers\RendererParticipatingMediaTransmission.cpp" />
-    <ClCompile Include="renderers\RendererPBRTSimple.cpp" />
-    <ClCompile Include="renderers\RendererPBRTVolume.cpp" />
-    <ClCompile Include="renderers\IntegratorDensitySampling.cpp" />
+    <ClCompile Include="integrators\RendererDeltaTracking2.cpp" />
+    <ClCompile Include="integrators\RendererParticipatingMediaTransmission.cpp" />
+    <ClCompile Include="integrators\RendererPBRTSimple.cpp" />
+    <ClCompile Include="integrators\RendererPBRTVolume.cpp" />
+    <ClCompile Include="integrators\IntegratorDensitySampling.cpp" />
     <ClCompile Include="Utils\MultithreadingHelper.cpp" />
-    <ClCompile Include="renderers\RendererNanoVDBEmission.cpp" />
-    <ClCompile Include="renderers\RendererNanoVDBSimple.cpp" />
-    <ClCompile Include="renderers\RendererParticipatingMedia1.cpp" />
-    <ClCompile Include="renderers\RendererScratchPixel4.cpp" />
+    <ClCompile Include="integrators\RendererNanoVDBEmission.cpp" />
+    <ClCompile Include="integrators\RendererNanoVDBSimple.cpp" />
+    <ClCompile Include="integrators\RendererParticipatingMedia1.cpp" />
+    <ClCompile Include="integrators\RendererScratchPixel4.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
-    <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
-    <ClCompile Include="IntersectionHandlers\IntersectionHandlerFactory.cpp" />
-    <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
-    <ClCompile Include="renderers\RendererFactory.cpp" />
+    <ClCompile Include="integrators\RendererFactory.cpp" />
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
     <ClCompile Include="Utils\PhaseFunction.cpp" />
     <ClCompile Include="Utils\DirectLightSampler.cpp" />
@@ -256,7 +248,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
     <ClCompile Include="RayTracer.cpp" />
-    <ClCompile Include="renderers\BaseRenderer.cpp" />
+    <ClCompile Include="integrators\BaseRenderer.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="stdafx.cpp">

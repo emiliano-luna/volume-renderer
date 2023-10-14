@@ -1,8 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include "SceneRenderer.h"
-#include "renderers/RendererFactory.h"
-#include "renderers/BaseRenderer.h"
+#include "integrators/RendererFactory.h"
+#include "integrators/BaseRenderer.h"
 
 #if defined(RTC_NAMESPACE_OPEN)
 RTC_NAMESPACE_OPEN

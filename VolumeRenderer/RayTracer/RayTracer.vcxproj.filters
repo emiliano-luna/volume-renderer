@@ -36,16 +36,10 @@
     <ClInclude Include="tinyobjloader\tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\BaseRenderer.h">
+    <ClInclude Include="integrators\BaseRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SceneLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nanonflann\nanoflann.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nanonflann\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\XMLManager.h">
@@ -72,16 +66,7 @@
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntersectionHandlers\BasicIntersectionHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntersectionHandlers\IntersectionHandlerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h">
@@ -171,43 +156,43 @@
     <ClInclude Include="nanovdb\fog_example\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererFactory.h">
+    <ClInclude Include="integrators\RendererFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\EmbreeHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererScratchPixel4.h">
+    <ClInclude Include="integrators\RendererScratchPixel4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererNanoVDBSimple.h">
+    <ClInclude Include="integrators\RendererNanoVDBSimple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererNanoVDBEmission.h">
+    <ClInclude Include="integrators\RendererNanoVDBEmission.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererParticipatingMedia1.h">
+    <ClInclude Include="integrators\RendererParticipatingMedia1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\MultithreadingHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererParticipatingMediaTransmission.h">
+    <ClInclude Include="integrators\RendererParticipatingMediaTransmission.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\RandomGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererDeltaTracking2.h">
+    <ClInclude Include="integrators\RendererDeltaTracking2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererPBRTSimple.h">
+    <ClInclude Include="integrators\RendererPBRTSimple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\RendererPBRTVolume.h">
+    <ClInclude Include="integrators\RendererPBRTVolume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\IntegratorDensitySampling.h">
+    <ClInclude Include="integrators\IntegratorDensitySampling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -230,7 +215,7 @@
     <ClCompile Include="tinyobjloader\tiny_obj_loader.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\BaseRenderer.cpp">
+    <ClCompile Include="integrators\BaseRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
@@ -257,16 +242,7 @@
     <ClCompile Include="Utils\DirectLightSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntersectionHandlers\BasicIntersectionHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntersectionHandlers\IntersectionHandlerFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntersectionHandlers\ScratchPixel1IntersectionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp">
@@ -281,43 +257,43 @@
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererFactory.cpp">
+    <ClCompile Include="integrators\RendererFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\EmbreeHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererScratchPixel4.cpp">
+    <ClCompile Include="integrators\RendererScratchPixel4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererNanoVDBSimple.cpp">
+    <ClCompile Include="integrators\RendererNanoVDBSimple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererNanoVDBEmission.cpp">
+    <ClCompile Include="integrators\RendererNanoVDBEmission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererParticipatingMedia1.cpp">
+    <ClCompile Include="integrators\RendererParticipatingMedia1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\MultithreadingHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererParticipatingMediaTransmission.cpp">
+    <ClCompile Include="integrators\RendererParticipatingMediaTransmission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\RandomGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererDeltaTracking2.cpp">
+    <ClCompile Include="integrators\RendererDeltaTracking2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererPBRTSimple.cpp">
+    <ClCompile Include="integrators\RendererPBRTSimple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\RendererPBRTVolume.cpp">
+    <ClCompile Include="integrators\RendererPBRTVolume.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\IntegratorDensitySampling.cpp">
+    <ClCompile Include="integrators\IntegratorDensitySampling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
