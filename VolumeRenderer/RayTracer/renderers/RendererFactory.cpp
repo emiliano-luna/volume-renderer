@@ -21,5 +21,7 @@ BaseRenderer* RendererFactory::GetRenderer(std::string name)
     if (name._Equal("deltaTracking2")) return new RendererDeltaTracking2();
     if (name._Equal("pbrtSimple")) return new RendererPBRTSimple();
     if (name._Equal("pbrtVolume")) return new RendererPBRTVolume();
-        return new RendererScratchPixel4();
+        //return new RendererScratchPixel4();
+
+    return nullptr;
 }
