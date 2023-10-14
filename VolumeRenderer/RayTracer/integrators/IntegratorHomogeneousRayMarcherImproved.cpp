@@ -119,6 +119,17 @@ Vec3f IntegratorHomogeneousRayMarcherImproved::handleIntersection(HandleIntersec
 						transparency * 
 						step_size;
 				}		
+
+				// the greater the value the more often we will break out from the marching loop
+				int d = 2; 
+				if (transparency < 1e-3) {
+					// break
+					if (data->randomGenerator->getFloat(0, 1) > 1.f / d)
+						n = ns;
+					// we continue but compensate
+					else
+						transparency *= d; 
+				}
 			}						
 
 			// combine background color and volumetric object color
