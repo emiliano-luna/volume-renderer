@@ -1,13 +1,10 @@
-#include "IntegratorHomogeneousRayMarcherNEE.h"
+#include "IntegratorHomogeneousRayMarcherImproved.h"
+#include <random>
 #include "../Utils/DirectLightSampler.h"
 #include "../Utils/DirectionSampler.h"
 #include "../Utils/EmbreeHelper.h"
 
-//Uses Embree for collision detection
-//Aproximated Method - Forward ray marcher - Homogeneous Media - Next Event Estimation
-//based on https://www.scratchapixel.com/lessons/3d-basic-rendering/volume-rendering-for-developers/ray-marching-algorithm.html
-
-Vec3f IntegratorHomogeneousRayMarcherNEE::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
+Vec3f IntegratorHomogeneousRayMarcherImproved::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
 	if (depth >= data->options.maxDepth) {
 		return Vec3f(0.0f);
@@ -48,7 +45,7 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::castRay(HandleIntersectionData* data, 
 	return data->L_total_diffuse;
 }
 
-Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)
+Vec3f IntegratorHomogeneousRayMarcherImproved::handleIntersection(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
 	auto material = data->sceneInfo->materials[data->sceneInfo->shapes[data->objectId].mesh.material_ids[0]];
 
@@ -64,7 +61,17 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionD
 
 			Vec3f light_dir{ 0, 1, 0 };
 			Vec3f light_color{ 0.655, 0.15, 0.45 };
+			light_color *= 60;
+
+			//absorption coefficient
 			auto sigma_a = 1 - material.dissolve;
+			//scattering coefficient
+			auto sigma_s = sigma_a;
+
+			auto density = 1.0f;
+
+			// asymmetry factor of the phase function
+			float g = 0.0; 
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);
@@ -75,11 +82,20 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionD
 
 			for (size_t n = 0; n < ns; n++)
 			{
-				float t = step_size * (n + 0.5f);
+				static std::default_random_engine e;
+				static std::uniform_real_distribution<> dis(0, 1);
+				auto randomOffset = dis(e);
+
+				//we use stochastic sampling to help with banding, even though it introduces noise
+				//Stochastic sampling is a Monte Carlo technique in which we sample 
+				//the function at appropriate non-uniformly spaced locations rather 
+				//than at regularly spaced locations.
+				float t = step_size * (n + randomOffset);
+
 				Vec3f samplePosition = rayOrigin + rayDirection * t;
 
 				//current sample transparency
-				float sampleAttenuation = exp(-step_size * sigma_a);
+				float sampleAttenuation = exp(-step_size * density * (sigma_a + sigma_s));
 
 				// attenuate volume object transparency by current sample transmission value
 				transparency *= sampleAttenuation;
@@ -91,12 +107,16 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionD
 				if (EmbreeHelper::castSingleRay(data)){
 					auto distanceRayLightToExitInVolume = data->tFar;
 
-					float light_attenuation = exp(-distanceRayLightToExitInVolume * sigma_a);
+					float cos_theta = Utils::dotProduct(rayDirection, light_dir);
+					float light_attenuation = exp(-distanceRayLightToExitInVolume * density * (sigma_a + sigma_s));
 					// attenuate in-scattering contrib. by the transmission of all samples accumulated so far
 					result += 
-						transparency * 
 						light_color * 
 						light_attenuation * 
+						density * 
+						sigma_s * 
+						PhaseFunction::heyney_greenstein(g, cos_theta) * 
+						transparency * 
 						step_size;
 				}		
 			}						
@@ -117,5 +137,5 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionD
 		data->rayOrigin = data->rayOrigin + data->rayDirection * 0.001;
 
 		return castRay(data, depth + 1, reboundFactor);
-	}	
+	}
 }

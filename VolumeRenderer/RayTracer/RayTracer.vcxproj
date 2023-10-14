@@ -178,7 +178,7 @@
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
     <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherNEE.h" />
-    <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
+    <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherImproved.h" />
     <ClInclude Include="nanovdb\fog_example\common.h" />
     <ClInclude Include="nanovdb\NanoVDB.h" />
     <ClInclude Include="nanovdb\util\CSampleFromVoxels.h" />
@@ -239,7 +239,7 @@
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp" />
-    <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
+    <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherImproved.cpp" />
     <ClCompile Include="integrators\RendererFactory.cpp" />
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
     <ClCompile Include="Utils\PhaseFunction.cpp" />
