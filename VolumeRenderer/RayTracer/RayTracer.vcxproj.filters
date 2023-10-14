@@ -69,7 +69,7 @@
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h">
+    <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherNEE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h">
@@ -245,7 +245,7 @@
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp">
+    <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp">

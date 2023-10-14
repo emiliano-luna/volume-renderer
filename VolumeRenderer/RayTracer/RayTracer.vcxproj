@@ -177,7 +177,7 @@
     <ClInclude Include="Utils\EmbreeHelper.h" />
     <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
     <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
-    <ClInclude Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.h" />
+    <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherNEE.h" />
     <ClInclude Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.h" />
     <ClInclude Include="nanovdb\fog_example\common.h" />
     <ClInclude Include="nanovdb\NanoVDB.h" />
@@ -238,7 +238,7 @@
     <ClCompile Include="integrators\RendererScratchPixel4.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
-    <ClCompile Include="IntersectionHandlers\ScratchPixel2IntersectionHandler.cpp" />
+    <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp" />
     <ClCompile Include="IntersectionHandlers\ScratchPixel3IntersectionHandler.cpp" />
     <ClCompile Include="integrators\RendererFactory.cpp" />
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
