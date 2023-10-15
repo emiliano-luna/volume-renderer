@@ -2,11 +2,11 @@
 #ifndef VOLUMERENDERER_INTEGRATORHOMOGENEOUSRAYMARCHERNEE
 #define VOLUMERENDERER_INTEGRATORHOMOGENEOUSRAYMARCHERNEE
 
-#include "BaseRenderer.h"
+#include "BaseIntegrator.h"
 #include "../Utils\Utils.h"
 
 class IntegratorHomogeneousRayMarcherNEE :
-    public BaseRenderer
+    public BaseIntegrator
 {
 public:
     virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

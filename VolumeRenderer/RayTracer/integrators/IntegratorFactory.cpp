@@ -1,5 +1,5 @@
-#include "RendererFactory.h"
-#include "BaseRenderer.h"
+#include "IntegratorFactory.h"
+#include "BaseIntegrator.h"
 #include "IntegratorDensitySampling.h"
 #include "IntegratorHomogeneousRayMarcherNEE.h"
 #include "IntegratorHomogeneousRayMarcherImproved.h"
@@ -12,7 +12,7 @@
 #include "RendererPBRTSimple.h"
 #include "RendererPBRTVolume.h"
 
-BaseRenderer* RendererFactory::GetRenderer(std::string name)
+BaseIntegrator* IntegratorFactory::GetIntegrator(std::string name)
 {
     if (name._Equal("densitySampling")) return new IntegratorDensitySampling();
     if (name._Equal("homogeneousRayMarcherNEE")) return new IntegratorHomogeneousRayMarcherNEE();

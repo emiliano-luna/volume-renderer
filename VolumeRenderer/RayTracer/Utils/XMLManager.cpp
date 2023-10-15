@@ -47,8 +47,7 @@ Options* XMLManager::GetRendererOptions() {
 	}
 
 	options->rayPerPixelCount = root.child("rayPerPixelCount").text().as_uint();
-
-	options->renderer = root.child("renderer").text().as_string();
+	options->integrator = root.child("integrator").text().as_string();
 
 	options->maxDepth = root.child("maxDepth").text().as_int();
 

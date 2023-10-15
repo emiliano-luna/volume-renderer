@@ -1,8 +1,8 @@
 #define NOMINMAX
 
 #pragma once
-#ifndef VOLUMERENDERER_BASERENDERER
-#define VOLUMERENDERER_BASERENDERER
+#ifndef VOLUMERENDERER_BASEINTEGRATOR
+#define VOLUMERENDERER_BASEINTEGRATOR
 
 #include <Windows.h>
 #include "Process.h"
@@ -25,7 +25,7 @@ struct SceneData {
 	Vec3f* orig;
 };
 
-class BaseRenderer
+class BaseIntegrator
 {
 private:
 	SceneData sceneData;
@@ -42,7 +42,7 @@ public:
 };
 
 struct RenderThreadData {
-	BaseRenderer* renderer;
+	BaseIntegrator* integrator;
 	uint32_t* chunkHeight;
 	//uint32_t* toHeight;
 	uint32_t* i;

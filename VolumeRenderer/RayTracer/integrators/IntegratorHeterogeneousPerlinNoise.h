@@ -14,9 +14,9 @@
 #include <rtcore.h>
 #include <stdio.h>
 #include <math.h>
-#include "BaseRenderer.h"
+#include "BaseIntegrator.h"
 
-class IntegratorHeterogeneousPerlinNoise : public BaseRenderer
+class IntegratorHeterogeneousPerlinNoise : public BaseIntegrator
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

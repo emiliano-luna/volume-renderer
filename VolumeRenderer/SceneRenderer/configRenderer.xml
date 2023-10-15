@@ -9,15 +9,7 @@
   <sigma_s>200</sigma_s>
   <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
-  <diffuseRebounds>
-    <rebound>5</rebound>
-    <rebound>4</rebound>
-    <rebound>3</rebound>
-    <rebound>2</rebound>
-    <rebound>1</rebound>
-  </diffuseRebounds>
-  <!-- <intersectionHandler>diffuse</intersectionHandler> -->
-  <renderer>heterogeneousPerlinNoise</renderer>  
+  <integrator>heterogeneousPerlinNoise</integrator>  
 	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->

@@ -204,7 +204,7 @@
     <ClInclude Include="nanovdb\util\Reduce.h" />
     <ClInclude Include="nanovdb\util\SampleFromVoxels.h" />
     <ClInclude Include="nanovdb\util\Stencils.h" />
-    <ClInclude Include="integrators\RendererFactory.h" />
+    <ClInclude Include="integrators\IntegratorFactory.h" />
     <ClInclude Include="Utils\PerlinNoiseSampler.h" />
     <ClInclude Include="Utils\PhaseFunction.h" />
     <ClInclude Include="Utils\DirectLightSampler.h" />
@@ -212,7 +212,7 @@
     <ClInclude Include="pugixml-1.9\src\pugiconfig.hpp" />
     <ClInclude Include="pugixml-1.9\src\pugixml.hpp" />
     <ClInclude Include="RayTracer.h" />
-    <ClInclude Include="integrators\BaseRenderer.h" />
+    <ClInclude Include="integrators\BaseIntegrator.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="stdafx.h" />
@@ -240,7 +240,7 @@
     <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp" />
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherImproved.cpp" />
-    <ClCompile Include="integrators\RendererFactory.cpp" />
+    <ClCompile Include="integrators\IntegratorFactory.cpp" />
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp" />
     <ClCompile Include="Utils\PhaseFunction.cpp" />
     <ClCompile Include="Utils\DirectLightSampler.cpp" />
@@ -248,7 +248,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pugixml-1.9\src\pugixml.cpp" />
     <ClCompile Include="RayTracer.cpp" />
-    <ClCompile Include="integrators\BaseRenderer.cpp" />
+    <ClCompile Include="integrators\BaseIntegrator.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="stdafx.cpp">

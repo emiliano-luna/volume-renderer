@@ -1,8 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include "SceneRenderer.h"
-#include "integrators/RendererFactory.h"
-#include "integrators/BaseRenderer.h"
+#include "integrators/IntegratorFactory.h"
+#include "integrators/BaseIntegrator.h"
 
 #if defined(RTC_NAMESPACE_OPEN)
 RTC_NAMESPACE_OPEN
@@ -17,7 +17,7 @@ void SceneRenderer::RenderScene(Options options)
 	RTCDevice device = SceneLoader::initializeDevice();
 	SceneInfo* sceneInfo = SceneLoader::initializeScene(device, options);
 
-	BaseRenderer* renderer = RendererFactory::GetRenderer(options.renderer);
+	BaseIntegrator* renderer = IntegratorFactory::GetIntegrator(options.integrator);
 
 	renderer->render(options, sceneInfo);
 	//renderer->renderPixel(254, 10, options, sceneInfo);

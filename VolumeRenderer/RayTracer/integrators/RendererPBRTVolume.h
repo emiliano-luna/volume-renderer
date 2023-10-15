@@ -14,12 +14,12 @@
 #include <rtcore.h>
 #include <stdio.h>
 #include <math.h>
-#include "BaseRenderer.h"
+#include "BaseIntegrator.h"
 
 /// <summary>
 /// Based on VolPathIntegrator from PBRT 4.0
 /// </summary>
-class RendererPBRTVolume : public BaseRenderer
+class RendererPBRTVolume : public BaseIntegrator
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

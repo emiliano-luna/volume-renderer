@@ -36,7 +36,7 @@
     <ClInclude Include="tinyobjloader\tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\BaseRenderer.h">
+    <ClInclude Include="integrators\BaseIntegrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SceneLoader.h">
@@ -156,7 +156,7 @@
     <ClInclude Include="nanovdb\fog_example\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererFactory.h">
+    <ClInclude Include="integrators\IntegratorFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\EmbreeHelper.h">
@@ -215,7 +215,7 @@
     <ClCompile Include="tinyobjloader\tiny_obj_loader.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\BaseRenderer.cpp">
+    <ClCompile Include="integrators\BaseIntegrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
@@ -257,7 +257,7 @@
     <ClCompile Include="Utils\PerlinNoiseSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererFactory.cpp">
+    <ClCompile Include="integrators\IntegratorFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\EmbreeHelper.cpp">

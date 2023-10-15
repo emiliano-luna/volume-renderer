@@ -2,7 +2,7 @@
 #ifndef VOLUMERENDERER_INTEGRATORHOMOGENEOUSRAYMARCHERIMPROVED
 #define VOLUMERENDERER_INTEGRATORHOMOGENEOUSRAYMARCHERIMPROVED
 
-#include "BaseRenderer.h"
+#include "BaseIntegrator.h"
 #include "../Utils\Utils.h"
 #include "../Utils/PhaseFunction.h"
 
@@ -11,7 +11,7 @@
 /// https://www.scratchapixel.com/lessons/3d-basic-rendering/volume-rendering-for-developers/ray-marching-get-it-right.html
 /// </summary>
 
-class IntegratorHomogeneousRayMarcherImproved : public BaseRenderer
+class IntegratorHomogeneousRayMarcherImproved : public BaseIntegrator
 {
 public:
     virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

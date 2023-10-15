@@ -105,7 +105,7 @@ struct Options
 	std::string fileName;
 	Vec3f cameraPosition;
 	Vec3f cameraRotation;	
-	std::string renderer;
+	std::string integrator;
 };
 
 

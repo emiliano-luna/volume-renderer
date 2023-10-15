@@ -1,10 +1,10 @@
-#include "BaseRenderer.h"
+#include "BaseIntegrator.h"
 #include "..\Utils\MultithreadingHelper.h"
 #include <ctime>
 #include <algorithm>
 #include <string>
 
-void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const char* fileName) {
+void BaseIntegrator::saveFile(Vec3f *framebuffer, int height, int width, const char* fileName) {
 	FreeImage_Initialise();
 
 	FIBITMAP* bitmap = FreeImage_Allocate(width, height, 24);
@@ -26,7 +26,7 @@ void BaseRenderer::saveFile(Vec3f *framebuffer, int height, int width, const cha
 }
 
 // generate primary ray direction
-void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, HandleIntersectionData* data) {
+void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight, Vec3f* &pix, Vec3f* orig, float imageAspectRatio, float scale, HandleIntersectionData* data) {
 	auto width = data->options.widthReference > 0 ? data->options.widthReference : data->options.width;
 	auto height = data->options.heightReference > 0 ? data->options.heightReference : data->options.height;
 	
@@ -88,7 +88,7 @@ void BaseRenderer::renderRay(int i, int j, float pixelWidth, float pixelHeight, 
 	*(pix++) = color / raysPerPixel;
 }
 
-Vec3f BaseRenderer::assignPointToQuadrant(int i, int total) {
+Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {
 	if (total < 4)
 		return Vec3f(0.0f);
 	if (total == 4) {
@@ -105,8 +105,7 @@ Vec3f BaseRenderer::assignPointToQuadrant(int i, int total) {
 	}
 }
 
-
-void BaseRenderer::renderPixel(int i, int j, Options &options,
+void BaseIntegrator::renderPixel(int i, int j, Options &options,
 	SceneInfo* scene)
 {
 	Vec3f* framebuffer = new Vec3f[1];
@@ -143,8 +142,7 @@ void BaseRenderer::renderPixel(int i, int j, Options &options,
 	delete[] framebuffer;
 }
 
-
-void BaseRenderer::render(Options &options,
+void BaseIntegrator::render(Options &options,
 	SceneInfo* scene)
 {
 	Vec3f *framebuffer = new Vec3f[options.width * options.height];
@@ -177,7 +175,7 @@ void BaseRenderer::render(Options &options,
 			//uint32_t* toHeight = new uint32_t(heightPerThread * (i + 1));
 			uint32_t* ipoint = new uint32_t(i);
 
-			data->renderer = this;
+			data->integrator = this;
 			//data->fromHeight = fromHeight;
 			//data->toHeight = toHeight;
 			data->chunkHeight = new uint32_t(heightPerThread);
@@ -185,7 +183,7 @@ void BaseRenderer::render(Options &options,
 			data->scene = scene;
 			data->multiThreadingHelper = multithreadingHelper;
 
-			myhandle[i] = (HANDLE)_beginthreadex(0, 0, &BaseRenderer::mythread, data, 0, 0);
+			myhandle[i] = (HANDLE)_beginthreadex(0, 0, &BaseIntegrator::mythread, data, 0, 0);
 			SetThreadAffinityMask(myhandle[i], static_cast<DWORD_PTR>(1) << i);
 		}
 
@@ -201,7 +199,7 @@ void BaseRenderer::render(Options &options,
 		threadInfo->fromHeight = options.heightStartOffset + 0;
 		threadInfo->toHeight = options.heightStartOffset + options.height;
 
-		BaseRenderer::renderPartial(&options.cameraPosition, pix, threadInfo, options, scene);
+		BaseIntegrator::renderPartial(&options.cameraPosition, pix, threadInfo, options, scene);
 	}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -219,7 +217,7 @@ void BaseRenderer::render(Options &options,
 	
 	std::stringstream fileNameStream;
 	fileNameStream << dateString << "_";
-	fileNameStream << options.renderer << "_";
+	fileNameStream << options.integrator << "_";
 	if (isAreaImage)
 		fileNameStream << "area" << options.widthStartOffset << "_" << options.heightStartOffset << "_";
 	else
@@ -235,10 +233,10 @@ void BaseRenderer::render(Options &options,
 	delete[] framebuffer;
 }
 
-unsigned int __stdcall BaseRenderer::mythread(void* data)
+unsigned int __stdcall BaseIntegrator::mythread(void* data)
 {
 	RenderThreadData* threadData = static_cast<RenderThreadData*>(data);
-	BaseRenderer* renderer = threadData->renderer;
+	BaseIntegrator* integrator = threadData->integrator;
 
 	std::stringstream stream;
 	stream << "Rendering thread " << *threadData->i << " - Starting" << std::endl;
@@ -255,8 +253,8 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 		//stream3 << "	Rendering chunk " << *threadData->i << " from " << fromHeight << " to " << toHeight << std::endl;
 		//std::cout << stream3.str();
 
-		renderer->renderPartial(renderer->sceneData.orig, &renderer->sceneData.pix[renderer->sceneData.options.width * threadInfo->fromHeight],
-			threadInfo, renderer->sceneData.options, threadData->scene);
+		integrator->renderPartial(integrator->sceneData.orig, &integrator->sceneData.pix[integrator->sceneData.options.width * threadInfo->fromHeight],
+			threadInfo, integrator->sceneData.options, threadData->scene);
 	}
 
 	std::stringstream stream2;
@@ -266,7 +264,7 @@ unsigned int __stdcall BaseRenderer::mythread(void* data)
 	return 0;
 }
 
-void BaseRenderer::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadInfo, const Options &options, SceneInfo* scene) {
+void BaseIntegrator::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadInfo, const Options &options, SceneInfo* scene) {
 	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
 	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
 	
