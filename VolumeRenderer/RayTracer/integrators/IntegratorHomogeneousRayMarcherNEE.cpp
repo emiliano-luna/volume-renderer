@@ -62,9 +62,10 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionD
 			Vec3f result = Vec3f(0.0f);
 			auto distance = data->tFar;
 
-			Vec3f light_dir{ 0, 1, 0 };
-			Vec3f light_color{ 0.655, 0.15, 0.45 };
-			auto sigma_a = 1 - material.dissolve;
+			Vec3f light_dir = Vec3f{ data->options.lightPosition.x, data->options.lightPosition.y, data->options.lightPosition.z };
+			Vec3f light_color = Vec3f{ data->options.lightColor.x, data->options.lightColor.y, data->options.lightColor.z };
+
+			auto sigma_a = data->options.sigma_a;
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);

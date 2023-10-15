@@ -62,14 +62,7 @@ Options* XMLManager::GetRendererOptions() {
 	options->heightReference = root.child("height").attribute("reference").as_int();
 	options->multiThreaded = root.child("multiThreaded").text().as_bool();
 	options->multiThreadedChunkSize = root.child("multiThreadedChunkSize").text().as_int();
-	//options->antiAliasing = root.child("antiAliasing").text().as_bool();
-	//options->colorDiffThreshold = root.child("antiAliasing").attribute("colorDiff").as_float();
-	//options->auxImages = root.child("auxImages").text().as_bool();
-	/*options->ambientLight = Vec3f(
-		root.child("ambient").attribute("r").as_float(),
-		root.child("ambient").attribute("g").as_float(),
-		root.child("ambient").attribute("b").as_float()
-	);*/
+
 	options->backgroundColor = Vec3f(
 		root.child("backgroundColor").attribute("r").as_float(),
 		root.child("backgroundColor").attribute("g").as_float(),
@@ -85,6 +78,15 @@ Options* XMLManager::GetRendererOptions() {
 	options->cameraRotation.x = root.child("camera").attribute("pitch").as_float();
 	options->cameraRotation.y = root.child("camera").attribute("yaw").as_float();
 	options->cameraRotation.z = root.child("camera").attribute("roll").as_float();
+
+	options->lightPosition.x = root.child("light").attribute("x").as_float();
+	options->lightPosition.y = root.child("light").attribute("y").as_float();
+	options->lightPosition.z = root.child("light").attribute("z").as_float();
+	options->lightColor.x = root.child("light").attribute("r").as_float();
+	options->lightColor.y = root.child("light").attribute("g").as_float();
+	options->lightColor.z = root.child("light").attribute("b").as_float();
+
+	options->heyneyGreensteinG = root.child("heyneygreenstein_g").text().as_float();
 
 	return options;
 }

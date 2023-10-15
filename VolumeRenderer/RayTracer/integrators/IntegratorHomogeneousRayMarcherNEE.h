@@ -13,4 +13,4 @@ public:
     Vec3f handleIntersection(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);
 };
 
-#endif // !VOLUMERENDERER_SCRATCH2INTERSECTIONHANDLER
+#endif

@@ -106,6 +106,9 @@ struct Options
 	Vec3f cameraPosition;
 	Vec3f cameraRotation;	
 	std::string integrator;
+	Vec3f lightPosition;
+	Vec3f lightColor;
+	float heyneyGreensteinG;
 };
 
 

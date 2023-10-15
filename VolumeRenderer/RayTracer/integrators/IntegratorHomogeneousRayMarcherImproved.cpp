@@ -63,19 +63,16 @@ Vec3f IntegratorHomogeneousRayMarcherImproved::handleIntersection(HandleIntersec
 			Vec3f result = Vec3f(0.0f);
 			auto distance = data->tFar;
 
-			Vec3f light_dir{ 0, 1, 0 };
-			Vec3f light_color{ 0.655, 0.15, 0.45 };
-			light_color *= 60;
+			Vec3f light_dir = Vec3f{ data->options.lightPosition.x, data->options.lightPosition.y, data->options.lightPosition.z };
+			Vec3f light_color = Vec3f{ data->options.lightColor.x, data->options.lightColor.y, data->options.lightColor.z };
 
 			//absorption coefficient
-			auto sigma_a = 1 - material.dissolve;
+			auto sigma_a = data->options.sigma_a;
 			//scattering coefficient
-			auto sigma_s = sigma_a;
-
+			auto sigma_s = data->options.sigma_s;
 			auto density = 1.0f;
-
 			// asymmetry factor of the phase function
-			float g = 0.0; 
+			float g = data->options.heyneyGreensteinG;
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);

@@ -53,7 +53,7 @@ Vec3f IntegratorDensitySampling::handleIntersection(HandleIntersectionData *data
 	if (data->previousObjectId == data->objectId)
 	{
 		auto distance = data->tFar;
-		auto sigma_a = 1 - material.dissolve;
+		auto sigma_a = data->options.sigma_a;
 		//for now we use the diffuse color of the object as the scattering color
 		auto scatteringColor = Vec3f(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
 		auto transmission = exp(-distance * sigma_a);

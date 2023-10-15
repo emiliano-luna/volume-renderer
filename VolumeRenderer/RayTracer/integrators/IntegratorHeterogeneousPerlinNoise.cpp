@@ -65,24 +65,20 @@ Vec3f IntegratorHeterogeneousPerlinNoise::handleIntersection(HandleIntersectionD
 		{
 			auto distance = data->tFar;
 
-			Vec3f light_dir{ 0, 1, 0 };
-			//Vec3f light_color{ 25.0f, 25.0f, 25.0f };
-			Vec3f light_color{ 0.655, 0.15, 0.45 };
-			light_color *= 60;
+			Vec3f light_dir = Vec3f{ data->options.lightPosition.x, data->options.lightPosition.y, data->options.lightPosition.z };
+			Vec3f light_color = Vec3f{ data->options.lightColor.x, data->options.lightColor.y, data->options.lightColor.z };
 
 			//absorption coefficient
-			//auto sigma_a = 1 - material.dissolve;
-			auto sigma_a = 1 - material.dissolve;
+			auto sigma_a = data->options.sigma_a;
 			//scattering coefficient
-			auto sigma_s = sigma_a;
+			auto sigma_s = data->options.sigma_s;
 			//extinction coefficient
 			auto sigma_t = sigma_a + sigma_s;
 			// heyney-greenstein asymmetry factor of the phase function
-			float g = 0.0; 
+			float g = data->options.heyneyGreensteinG; 
 
 			float step_size = 0.2;
 			int ns = std::ceil(distance / step_size);
-			//step_size = distance / ns;
 
 			//initialize transmission to 1 (fully transparent)
 			float transparency = 1;
@@ -97,8 +93,7 @@ Vec3f IntegratorHeterogeneousPerlinNoise::handleIntersection(HandleIntersectionD
 				static std::default_random_engine e;
 				static std::uniform_real_distribution<> dis(0, 1);
 				auto randomOffset = dis(e);
-				//float t = step_size * (n + 0.5f);
-				// 
+
 				//we use stochastic sampling to help with banding, even though it introduces noise
 				//Stochastic sampling is a Monte Carlo technique in which we sample 
 				//the function at appropriate non-uniformly spaced locations rather 
@@ -134,8 +129,6 @@ Vec3f IntegratorHeterogeneousPerlinNoise::handleIntersection(HandleIntersectionD
 
 					float cos_theta = Utils::dotProduct(rayDirection, light_dir);
 					float light_attenuation = exp(-tau * step_size * sigma_t);
-					// attenuate in-scattering contrib. by the transmission of all samples accumulated so far
-					//result += transparency * light_color * light_attenuation * sigma_s * density * step_size;
 					result += 
 						light_color *										// light color
 						light_attenuation *									// light ray transmission value
