@@ -171,7 +171,7 @@
     <ClInclude Include="integrators\IntegratorDensitySampling.h" />
     <ClInclude Include="Utils\MultithreadingHelper.h" />
     <ClInclude Include="integrators\RendererNanoVDBEmission.h" />
-    <ClInclude Include="integrators\RendererNanoVDBSimple.h" />
+    <ClInclude Include="integrators\IntegratorNanoVDBSimple.h" />
     <ClInclude Include="integrators\RendererParticipatingMedia1.h" />
     <ClInclude Include="integrators\IntegratorHeterogeneousPerlinNoise.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
@@ -233,7 +233,7 @@
     <ClCompile Include="integrators\IntegratorDensitySampling.cpp" />
     <ClCompile Include="Utils\MultithreadingHelper.cpp" />
     <ClCompile Include="integrators\RendererNanoVDBEmission.cpp" />
-    <ClCompile Include="integrators\RendererNanoVDBSimple.cpp" />
+    <ClCompile Include="integrators\IntegratorNanoVDBSimple.cpp" />
     <ClCompile Include="integrators\RendererParticipatingMedia1.cpp" />
     <ClCompile Include="integrators\IntegratorHeterogeneousPerlinNoise.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />

@@ -4,7 +4,7 @@
 #include "IntegratorHomogeneousRayMarcherNEE.h"
 #include "IntegratorHomogeneousRayMarcherImproved.h"
 #include "IntegratorHeterogeneousPerlinNoise.h"
-#include "RendererNanoVDBSimple.h"
+#include "IntegratorNanoVDBSimple.h"
 #include "RendererNanoVDBEmission.h"
 #include "RendererParticipatingMedia1.h"
 #include "RendererParticipatingMediaTransmission.h"
@@ -18,7 +18,7 @@ BaseIntegrator* IntegratorFactory::GetIntegrator(std::string name)
     if (name._Equal("homogeneousRayMarcherNEE")) return new IntegratorHomogeneousRayMarcherNEE();
     if (name._Equal("homogeneousRayMarcherImproved")) return new IntegratorHomogeneousRayMarcherImproved();
     if (name._Equal("heterogeneousPerlinNoise")) return new IntegratorHeterogeneousPerlinNoise();
-    if (name._Equal("nanoVDBSimple")) return new RendererNanoVDBSimple();
+    if (name._Equal("nanoVDBSimple")) return new IntegratorNanoVDBSimple();
     if (name._Equal("nanoVDBEmission")) return new RendererNanoVDBEmission();
     if (name._Equal("participatingMedia1")) return new RendererParticipatingMedia1();
     if (name._Equal("participatingMediaTransmission")) return new RendererParticipatingMediaTransmission();

@@ -165,7 +165,7 @@
     <ClInclude Include="integrators\IntegratorHeterogeneousPerlinNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererNanoVDBSimple.h">
+    <ClInclude Include="integrators\IntegratorNanoVDBSimple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="integrators\RendererNanoVDBEmission.h">
@@ -266,7 +266,7 @@
     <ClCompile Include="integrators\IntegratorHeterogeneousPerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererNanoVDBSimple.cpp">
+    <ClCompile Include="integrators\IntegratorNanoVDBSimple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\RendererNanoVDBEmission.cpp">

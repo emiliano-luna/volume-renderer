@@ -1,26 +1,41 @@
 <?xml version="1.0"?>
 <options>
   <models>
-    <model baseDir="..\Models\">SphereOnly.obj</model>
+    <!-- <model baseDir="..\Models\">SphereOnly.obj</model> -->
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
   <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
+  <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
   <sigma_a>0.2</sigma_a>
   <sigma_s>3</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
-  <rayPerPixelCount>16</rayPerPixelCount>
+  <rayPerPixelCount>1</rayPerPixelCount>
   <maxDepth>16</maxDepth>
-  <integrator>heterogeneousPerlinNoise</integrator>  
+  <integrator>nanoVDBSimple</integrator>  
 	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
-	<height>640</height>
+	<height startOffset="0" reference="640">640</height>
 	<multiThreaded>true</multiThreaded>
   <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
   <multiThreadedChunkSize>16</multiThreadedChunkSize>
+
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
-	<camera x="0" y="0.825" z="6.75" pitch="0" yaw="0" roll="0" fov="60"/>
+	<!-- camera for sphere -->
+  <!-- <camera x="0" y="0.825" z="6.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
+  <!-- camera for bunny_cloud.nvdb -->
+  <camera x="-2.5" y="15.5" z="38.0" pitch="0" yaw="0" roll="0" fov="80"/>
+  <!-- camera for fire.nvdb -->
   <!-- <camera x="-1.0" y="40" z="75.0" pitch="0" yaw="0" roll="0" fov="80"/> -->
+
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
-  <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5">
+ 
+  <!-- 60 times more than above -->
+  <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5"> -->
+  <!-- 1/2 above -->
+  <light x="0" y="1" z="0" r="9.825" g="2.25" b="6.75">
+  <!-- 1/10 above -->
+  <!-- <light x="0" y="-1" z="0" r="0.9825" g="0.225" b="0.675"> -->
+  <!-- 1/3 above -->
+  <!-- <light x="0" y="1" z="0" r="0.3275" g="0.075" b="0.225"> -->
 </options>
