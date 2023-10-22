@@ -1,8 +1,8 @@
 #define NOMINMAX
 
 #pragma once
-#ifndef VOLUMERENDERER_RENDERERNANOVDBEMISSION
-#define VOLUMERENDERER_RENDERERNANOVDBEMISSION
+#ifndef VOLUMERENDERER_IntegratorNanoVDBEmission
+#define VOLUMERENDERER_IntegratorNanoVDBEmission
 
 #include <Windows.h>
 #include "Process.h"
@@ -16,7 +16,7 @@
 #include <math.h>
 #include "BaseIntegrator.h"
 
-class RendererNanoVDBEmission : public BaseIntegrator
+class IntegratorNanoVDBEmission : public BaseIntegrator
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

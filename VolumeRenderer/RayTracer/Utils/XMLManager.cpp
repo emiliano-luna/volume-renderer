@@ -86,6 +86,10 @@ Options* XMLManager::GetRendererOptions() {
 	options->lightColor.y = root.child("light").attribute("g").as_float();
 	options->lightColor.z = root.child("light").attribute("b").as_float();
 
+	options->emissionColor.x = root.child("emission").attribute("r").as_float();
+	options->emissionColor.y = root.child("emission").attribute("g").as_float();
+	options->emissionColor.z = root.child("emission").attribute("b").as_float();
+
 	options->heyneyGreensteinG = root.child("heyneygreenstein_g").text().as_float();
 
 	return options;

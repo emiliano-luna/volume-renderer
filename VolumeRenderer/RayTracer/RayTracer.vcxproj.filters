@@ -168,7 +168,7 @@
     <ClInclude Include="integrators\IntegratorNanoVDBSimple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererNanoVDBEmission.h">
+    <ClInclude Include="integrators\IntegratorNanoVDBEmission.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="integrators\RendererParticipatingMedia1.h">
@@ -269,7 +269,7 @@
     <ClCompile Include="integrators\IntegratorNanoVDBSimple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererNanoVDBEmission.cpp">
+    <ClCompile Include="integrators\IntegratorNanoVDBEmission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\RendererParticipatingMedia1.cpp">

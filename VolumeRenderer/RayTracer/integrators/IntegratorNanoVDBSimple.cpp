@@ -42,7 +42,7 @@ Vec3f IntegratorNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t de
 		auto rayWorldPosition = data->sceneInfo->densityGrid->indexToWorldF(iRay(t));		
 
 		data->rayDirection = data->options.lightPosition;
-		data->rayOrigin = Vec3f(rayWorldPosition[0], rayWorldPosition[1], rayWorldPosition[2]);;
+		data->rayOrigin = Vec3f(rayWorldPosition[0], rayWorldPosition[1], rayWorldPosition[2]);
 
 		if (sigma > 0){	
 			//in shadow

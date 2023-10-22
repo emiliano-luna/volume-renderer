@@ -108,10 +108,9 @@ struct Options
 	std::string integrator;
 	Vec3f lightPosition;
 	Vec3f lightColor;
+	Vec3f emissionColor;
 	float heyneyGreensteinG;
 };
-
-
 
 struct PointLight {
 	Vec3f position;
