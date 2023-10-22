@@ -75,7 +75,9 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 		else if (sample < pNull + pAbsorption) {
 			float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
-			result += data->options.emissionColor * emission / emissionMax;
+			result += 
+				data->options.emissionColor * 
+				emission / emissionMax;
 
 			terminated = true;
 		}

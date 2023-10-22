@@ -9,19 +9,12 @@
 
 Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	Vec3f light_color{ 9.0f * 4.0f, 2.25f * 4.0f, 0 };
-	Vec3f light_dir{ 0, 1, 0 };
-
 	data->depthRemaining = data->options.maxDepth;
 
 	float tMin = 0.01f;
-
-	// heyney-greenstein asymmetry factor of the phase function
-	float g = 0.0;
-
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
-		// get an accessor.
+	// get an accessor.
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
 	auto accEmission = data->sceneInfo->temperatureGrid->tree().getAccessor();
 
@@ -41,17 +34,14 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 	//find sigmaMax, max density in the entire medium	
 	float sigmaMax = data->sceneInfo->densityExtrema.max();
 	float emissionMax = data->sceneInfo->temperatureExtrema.max();
+	//sigma_maj is very loose on fire.nvdb
+	float sigma_maj = sigmaMax * (data->options.sigma_a + data->options.sigma_s);
 
 	data->iRay = iRay;
 	data->tFar = iRay.t0();	
 
 	data->radiance = Vec3f(0.0f);
 	data->transmission = 1.0f;
-	//MIS from VolPathIntegrator
-	//weight for undirected radiance in MIS
-	data->r_u = 1.0f;
-	//weight for direct lighting in MIS
-	data->r_l = 1.0f;
 
 	bool terminated = false;
 
@@ -68,34 +58,29 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 
 		if (data->transmission <= 0.0f) {
 			terminated = true;
-
 			break;
 		}
 
 		//sample free path length
-		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;				
+		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
 		data->tFar += pathLength;
-						
+
 		//if ray is outside medium
-		if (data->tFar > data->iRay.t1()) { 
+		if (data->tFar > data->iRay.t1()) {
 			break;
 		}
 
-		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));		
+		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 		if (sigma <= 0.0f)
 			continue;
 
+		//current sample transparency
+		float sampleAttenuation = exp(-(pathLength - tMin) * sigma);
+		// attenuate volume object transparency by current sample transmission value
+		data->transmission *= sampleAttenuation;
+						
 		auto node = acc.getNodeInfo(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-
-		//get density at current position in the medium 
-		//sigma maj is wildly loose sigmaMax aprox 1.5 vs 0.001 sigma or less at most points
-		float sigma_maj = sigmaMax * (data->options.sigma_a + data->options.sigma_s); 
 		
-		//why does this work????	
-		/*
-		float sigma_maj =//((1 / sigma) / sigmaMax) *
-			//(data->options.sigma_a + data->options.sigma_s);*/
-
 		float pAbsorption = sigma * data->options.sigma_a / sigma_maj;
 		float pScattering = sigma * data->options.sigma_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
@@ -106,28 +91,18 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 		float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
 		if (emission > 0.0f) {
-			//// Compute $\beta'$ at new path vertex
-			//float pdf = sigma_maj * data->transmission;
-			//auto betap = data->transmission * data->transmission / pdf;
-
-			////compute rescaled path probability for absorption at path vertex
-			//float r_e = data->r_u * sigma_maj * data->transmission / pdf;
-
-			//// Update radiance for medium emission
-			//if (r_e > 0.0f)
-			//	data->radiance += betap * data->options.sigma_a * getEmission(data, emission / emissionMax) / r_e;
-			data->radiance += data->transmission * pAbsorption * getEmission(data, emission / emissionMax);
+			data->radiance +=
+				data->transmission *
+				pAbsorption *
+				data->options.emissionColor *
+				emission * 
+				pathLength;
 		}		
 
 		//null-scattering
-		if (sample < pNull) {
-		}
+		if (sample < pNull) {}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
-			//float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-
-			//data->radiance += /*data->transmission **/ getEmission(data, emission / emissionMax);
-
 			terminated = true;
 		}
 		//scattering
@@ -136,28 +111,21 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 			//if i run out of rebounds possible assume absorption
 			if (data->depthRemaining-- < 0) {
 				terminated = true;
-
 				break;
 			}
-
-			// Update _beta_ and _r_u_ for real-scattering event
-			//float pdf = data->transmission * data->options.sigma_s;
-			//data->transmission *= data->transmission * data->options.sigma_s / pdf;
-			//data->r_u *= data->transmission * data->options.sigma_s / pdf;
 
 			if (data->transmission > 0.0f && data->r_u > 0.0f) {
 				//Sample direct lighting at volume-scattering event
 				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigmaMax);
-				float cos_theta = Utils::dotProduct(data->rayDirection, light_dir);
+				float cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
+
+				float g = data->options.heyneyGreensteinG;
 
 				data->radiance += 
+					data->transmission *
 					lightTransmission * 
-					light_color * 
-					PhaseFunction::heyney_greenstein(g, cos_theta);
-
-				//use Henyey-Greenstein to get scattering direction
-				//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
-				float g = 0.0f;
+					data->options.lightColor * 
+					PhaseFunction::heyney_greenstein(g, cos_theta);				
 
 				float theta;
 				if (g != 0.0f) {
@@ -183,7 +151,6 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 					1 * cos(theta) };
 
 				data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
-
 				data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
 
 				// clip to bounds.
@@ -191,7 +158,6 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 					std::cout << "scattering failed";
 
 					terminated = true; 
-
 					break;
 				}
 
@@ -203,13 +169,7 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 	if (terminated)
 		return data->radiance;
 	else
-		return data->radiance + data->options.backgroundColor;
-}
-
-Vec3f RendererPBRTVolume::getEmission(HandleIntersectionData* data, float emissionWeight){
-	Vec3f emissionColor{ 1, 0.5f, 0.1f };
-
-	return emissionColor * emissionWeight;
+		return data->radiance + data->options.backgroundColor * data->transmission;
 }
 
 float RendererPBRTVolume::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigmaMax) {
@@ -221,7 +181,7 @@ float RendererPBRTVolume::directLightningRayMarch(HandleIntersectionData* data, 
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
 		float sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax; //std::min(maxStepSize, maxStepSize * sigma / sigmaMax);
+		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
 
 		//	# Calcular la transmisión del paso actual
 		float transmissionStep = exp(-stepSize * sigma);

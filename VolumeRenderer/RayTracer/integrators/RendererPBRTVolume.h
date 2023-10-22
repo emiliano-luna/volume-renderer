@@ -6,8 +6,6 @@
 
 #include "../Utils\Types.h"
 #include "../Utils\Utils.h"
-#include <vector>
-#include <rtcore.h>
 #include "BaseIntegrator.h"
 
 /// <summary>
@@ -17,7 +15,6 @@ class RendererPBRTVolume : public BaseIntegrator
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);
-	Vec3f getEmission(HandleIntersectionData* data, float emissionWeight);
 	float directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigmaMax);
 };
 
