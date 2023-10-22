@@ -1,4 +1,5 @@
 #include "EmbreeHelper.h"
+#include "../integrators/BaseIntegrator.h"
 
 bool EmbreeHelper::castSingleRay(
 	HandleIntersectionData* data)

@@ -3,7 +3,6 @@
 #define VOLUMERENDERER_DIRECTLIGHTSAMPLER
 
 #include "Types.h"
-#include "../IntersectionHandlers/BaseIntersectionHandler.h"
 #include "Utils.h"
 
 class DirectLightSampler

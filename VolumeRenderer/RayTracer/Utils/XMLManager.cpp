@@ -40,18 +40,10 @@ Options* XMLManager::GetRendererOptions() {
 	options->sigma_a = root.child("sigma_a").text().as_float();
 
 	auto rebounds = root.child("diffuseRebounds").children("rebound");
-
-	for (auto rebound : rebounds)
-	{
-		options->diffuseReboundCount.push_back(rebound.text().as_int());
-	}
-
 	options->rayPerPixelCount = root.child("rayPerPixelCount").text().as_uint();
 	options->integrator = root.child("integrator").text().as_string();
 
 	options->maxDepth = root.child("maxDepth").text().as_int();
-
-	options->radiusSearch = root.child("radius").text().as_float();
 	options->fileName = root.child("fileName").text().as_string();
 
 	options->width = root.child("width").text().as_int();

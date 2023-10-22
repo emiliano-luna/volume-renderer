@@ -63,12 +63,6 @@
     <ClInclude Include="Utils\DirectLightSampler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherNEE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -240,9 +234,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\DirectLightSampler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp">

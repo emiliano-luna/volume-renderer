@@ -4,16 +4,10 @@
 #ifndef VOLUMERENDERER_RENDERERPBRTVOLUME
 #define VOLUMERENDERER_RENDERERPBRTVOLUME
 
-#include <Windows.h>
-#include "Process.h"
 #include "../Utils\Types.h"
 #include "../Utils\Utils.h"
-#include "../IntersectionHandlers/BaseIntersectionHandler.h"
-#include "FreeImage.h"
 #include <vector>
 #include <rtcore.h>
-#include <stdio.h>
-#include <math.h>
 #include "BaseIntegrator.h"
 
 /// <summary>

@@ -8,7 +8,6 @@
 #include "Process.h"
 #include "../Utils\Types.h"
 #include "../Utils\Utils.h"
-#include "../IntersectionHandlers/BaseIntersectionHandler.h"
 #include "FreeImage.h"
 #include <vector>
 #include <rtcore.h>

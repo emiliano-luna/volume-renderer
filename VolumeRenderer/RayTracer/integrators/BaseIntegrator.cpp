@@ -86,9 +86,7 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 		data->rayDirection = dir;
 		data->objectId = -1;
 		data->L_total_diffuse = Vec3f(0.0f);
-		data->throughput = Vec3f(1.0f);
 
-		//color += castRayNanoVDB(data, 0, 1);
 		color += castRay(data, 0, 1);
 	}
 
@@ -124,7 +122,6 @@ void BaseIntegrator::renderPixel(int i, int j, Options &options,
 		
 	data->sceneInfo = scene;
 	data->options = options;	
-	data->throughput = 1;
 	data->randomGenerator = new RandomGenerator(0);
 
 	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
@@ -287,7 +284,6 @@ void BaseIntegrator::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadIn
 		
 	data->sceneInfo = scene;
 	data->options = options;	
-	data->throughput = 1;
 	data->randomGenerator = new RandomGenerator(threadInfo->fromHeight);
 	data->threadInfo = threadInfo;
 

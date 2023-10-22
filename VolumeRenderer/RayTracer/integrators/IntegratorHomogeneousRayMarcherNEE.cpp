@@ -41,11 +41,7 @@ Vec3f IntegratorHomogeneousRayMarcherNEE::castRay(HandleIntersectionData* data, 
 	}
 
 	//No diffuse hits
-	else if (data->throughput == 1.0f) {
-		data->L_total_diffuse = data->options.backgroundColor;
-	}
-
-	return data->L_total_diffuse;
+	return data->options.backgroundColor;
 }
 
 Vec3f IntegratorHomogeneousRayMarcherNEE::handleIntersection(HandleIntersectionData *data, uint32_t depth, uint32_t reboundFactor)

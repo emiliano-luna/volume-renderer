@@ -20,6 +20,8 @@
 #include "..\nanovdb\util\GridHandle.h"
 #include "..\tinyobjloader\tiny_obj_loader.h"
 #include "../nanovdb/util/GridStats.h"
+#include "RandomGenerator.h"
+#include "..\nanovdb\util\Ray.h"
 
 enum MaterialType { DIFFUSE_AND_GLOSSY, REFLECTION_AND_REFRACTION, REFLECTION };
 
@@ -82,7 +84,6 @@ struct Options
 	float sigma_s;
 	float sigma_a;
 	float sigma_n;
-	std::vector<int> diffuseReboundCount;
 	uint32_t rayPerPixelCount;
 	uint32_t width;
 	uint32_t widthStartOffset;
@@ -95,13 +96,8 @@ struct Options
 	uint8_t maxDepth;
 	Vec3f backgroundColor;
 	Vec3f ambientLight;
-	float bias;
 	bool multiThreaded;
 	uint32_t multiThreadedChunkSize;
-	bool antiAliasing;
-	float colorDiffThreshold;
-	bool auxImages;
-	float radiusSearch;
 	std::string fileName;
 	Vec3f cameraPosition;
 	Vec3f cameraRotation;	

@@ -2,7 +2,8 @@
 #ifndef VOLUMERENDERER_EMBREEHELPER
 #define VOLUMERENDERER_EMBREEHELPER
 
-#include "../IntersectionHandlers/BaseIntersectionHandler.h"
+#include "../Utils/Types.h"
+#include "../integrators/BaseIntegrator.h"
 
 class EmbreeHelper
 {

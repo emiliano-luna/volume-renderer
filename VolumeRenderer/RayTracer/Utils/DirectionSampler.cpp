@@ -25,7 +25,6 @@ Vec3f DirectionSampler::getCosineDistributionRebound(Vec3f normal, RandomGenerat
 	auto v3 = c * normal;
 
 	//add up to get velocity, vel = v1 + v2 + v3
-	//	vel = []
 	Vec3f res;
 	res = v1 + v2 + v3;
 

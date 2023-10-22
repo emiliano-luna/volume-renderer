@@ -13,7 +13,6 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 	Vec3f light_dir{ 0, 1, 0 };
 
 	data->depthRemaining = data->options.maxDepth;
-	data->rayWeight = 0.0f;
 
 	float tMin = 0.01f;
 

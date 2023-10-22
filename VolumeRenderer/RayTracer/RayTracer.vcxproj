@@ -175,8 +175,6 @@
     <ClInclude Include="integrators\RendererParticipatingMedia1.h" />
     <ClInclude Include="integrators\IntegratorHeterogeneousPerlinNoise.h" />
     <ClInclude Include="Utils\EmbreeHelper.h" />
-    <ClInclude Include="IntersectionHandlers\BaseIntersectionHandler.h" />
-    <ClInclude Include="IntersectionHandlers\DiffuseIntersectionHandler.h" />
     <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherNEE.h" />
     <ClInclude Include="integrators\IntegratorHomogeneousRayMarcherImproved.h" />
     <ClInclude Include="nanovdb\fog_example\common.h" />
@@ -237,7 +235,6 @@
     <ClCompile Include="integrators\RendererParticipatingMedia1.cpp" />
     <ClCompile Include="integrators\IntegratorHeterogeneousPerlinNoise.cpp" />
     <ClCompile Include="Utils\EmbreeHelper.cpp" />
-    <ClCompile Include="IntersectionHandlers\DiffuseIntersectionHandler.cpp" />
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherNEE.cpp" />
     <ClCompile Include="integrators\IntegratorHomogeneousRayMarcherImproved.cpp" />
     <ClCompile Include="integrators\IntegratorFactory.cpp" />
