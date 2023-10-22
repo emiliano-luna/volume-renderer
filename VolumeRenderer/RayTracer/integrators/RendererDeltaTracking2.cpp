@@ -9,11 +9,7 @@
 
 Vec3f RendererDeltaTracking2::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	Vec3f light_color{ 1, 1, 1 };
-	Vec3f light_dir{ 0, 1, 0 };
-
-	float g = 0.0f;
-
+	float tMin = 0.01f;
 	data->depthRemaining = data->options.maxDepth;
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
@@ -43,9 +39,9 @@ Vec3f RendererDeltaTracking2::castRay(HandleIntersectionData* data, uint32_t dep
 	data->radiance = Vec3f(0.0f);
 	data->transmission = 1.0f;
 
-	while (data->depthRemaining > 0 && data->transmission > 0.01f) {
+	while (data->depthRemaining > 0) {
 		//sample free path length
-		float pathLength = -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
+		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
 				
 		data->tFar += pathLength;
 
@@ -59,28 +55,37 @@ Vec3f RendererDeltaTracking2::castRay(HandleIntersectionData* data, uint32_t dep
 		sigma *= 64.0f;
 
 		//do delta tracking
-		if (sigma > 0.0f && 
-			data->randomGenerator->getFloat(0, 1) < sigma / sigmaMax) {
+		if (sigma > 0.0f && data->randomGenerator->getFloat(0, 1) < sigma / sigmaMax) {
 			//true collision
 			data->depthRemaining--;
 
 			float emission = temperatureAccesor.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-
-			float cos_theta = Utils::dotProduct(data->rayDirection, light_dir);
+			float cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
 
 			nanovdb::Vec3<float> lightRayOrigin = { data->iRay(data->tFar) };
-			nanovdb::Vec3<float> lightRayDirection = { light_dir.x, light_dir.y, light_dir.z };
+			nanovdb::Vec3<float> lightRayDirection = { data->options.lightPosition.x, data->options.lightPosition.y, data->options.lightPosition.z };
 			auto lightRay = nanovdb::Ray<float>(lightRayOrigin, lightRayDirection);
 
 			//add direct light contribution to radiance
 			auto lightTransmission = directLightningRayMarch(data, lightRay, densityAccesor, 5.0f, sigmaMax);
 			data->radiance +=
 				lightTransmission *
-				light_color *
-				PhaseFunction::heyney_greenstein(g, cos_theta);
+				data->options.lightColor *
+				PhaseFunction::heyney_greenstein(data->options.heyneyGreensteinG, cos_theta);
 
 			//sample new direction
 			handleIntersection(data, sigma / sigmaMax, emission / emissionMax, densityAccesor, sigmaMax);
+		}
+
+		// the greater the value the more often we will break out from the marching loop
+		int d = 2;
+		if (data->transmission < 1e-3) {
+			// break
+			if (data->randomGenerator->getFloat(0, 1) > 1.f / d)
+				data->depthRemaining = 0;
+			// we continue but compensate
+			else
+				data->transmission *= d;
 		}
 	}
 
@@ -88,8 +93,6 @@ Vec3f RendererDeltaTracking2::castRay(HandleIntersectionData* data, uint32_t dep
 }
 
 void RendererDeltaTracking2::handleIntersection(HandleIntersectionData* data, float absorptionChance, float emissionChance, nanovdb::DefaultReadAccessor<float> gridAccesor, float sigmaMax) {
-	Vec3f emissionColor{ 1, 0.5f, 0.1f };		
-	
 	//photon interacts with medium, decide intersection type		
 	float pEmission = emissionChance;
 	float pAbsorption = (absorptionChance + pEmission > 1.0f) ? 1.0f - pEmission : absorptionChance;
@@ -100,19 +103,12 @@ void RendererDeltaTracking2::handleIntersection(HandleIntersectionData* data, fl
 
 	//absorption
 	if (random < pAbsorption) {		
-		//auto transmission = directLightningRayMarch(data, gridAccesor, 5.0f, sigmaMax);
-
-		//data->L_total_diffuse = transmission * light_color;
-		//data->rayWeight = 0;
 		//end path
 		data->transmission = 0.0f;
 	}
 	//scattering
 	else if (random < pAbsorption + pScattering) {
-		//use Henyey-Greenstein to get scattering direction
-
-		//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
-		float g = 0.0f;
+		float g = data->options.heyneyGreensteinG;
 
 		float theta;
 		if (g != 0.0f) {
@@ -148,7 +144,7 @@ void RendererDeltaTracking2::handleIntersection(HandleIntersectionData* data, fl
 	}
 	//emission
 	else {
-		data->radiance += emissionColor;
+		data->radiance += data->options.emissionColor;
 		//end path
 		data->transmission = 0.0f;
 	}
@@ -156,11 +152,12 @@ void RendererDeltaTracking2::handleIntersection(HandleIntersectionData* data, fl
 
 float RendererDeltaTracking2::directLightningRayMarch(HandleIntersectionData* data, nanovdb::Ray<float> lightRay, nanovdb::DefaultReadAccessor<float> gridAccesor, float maxStepSize, float sigmaMax) {
 	auto transmission = 1.0f;
+	float tMin = 0.01f;
 
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
 		float sigma = gridAccesor.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-		float stepSize = std::min(maxStepSize, maxStepSize * sigma / sigmaMax);
+		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
 
 		//	# Calcular la transmisión del paso actual
 		float transmissionStep = exp(-stepSize * sigma);
@@ -177,51 +174,4 @@ float RendererDeltaTracking2::directLightningRayMarch(HandleIntersectionData* da
 			return transmission;
 		}
 	}
-}
-
-/// <summary>
-/// data->rayOrigin is already in grid index-space here 
-/// </summary>
-/// <param name="data"></param>
-/// <returns></returns>
-bool RendererDeltaTracking2::castLightRay(HandleIntersectionData* data) {
-	//using GridT = nanovdb::FloatGrid;
-	//using CoordT = nanovdb::Coord;
-	//using RealT = float;
-	//using Vec3T = nanovdb::Vec3<RealT>;
-	//using RayT = nanovdb::Ray<RealT>;
-
-	//auto rayDirection = Utils::normalize(data->rayDirection);
-
-	//nanovdb::GridHandle<nanovdb::HostBuffer>& handle = data->sceneInfo->densityGrid;
-
-	//auto* h_grid = handle.grid<float>();
-	//if (!h_grid)
-	//	throw std::runtime_error("GridHandle does not contain a valid host grid");
-
-	//float              wBBoxDimZ = (float)h_grid->worldBBox().dim()[2] * 2;
-	//Vec3T              wBBoxCenter = Vec3T(h_grid->worldBBox().min() + h_grid->worldBBox().dim() * 0.5f);
-	//nanovdb::CoordBBox treeIndexBbox = h_grid->tree().bbox();
-
-	//RayGenOp<Vec3T> rayGenOp(wBBoxDimZ, wBBoxCenter);
-	//CompositeOp     compositeOp;
-
-	//// get an accessor.
-	//auto acc = h_grid->tree().getAccessor();
-
-	//Vec3T rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
-	//Vec3T rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
-	//// generate ray.
-	//RayT wRay(rayEye, rayDir);
-	//// transform the ray to the grid's index-space.
-	//RayT iRay = wRay.worldToIndexF(*h_grid);
-	//// clip to bounds.
-	//if (iRay.clip(treeIndexBbox) == false) {
-	//	return false;
-	//}
-
-	////data->tFar = iRay.t1();
-	//data->nanoVDBRay = iRay;
-
-	return true;
 }
