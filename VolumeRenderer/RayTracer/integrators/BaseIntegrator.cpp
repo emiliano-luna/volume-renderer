@@ -36,14 +36,15 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 
 	auto raysPerPixel = data->options.rayPerPixelCount;
 	
-	Vec3f dir;
-	if (raysPerPixel != 4 && raysPerPixel != 16 && raysPerPixel != 256)
-		dir = Utils::normalize(Vec3f(x, y, -1));	
+	Vec3f dir = Utils::normalize(Vec3f(x, y, -1));
+	//if (raysPerPixel != 4 && raysPerPixel != 16)
+	//	dir = Utils::normalize(Vec3f(x, y, -1));	
 
 	Vec3f color;	
+	
 	for (size_t i = 0; i < raysPerPixel; i++)
 	{
-		if (raysPerPixel == 4)
+/*		if (raysPerPixel == 4)
 		{
 			if (i == 0)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25, y + pixelHeight * 0.25, -1));
 			if (i == 1)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25, y - pixelHeight * 0.25, -1));
@@ -70,7 +71,10 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 			if (i == 15)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
 		}
 		else if (raysPerPixel == 256)
-			dir = Utils::normalize(assignPointToQuadrant(i, 256));
+		{	*/		
+		auto offset = assignPointToQuadrant(i, raysPerPixel);
+		dir += Vec3f(offset.x * pixelWidth, offset.y * pixelHeight, 0);
+		//}
 
 		//El orden y, x, z es para matchear con el pitch roll y yaw del m�todo (usa otro sistemas de coordenadas)
 		if (data->options.cameraRotation.y != 0 && data->options.cameraRotation.x != 0 && data->options.cameraRotation.z != 0)
@@ -95,16 +99,18 @@ Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {
 	if (total < 4)
 		return Vec3f(0.0f);
 	if (total == 4) {
-		if (i == 0)	return Vec3f(0.25, 0.25, -1);
-		if (i == 1)	return Vec3f(0.25, -0.25, -1);
-		if (i == 2)	return Vec3f(-0.25, 0.25, -1);
-		if (i == 3)	return Vec3f(-0.25, -0.25, -1);
+		if (i == 0)	return Vec3f(0.25, 0.25, 0);
+		if (i == 1)	return Vec3f(0.25, -0.25, 0);
+		if (i == 2)	return Vec3f(-0.25, 0.25, 0);
+		if (i == 3)	return Vec3f(-0.25, -0.25, 0);
 	}
 	else {
-		if (i < total / 4)		return Vec3f(1 / total, 1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
-		if (i < 2 * total / 4)	return Vec3f(1 / total, -1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
-		if (i < 3 * total / 4)	return Vec3f(-1 / total, 1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
-		if (i <= total)			return Vec3f(-1 / total, -1 / total, 0) + assignPointToQuadrant(i / 4, total / 4);
+		auto recursiveResult = assignPointToQuadrant(i % (total / 4), total / 4);
+		auto value = 1.0f / total;
+		if (i < total / 4.0f)		return Vec3f(value, value, 0) + recursiveResult;
+		if (i < 2 * total / 4.0f)	return Vec3f(value, -value, 0) + recursiveResult;
+		if (i < 3 * total / 4.0f)	return Vec3f(-value, value, 0) + recursiveResult;
+		if (i < total)				return Vec3f(-value, -value, 0) + recursiveResult;
 	}
 }
 
