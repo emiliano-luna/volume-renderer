@@ -9,9 +9,9 @@
   <sigma_a>0.2</sigma_a>
   <sigma_s>3</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
-  <rayPerPixelCount>1</rayPerPixelCount>
+  <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
-  <integrator>nanoVDBEmission</integrator>  
+  <integrator>participatingMedia1</integrator>  
 	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
@@ -34,11 +34,10 @@
   <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5"> -->
   <!-- 1/2 above -->
   <!-- <light x="0" y="1" z="0" r="9.825" g="2.25" b="6.75"/> -->
-  <light x="0" y="1" z="0" r="4" g="4" b="4"/>
+  <light x="0" y="1" z="0" r="1" g="1" b="1"/>
   <!-- 1/10 above -->
   <!-- <light x="0" y="-1" z="0" r="0.9825" g="0.225" b="0.675"> -->
   <!-- 1/3 above -->
-  <!-- <light x="0" y="1" z="0" r="0.3275" g="0.075" b="0.225"> -->
-
+  <!-- <light x="0" y="1" z="0" r="0.3275" g="0.075" b="0.225"> -->  
   <emission r="1" g="0.5" b="0.1"/>
 </options>
