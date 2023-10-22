@@ -65,7 +65,7 @@ Vec3f RendererParticipatingMedia1::castRay(HandleIntersectionData* data, uint32_
 			float emission = temperatureAccesor.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
 			//sample new direction
-			handleIntersection(data, sigma / sigmaMax, 4.0f * emission / emissionMax, densityAccesor, sigmaMax);
+			handleIntersection(data, sigma / sigmaMax, emission / emissionMax, densityAccesor, sigmaMax);
 		}
 	}
 
@@ -122,7 +122,7 @@ void RendererParticipatingMedia1::handleIntersection(HandleIntersectionData* dat
 	}
 	//emission
 	else {
-		data->L_total_diffuse = emissionChance * data->options.emissionColor;
+		data->L_total_diffuse = data->options.emissionColor;
 		//end path
 		data->depthRemaining = 0;
 	}
