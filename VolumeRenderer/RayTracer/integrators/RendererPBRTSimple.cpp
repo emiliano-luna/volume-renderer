@@ -9,20 +9,12 @@
 
 Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	Vec3f light_color{ 1, 1, 1 };
-	Vec3f light_dir{ 0, 1, 0 };
-
 	data->depthRemaining = data->options.maxDepth;
-	data->rayWeight = 0.0f;
-
 	float tMin = 0.01f;
-
-	// heyney-greenstein asymmetry factor of the phase function
-	float g = 0.0;
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
-		// get an accessor.
+	// get an accessor.
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
 	auto accEmission = data->sceneInfo->temperatureGrid->tree().getAccessor();
 
@@ -38,15 +30,15 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 	}
 	
 	Vec3f result = Vec3f(0.0f);
-	
+
 	//find sigmaMax, max density in the entire medium	
 	float sigmaMax = data->sceneInfo->densityExtrema.max();
 	float emissionMax = data->sceneInfo->temperatureExtrema.max();
 
+	float sigma_maj = sigmaMax * (data->options.sigma_a + data->options.sigma_s);
+
 	data->iRay = iRay;
 	data->tFar = iRay.t0();	
-
-	data->radiance = Vec3f(0.0f);
 
 	bool terminated = false;
 
@@ -67,24 +59,23 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 			continue;
 
 		//get density at current position in the medium 
-		float sigma_maj = 
+		/*float sigma_maj = 
 			((1 / sigma) / sigmaMax) *
-			(data->options.sigma_a + data->options.sigma_s);
+			(data->options.sigma_a + data->options.sigma_s);*/		
 
-		float pAbsorption = data->options.sigma_a / sigma_maj;
-		float pScattering = data->options.sigma_s / sigma_maj;
+		float pAbsorption = sigma * data->options.sigma_a / sigma_maj;
+		float pScattering = sigma * data->options.sigma_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
 
 		float sample = data->randomGenerator->getFloat(0, 1);
 
 		//null-scattering
-		if (sample < pNull) {
-		}
+		if (sample < pNull) {}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
 			float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
-			data->radiance += /*data->transmission **/ getEmission(data, emission / emissionMax);
+			result += data->options.emissionColor * emission / emissionMax;
 
 			terminated = true;
 		}
@@ -94,13 +85,12 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 			//if i run out of rebounds possible assume absorption
 			if (data->depthRemaining-- < 0) {
 				terminated = true;
-
 				break;
 			}
 
 			//use Henyey-Greenstein to get scattering direction
 			//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
-			float g = 0.0f;
+			float g = data->options.heyneyGreensteinG;
 
 			float theta;
 			if (g != 0.0f) {
@@ -118,7 +108,6 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 
 			//phi randomly with uniform distribution in [0, 2*pi0]
 			float phi = data->randomGenerator->getFloat(0, 1) * 2 * M_PI;
-
 			//polar to cartesian coordinates
 			nanovdb::Vec3<float> iRayOrigin = { data->iRay(data->tFar) };
 			nanovdb::Vec3<float> rayDir = { 1 * sin(theta) * cos(phi),
@@ -126,13 +115,11 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 				1 * cos(theta) };
 
 			data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
-
 			data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
 
 			// clip to bounds.
 			if (data->iRay.clip(data->sceneInfo->gridBoundingBox) == false) {
 				std::cout << "scattering failed";
-
 				terminated = true; 
 
 				break;
@@ -143,13 +130,7 @@ Vec3f RendererPBRTSimple::castRay(HandleIntersectionData* data, uint32_t depth, 
 	}
 
 	if (terminated)
-		return data->radiance;
+		return result;
 	else
-		return data->radiance + data->options.backgroundColor;
-}
-
-Vec3f RendererPBRTSimple::getEmission(HandleIntersectionData* data, float emissionWeight){
-	Vec3f emissionColor{ 1, 0.5f, 0.1f };
-
-	return emissionColor * emissionWeight;
+		return result + data->options.backgroundColor;
 }

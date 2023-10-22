@@ -23,7 +23,6 @@ class RendererPBRTSimple : public BaseIntegrator
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);
-	Vec3f getEmission(HandleIntersectionData* data, float emissionWeight);
 };
 
 #endif
