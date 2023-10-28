@@ -9,9 +9,9 @@
   <sigma_a>2</sigma_a>
   <sigma_s>2</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
-  <rayPerPixelCount>256</rayPerPixelCount>
+  <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
-  <integrator>pbrtVolume</integrator>  
+  <integrator>deltaTracking</integrator>  
 	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->

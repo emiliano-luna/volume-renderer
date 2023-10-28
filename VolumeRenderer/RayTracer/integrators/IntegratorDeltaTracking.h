@@ -1,8 +1,8 @@
 #define NOMINMAX
 
 #pragma once
-#ifndef VOLUMERENDERER_RENDERERPBRTSIMPLE
-#define VOLUMERENDERER_RENDERERPBRTSIMPLE
+#ifndef VOLUMERENDERER_IntegratorDeltaTracking
+#define VOLUMERENDERER_IntegratorDeltaTracking
 
 #include <Windows.h>
 #include "Process.h"
@@ -18,7 +18,7 @@
 /// <summary>
 /// Based on SimpleVolPathIntegrator from PBRT 4.0 - delta tracking (no ray transmission) without direct lighting added to resulting image
 /// </summary>
-class RendererPBRTSimple : public BaseIntegrator
+class IntegratorDeltaTracking : public BaseIntegrator
 {
 public:			
 	virtual Vec3f castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor);

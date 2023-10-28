@@ -171,7 +171,7 @@
     <ClInclude Include="Utils\RandomGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererPBRTSimple.h">
+    <ClInclude Include="integrators\IntegratorDeltaTracking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="integrators\RendererPBRTVolume.h">
@@ -260,7 +260,7 @@
     <ClCompile Include="Utils\RandomGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererPBRTSimple.cpp">
+    <ClCompile Include="integrators\IntegratorDeltaTracking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\RendererPBRTVolume.cpp">

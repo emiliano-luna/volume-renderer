@@ -6,7 +6,7 @@
 #include "IntegratorHeterogeneousPerlinNoise.h"
 #include "IntegratorNanoVDBSimple.h"
 #include "IntegratorNanoVDBEmission.h"
-#include "RendererPBRTSimple.h"
+#include "IntegratorDeltaTracking.h"
 #include "RendererPBRTVolume.h"
 
 BaseIntegrator* IntegratorFactory::GetIntegrator(std::string name)
@@ -17,7 +17,7 @@ BaseIntegrator* IntegratorFactory::GetIntegrator(std::string name)
     if (name._Equal("heterogeneousPerlinNoise")) return new IntegratorHeterogeneousPerlinNoise();
     if (name._Equal("nanoVDBSimple")) return new IntegratorNanoVDBSimple();
     if (name._Equal("nanoVDBEmission")) return new IntegratorNanoVDBEmission();
-    if (name._Equal("pbrtSimple")) return new RendererPBRTSimple();
+    if (name._Equal("deltaTracking")) return new IntegratorDeltaTracking();
     if (name._Equal("pbrtVolume")) return new RendererPBRTVolume();
 
     return nullptr;
