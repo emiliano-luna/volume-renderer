@@ -7,7 +7,7 @@
 #include "IntegratorNanoVDBSimple.h"
 #include "IntegratorNanoVDBEmission.h"
 #include "IntegratorDeltaTracking.h"
-#include "RendererPBRTVolume.h"
+#include "IntegratorRatioTracking.h"
 
 BaseIntegrator* IntegratorFactory::GetIntegrator(std::string name)
 {
@@ -18,7 +18,7 @@ BaseIntegrator* IntegratorFactory::GetIntegrator(std::string name)
     if (name._Equal("nanoVDBSimple")) return new IntegratorNanoVDBSimple();
     if (name._Equal("nanoVDBEmission")) return new IntegratorNanoVDBEmission();
     if (name._Equal("deltaTracking")) return new IntegratorDeltaTracking();
-    if (name._Equal("pbrtVolume")) return new RendererPBRTVolume();
+    if (name._Equal("ratioTracking")) return new IntegratorRatioTracking();
 
     return nullptr;
 }

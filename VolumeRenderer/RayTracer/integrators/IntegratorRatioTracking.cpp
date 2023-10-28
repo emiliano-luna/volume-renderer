@@ -1,4 +1,4 @@
-#include "RendererPBRTVolume.h"
+#include "IntegratorRatioTracking.h"
 #include "../nanovdb/NanoVDB.h"
 #include "../nanovdb/util/Ray.h"
 #include "../nanovdb/util/IO.h"
@@ -7,7 +7,7 @@
 #include "../nanovdb/fog_example/common.h"
 #include "../Utils/PhaseFunction.h"
 
-Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
+Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
 	data->depthRemaining = data->options.maxDepth;
 
@@ -172,7 +172,7 @@ Vec3f RendererPBRTVolume::castRay(HandleIntersectionData* data, uint32_t depth, 
 		return data->radiance + data->options.backgroundColor * data->transmission;
 }
 
-float RendererPBRTVolume::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigmaMax) {
+float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigmaMax) {
 	auto transmission = 1.0f;
 	float tMin = 0.01f;
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();

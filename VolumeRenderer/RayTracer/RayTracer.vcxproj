@@ -165,7 +165,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="integrators\IntegratorDeltaTracking.h" />
-    <ClInclude Include="integrators\RendererPBRTVolume.h" />
+    <ClInclude Include="integrators\IntegratorRatioTracking.h" />
     <ClInclude Include="integrators\IntegratorDensitySampling.h" />
     <ClInclude Include="Utils\MultithreadingHelper.h" />
     <ClInclude Include="integrators\IntegratorNanoVDBEmission.h" />
@@ -222,7 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="integrators\IntegratorDeltaTracking.cpp" />
-    <ClCompile Include="integrators\RendererPBRTVolume.cpp" />
+    <ClCompile Include="integrators\IntegratorRatioTracking.cpp" />
     <ClCompile Include="integrators\IntegratorDensitySampling.cpp" />
     <ClCompile Include="Utils\MultithreadingHelper.cpp" />
     <ClCompile Include="integrators\IntegratorNanoVDBEmission.cpp" />

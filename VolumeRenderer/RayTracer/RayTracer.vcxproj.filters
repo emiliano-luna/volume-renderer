@@ -174,7 +174,7 @@
     <ClInclude Include="integrators\IntegratorDeltaTracking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererPBRTVolume.h">
+    <ClInclude Include="integrators\IntegratorRatioTracking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="integrators\IntegratorDensitySampling.h">
@@ -263,7 +263,7 @@
     <ClCompile Include="integrators\IntegratorDeltaTracking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererPBRTVolume.cpp">
+    <ClCompile Include="integrators\IntegratorRatioTracking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\IntegratorDensitySampling.cpp">

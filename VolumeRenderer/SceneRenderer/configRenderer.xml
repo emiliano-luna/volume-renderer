@@ -11,7 +11,7 @@
   <heyneygreenstein_g>0</heyneygreenstein_g>
   <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
-  <integrator>deltaTracking</integrator>  
+  <integrator>ratioTracking</integrator>  
 	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
