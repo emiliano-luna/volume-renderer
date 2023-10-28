@@ -58,11 +58,6 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sigma <= 0.0f)
 			continue;
 
-		//get density at current position in the medium 
-		/*float sigma_maj = 
-			((1 / sigma) / sigmaMax) *
-			(data->options.sigma_a + data->options.sigma_s);*/		
-
 		float pAbsorption = sigma * data->options.sigma_a / sigma_maj;
 		float pScattering = sigma * data->options.sigma_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);

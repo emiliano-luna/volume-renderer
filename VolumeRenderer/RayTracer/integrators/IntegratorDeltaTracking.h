@@ -15,9 +15,6 @@
 #include <math.h>
 #include "BaseIntegrator.h"
 
-/// <summary>
-/// Based on SimpleVolPathIntegrator from PBRT 4.0 - delta tracking (no ray transmission) without direct lighting added to resulting image
-/// </summary>
 class IntegratorDeltaTracking : public BaseIntegrator
 {
 public:			

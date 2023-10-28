@@ -8,9 +8,6 @@
 #include "../Utils\Utils.h"
 #include "BaseIntegrator.h"
 
-/// <summary>
-/// Based on VolPathIntegrator from PBRT 4.0
-/// </summary>
 class IntegratorRatioTracking : public BaseIntegrator
 {
 public:			
