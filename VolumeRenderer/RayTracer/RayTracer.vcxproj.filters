@@ -165,19 +165,10 @@
     <ClInclude Include="integrators\IntegratorNanoVDBEmission.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererParticipatingMedia1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\MultithreadingHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="integrators\RendererParticipatingMediaTransmission.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\RandomGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="integrators\RendererDeltaTracking2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="integrators\RendererPBRTSimple.h">
@@ -263,19 +254,10 @@
     <ClCompile Include="integrators\IntegratorNanoVDBEmission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererParticipatingMedia1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\MultithreadingHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="integrators\RendererParticipatingMediaTransmission.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\RandomGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="integrators\RendererDeltaTracking2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrators\RendererPBRTSimple.cpp">
