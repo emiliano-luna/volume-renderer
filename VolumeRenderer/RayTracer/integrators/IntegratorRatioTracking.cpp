@@ -62,7 +62,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		}
 
 		//sample free path length
-		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
+		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigma_maj;
 		data->tFar += pathLength;
 
 		//if ray is outside medium
@@ -116,7 +116,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 			if (data->transmission > 0.0f && data->r_u > 0.0f) {
 				//Sample direct lighting at volume-scattering event
-				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigmaMax);
+				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
 				float cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
 
 				float g = data->options.heyneyGreensteinG;
@@ -172,7 +172,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		return data->radiance + data->options.backgroundColor * data->transmission;
 }
 
-float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigmaMax) {
+float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigma_maj) {
 	auto transmission = 1.0f;
 	float tMin = 0.01f;
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
@@ -181,7 +181,7 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
 		float sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
+		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigma_maj;
 
 		//	# Calcular la transmisión del paso actual
 		float transmissionStep = exp(-stepSize * sigma);
