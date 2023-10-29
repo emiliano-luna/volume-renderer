@@ -77,6 +77,8 @@ Options* XMLManager::GetRendererOptions() {
 	options->lightColor.x = root.child("light").attribute("r").as_float();
 	options->lightColor.y = root.child("light").attribute("g").as_float();
 	options->lightColor.z = root.child("light").attribute("b").as_float();
+	auto lightMultiplier = root.child("light").attribute("multiplier").as_float();
+	options->lightColor *= lightMultiplier;
 
 	options->emissionColor.x = root.child("emission").attribute("r").as_float();
 	options->emissionColor.y = root.child("emission").attribute("g").as_float();

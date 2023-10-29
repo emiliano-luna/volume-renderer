@@ -9,7 +9,7 @@
   <sigma_a>2</sigma_a>
   <sigma_s>2</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
-  <rayPerPixelCount>16</rayPerPixelCount>
+  <rayPerPixelCount>256</rayPerPixelCount>
   <maxDepth>16</maxDepth>
   <integrator>ratioTracking</integrator>  
 	<width startOffset="0" reference="640">640</width>
@@ -31,9 +31,9 @@
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
  
   <!-- 60 times more than above -->
-  <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5"> -->
+  <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="2.0"/>
   <!-- 1/2 above -->
-  <light x="0" y="1" z="0" r="9.825" g="2.25" b="6.75"/>
+  <!-- <light x="0" y="1" z="0" r="9.825" g="2.25" b="6.75"/> -->
   <!-- <light x="0" y="1" z="0" r="1" g="1" b="1"/> -->
   <!-- 1/10 above -->
   <!-- <light x="0" y="-1" z="0" r="0.9825" g="0.225" b="0.675"> -->

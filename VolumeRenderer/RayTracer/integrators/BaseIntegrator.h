@@ -37,9 +37,6 @@ public:
 	Vec3f L_total_diffuse;
 	Vec3f radiance;
 	float transmission;
-	float r_u;
-	float r_l;
-
 	int depthRemaining;
 
 	nanovdb::Ray<float> iRay;

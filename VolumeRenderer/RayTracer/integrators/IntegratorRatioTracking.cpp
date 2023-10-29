@@ -114,18 +114,19 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 				break;
 			}
 
-			if (data->transmission > 0.0f && data->r_u > 0.0f) {
+			if (data->transmission > 0.0f) {
 				//Sample direct lighting at volume-scattering event
 				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
 				float cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
 
 				float g = data->options.heyneyGreensteinG;
 
-				data->radiance += 
+				data->radiance +=
 					data->transmission *
-					lightTransmission * 
-					data->options.lightColor * 
-					PhaseFunction::heyney_greenstein(g, cos_theta);				
+					lightTransmission *
+					data->options.lightColor *
+					PhaseFunction::heyney_greenstein(g, cos_theta);// *
+					//sigma / sigma_maj;//Ratio NEE
 
 				float theta;
 				if (g != 0.0f) {
@@ -184,7 +185,7 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigma_maj;
 
 		//	# Calcular la transmisión del paso actual
-		float transmissionStep = exp(-stepSize * sigma);
+		float transmissionStep = exp(-(stepSize - tMin) * sigma);
 
 		//	# Actualizar la transmisión total
 		transmission *= transmissionStep;
