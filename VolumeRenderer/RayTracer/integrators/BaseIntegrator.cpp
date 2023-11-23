@@ -262,7 +262,7 @@ unsigned int __stdcall BaseIntegrator::mythread(void* data)
 		//stream3 << "	Rendering chunk " << *threadData->i << " from " << fromHeight << " to " << toHeight << std::endl;
 		//std::cout << stream3.str();
 
-		integrator->renderPartial(integrator->sceneData.orig, &integrator->sceneData.pix[integrator->sceneData.options.width * threadInfo->fromHeight],
+		integrator->renderPartial(integrator->sceneData.orig, &integrator->sceneData.pix[integrator->sceneData.options.width * (threadInfo->fromHeight - integrator->sceneData.options.heightStartOffset)],
 			threadInfo, integrator->sceneData.options, threadData->scene);
 	}
 

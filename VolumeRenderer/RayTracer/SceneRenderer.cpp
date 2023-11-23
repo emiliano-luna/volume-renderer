@@ -20,7 +20,7 @@ void SceneRenderer::RenderScene(Options options)
 	BaseIntegrator* renderer = IntegratorFactory::GetIntegrator(options.integrator);
 
 	renderer->render(options, sceneInfo);
-	//renderer->renderPixel(254, 10, options, sceneInfo);
+	//renderer->renderPixel(131, 8, options, sceneInfo);
 
 	/* Though not strictly necessary in this example, you should
 	 * always make sure to release resources allocated through Embree. */

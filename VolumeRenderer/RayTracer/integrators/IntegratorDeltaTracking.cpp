@@ -11,6 +11,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 {
 	data->depthRemaining = data->options.maxDepth;
 	float tMin = 0.01f;
+	float tMax = 1.0f;
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
@@ -43,23 +44,28 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 	bool terminated = false;
 
 	while (!terminated && data->depthRemaining > 0) {
-		//sample free path length
-		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigmaMax;
+		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		auto mu_a = sigma * data->options.sigma_a;
+		auto mu_s = sigma * data->options.sigma_s;
+		auto mu_t = mu_a + mu_s;
+
+		float pathLength = 0;
+		if (sigma > 0.0f)
+			//sample free path length
+			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
 				
-		data->tFar += pathLength;
+		data->tFar += Utils::clamp(tMin, tMax, pathLength);
 						
 		//if ray is outside medium return its weight
 		if (data->tFar > data->iRay.t1()) { 
 			break;
-		}
-
-		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		}		
 
 		if (sigma <= 0.0f)
 			continue;
 
-		float pAbsorption = sigma * data->options.sigma_a / sigma_maj;
-		float pScattering = sigma * data->options.sigma_s / sigma_maj;
+		float pAbsorption = mu_a / sigma_maj;
+		float pScattering = mu_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
 
 		float sample = data->randomGenerator->getFloat(0, 1);

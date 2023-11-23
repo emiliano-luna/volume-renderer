@@ -83,6 +83,8 @@ Options* XMLManager::GetRendererOptions() {
 	options->emissionColor.x = root.child("emission").attribute("r").as_float();
 	options->emissionColor.y = root.child("emission").attribute("g").as_float();
 	options->emissionColor.z = root.child("emission").attribute("b").as_float();
+	auto emissionMultiplier = root.child("emission").attribute("multiplier").as_float();
+	options->emissionColor *= emissionMultiplier;
 
 	options->heyneyGreensteinG = root.child("heyneygreenstein_g").text().as_float();
 
