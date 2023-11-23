@@ -12,6 +12,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 	data->depthRemaining = data->options.maxDepth;
 
 	float tMin = 0.01f;
+	float tMax = 1.0f;
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
 	// get an accessor.
@@ -61,29 +62,38 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 			break;
 		}
 
-		//sample free path length
-		float pathLength = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigma_maj;
+		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		auto mu_a = sigma * data->options.sigma_a;
+		auto mu_s = sigma * data->options.sigma_s;
+		auto mu_t = mu_a + mu_s;
+
+		float pathLength = 0;
+		if (sigma > 0.0f)
+			//sample free path length
+			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+
+		pathLength = Utils::clamp(tMin, tMax, pathLength);
+
 		data->tFar += pathLength;
 
-		//if ray is outside medium
+		//if ray is outside medium return its weight
 		if (data->tFar > data->iRay.t1()) {
 			break;
 		}
 
-		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 		if (sigma <= 0.0f)
 			continue;
-
-		//current sample transparency
-		float sampleAttenuation = exp(-(pathLength - tMin) * sigma);
-		// attenuate volume object transparency by current sample transmission value
-		data->transmission *= sampleAttenuation;
-						
+								
 		auto node = acc.getNodeInfo(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 		
-		float pAbsorption = sigma * data->options.sigma_a / sigma_maj;
-		float pScattering = sigma * data->options.sigma_s / sigma_maj;
+		float pAbsorption = mu_a / sigma_maj;
+		float pScattering = mu_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
+
+		//current sample transparency
+		float sampleAttenuation = exp(-(pathLength - tMin) * mu_t);
+		// attenuate volume object transparency by current sample transmission value
+		data->transmission *= sampleAttenuation;
 
 		float sample = data->randomGenerator->getFloat(0, 1);
 
@@ -176,16 +186,27 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigma_maj) {
 	auto transmission = 1.0f;
 	float tMin = 0.01f;
+	float tMax = 1.0f;
+
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
 	auto lightRay = nanovdb::Ray<float>(data->iRay);
 
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
 		float sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
-		float stepSize = tMin + -log(data->randomGenerator->getFloat(0, 1)) / sigma_maj;
+		auto mu_a = sigma * data->options.sigma_a;
+		auto mu_s = sigma * data->options.sigma_s;
+		auto mu_t = mu_a + mu_s;
+
+		float pathLength = 0;
+		if (sigma > 0.0f)
+			//sample free path length
+			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+
+		float stepSize = Utils::clamp(tMin, tMax, pathLength);
 
 		//	# Calcular la transmisión del paso actual
-		float transmissionStep = exp(-(stepSize - tMin) * sigma);
+		float transmissionStep = exp(-(stepSize - tMin) * mu_t);
 
 		//	# Actualizar la transmisión total
 		transmission *= transmissionStep;
