@@ -9,6 +9,8 @@
 
 Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
+	bool hasEmission = data->sceneInfo->temperatureGrid;
+
 	data->depthRemaining = data->options.maxDepth;
 	float tMin = 0.01f;
 	float tMax = 1.0f;
@@ -17,7 +19,9 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	// get an accessor.
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
-	auto accEmission = data->sceneInfo->temperatureGrid->tree().getAccessor();
+	auto accEmission = acc;
+	if (hasEmission)
+		accEmission = data->sceneInfo->temperatureGrid->tree().getAccessor();
 
 	nanovdb::Vec3<float> rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
 	nanovdb::Vec3<float> rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
@@ -74,11 +78,13 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sample < pNull) {}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
-			float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+			if (hasEmission) {
+				float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
-			result += 
-				data->options.emissionColor * 
-				emission / emissionMax;
+				result +=
+					data->options.emissionColor *
+					emission / emissionMax;
+			}
 
 			terminated = true;
 		}

@@ -4,15 +4,15 @@
     <!-- <model baseDir="..\Models\">SphereOnly.obj</model> -->
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
-  <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
-  <!-- <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField> -->
-  <sigma_a>0.5</sigma_a>
-  <sigma_s>0.5</sigma_s>
+  <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
+  <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
+  <sigma_a>0.2</sigma_a>
+  <sigma_s>1.0</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
-  <rayPerPixelCount>16</rayPerPixelCount>
-  <maxDepth>16</maxDepth>
-  <integrator>ratioTracking</integrator>  
-	<width startOffset="160" reference="640">320</width>
+  <rayPerPixelCount>4</rayPerPixelCount>
+  <maxDepth>4</maxDepth>
+  <integrator>deltaTracking</integrator>  
+	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
 	<height startOffset="0" reference="640">640</height>
@@ -24,9 +24,9 @@
 	<!-- camera for sphere -->
   <!-- <camera x="0" y="0.825" z="6.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
   <!-- camera for bunny_cloud.nvdb -->
-  <!-- <camera x="-2.5" y="15.5" z="38.0" pitch="0" yaw="0" roll="0" fov="80"/> -->
+  <camera x="-15.5" y="40.5" z="-54.0" pitch="-20.0" yaw="190.0" roll="0.0" fov="50"/>
   <!-- camera for fire.nvdb -->
-  <camera x="-1.0" y="40" z="75.0" pitch="0" yaw="0" roll="0" fov="80"/>
+  <!-- <camera x="-1.0" y="40" z="75.0" pitch="0" yaw="0" roll="0" fov="80"/> -->
 
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
  

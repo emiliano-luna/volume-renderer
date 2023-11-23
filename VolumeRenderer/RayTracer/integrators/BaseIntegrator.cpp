@@ -36,48 +36,20 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 
 	auto raysPerPixel = data->options.rayPerPixelCount;
 	
-	Vec3f dir = Utils::normalize(Vec3f(x, y, -1));
+	Vec3f dirNormalized = Utils::normalize(Vec3f(x, y, -1));
 	//if (raysPerPixel != 4 && raysPerPixel != 16)
 	//	dir = Utils::normalize(Vec3f(x, y, -1));	
 
 	Vec3f color;	
 	
 	for (size_t i = 0; i < raysPerPixel; i++)
-	{
-/*		if (raysPerPixel == 4)
-		{
-			if (i == 0)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25, y + pixelHeight * 0.25, -1));
-			if (i == 1)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25, y - pixelHeight * 0.25, -1));
-			if (i == 2)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25, y + pixelHeight * 0.25, -1));
-			if (i == 3)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25, y - pixelHeight * 0.25, -1));
-		}
-		else if (raysPerPixel == 16)
-		{
-			if (i == 0)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 1)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 2)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 3)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 4)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 5)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 6)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 7)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y + pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 8)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 9)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 10)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 11)	dir = Utils::normalize(Vec3f(x + pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 12)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 13)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 + pixelHeight * 0.125, -1));
-			if (i == 14)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 + pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-			if (i == 15)	dir = Utils::normalize(Vec3f(x - pixelWidth * 0.25 - pixelWidth * 0.125, y - pixelHeight * 0.25 - pixelHeight * 0.125, -1));
-		}
-		else if (raysPerPixel == 256)
-		{	*/		
+	{	
 		auto offset = assignPointToQuadrant(i, raysPerPixel);
-		dir += Vec3f(offset.x * pixelWidth, offset.y * pixelHeight, 0);
-		//}
-
+		
+		auto dir = dirNormalized + Vec3f(offset.x * pixelWidth, offset.y * pixelHeight, 0);
+		
 		//El orden y, x, z es para matchear con el pitch roll y yaw del m�todo (usa otro sistemas de coordenadas)
-		if (data->options.cameraRotation.y != 0 && data->options.cameraRotation.x != 0 && data->options.cameraRotation.z != 0)
+		if (data->options.cameraRotation.y != 0 || data->options.cameraRotation.x != 0 || data->options.cameraRotation.z != 0)
 			Utils::rotate(data->options.cameraRotation.y, data->options.cameraRotation.x, data->options.cameraRotation.z, &dir);
 
 		//std::cout << i << " - " << dir << std::endl;
