@@ -9,8 +9,8 @@
   <sigma_a>0.2</sigma_a>
   <sigma_s>1.0</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
-  <rayPerPixelCount>4</rayPerPixelCount>
-  <maxDepth>4</maxDepth>
+  <rayPerPixelCount>16</rayPerPixelCount>
+  <maxDepth>16</maxDepth>
   <integrator>deltaTracking</integrator>  
 	<width startOffset="0" reference="640">640</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->

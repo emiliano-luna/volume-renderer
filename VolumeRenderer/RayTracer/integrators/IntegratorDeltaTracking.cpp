@@ -13,7 +13,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	data->depthRemaining = data->options.maxDepth;
 	float tMin = 0.01f;
-	float tMax = 1.0f;
+	float tMax = 0.5f;
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 
@@ -54,12 +54,16 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		auto mu_t = mu_a + mu_s;
 
 		float pathLength = 0;
-		if (sigma > 0.0f)
+		if (sigma > 0.0f)		
+		{
 			//sample free path length
 			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
-				
-		data->tFar += Utils::clamp(tMin, tMax, pathLength);
-						
+			data->tFar += Utils::clamp(tMin, tMax, pathLength);
+		}
+		else {
+			data->tFar += tMax;
+		}
+										
 		//if ray is outside medium return its weight
 		if (data->tFar > data->iRay.t1()) { 
 			break;
