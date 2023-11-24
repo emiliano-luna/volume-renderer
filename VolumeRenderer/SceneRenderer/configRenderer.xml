@@ -6,7 +6,7 @@
   </models>
   <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
-  <sigma_a>0.001</sigma_a>
+  <sigma_a>0.00075</sigma_a>
   <sigma_s>0.01</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
   <rayPerPixelCount>16</rayPerPixelCount>
@@ -29,9 +29,11 @@
   <!-- camera for fire.nvdb -->
   <!-- <camera x="-1.0" y="40" z="75.0" pitch="0" yaw="0" roll="0" fov="80"/> -->
 
-  <backgroundColor r="0.572" g="0.772" b="0.921"/> 
- 
-  <!-- 60 times more than above -->
-  <light x="0" y="-1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.1"/>
+  <!-- scratchapixel -->
+  <!-- <backgroundColor r="0.572" g="0.772" b="0.921"/>  -->
+  <!-- trying to match pbrt -->
+  <backgroundColor r="0.36" g="0.702" b="0.98"/> 
+
+  <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.0"/>  
   <emission r="0.25" g="0.125" b="0.025" multiplier="0.3"/>
 </options>
