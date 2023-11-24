@@ -6,25 +6,26 @@
   </models>
   <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
-  <sigma_a>0.2</sigma_a>
-  <sigma_s>1.0</sigma_s>
+  <sigma_a>0.14</sigma_a>
+  <sigma_s>1.4</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
   <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
   <integrator>deltaTracking</integrator>  
-	<width startOffset="0" reference="640">640</width>
+	<width startOffset="540" reference="2160">1080</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
-	<height startOffset="0" reference="640">640</height>
+	<height startOffset="540" reference="2160">1080</height>
 	<multiThreaded>true</multiThreaded>
   <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
-  <multiThreadedChunkSize>16</multiThreadedChunkSize>
+  <multiThreadedChunkSize>20</multiThreadedChunkSize>
 
 	<!-- pitch: x, crece hacia arriba, yaw: y, crece para la izquierda, roll: z, crece en sentido antihorario -->
 	<!-- camera for sphere -->
   <!-- <camera x="0" y="0.825" z="6.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
   <!-- camera for bunny_cloud.nvdb -->
-  <camera x="-15.5" y="40.5" z="-54.0" pitch="-20.0" yaw="190.0" roll="0.0" fov="50"/>
+  <!-- <camera x="-105.5" y="50.0" z="-60.0" pitch="-15.0" yaw="237.0" roll="0.0" fov="25"/> -->
+  <camera x="-10.0" y="33.5" z="46.0" pitch="-19.0" yaw="-8.0" roll="0.0" fov="100"/>
   <!-- camera for fire.nvdb -->
   <!-- <camera x="-1.0" y="40" z="75.0" pitch="0" yaw="0" roll="0" fov="80"/> -->
 
