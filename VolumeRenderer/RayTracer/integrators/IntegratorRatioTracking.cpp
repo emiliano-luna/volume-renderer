@@ -9,6 +9,8 @@
 
 Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
+	bool hasEmission = data->sceneInfo->temperatureGrid;
+
 	data->depthRemaining = data->options.maxDepth;
 
 	float tMin = 0.01f;
@@ -17,7 +19,10 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	// get an accessor.
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
-	auto accEmission = data->sceneInfo->temperatureGrid->tree().getAccessor();
+	auto accEmission = acc;
+
+	if (hasEmission)
+		accEmission = data->sceneInfo->temperatureGrid->tree().getAccessor();
 
 	nanovdb::Vec3<float> rayEye = { data->rayOrigin.x, data->rayOrigin.y, data->rayOrigin.z };
 	nanovdb::Vec3<float> rayDir = { data->rayDirection.x, data->rayDirection.y, data->rayDirection.z };
@@ -69,10 +74,14 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 		float pathLength = 0;
 		if (sigma > 0.0f)
+		{
 			//sample free path length
 			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
-
-		pathLength = Utils::clamp(tMin, tMax, pathLength);
+			pathLength = Utils::clamp(tMin, tMax, pathLength);
+		}
+		else {
+			pathLength = tMax;
+		}		
 
 		data->tFar += pathLength;
 
@@ -97,16 +106,18 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 		float sample = data->randomGenerator->getFloat(0, 1);
 
-		//add emission from medium scattering event
-		float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		if (hasEmission) {
+			//add emission from medium scattering event
+			float emission = accEmission.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 
-		if (emission > 0.0f) {
-			data->radiance +=
-				data->transmission *
-				pAbsorption *
-				data->options.emissionColor *
-				emission * 
-				pathLength;
+			if (emission > 0.0f) {
+				data->radiance +=
+					data->transmission *
+					pAbsorption *
+					data->options.emissionColor *
+					emission *
+					pathLength;
+			}
 		}		
 
 		//null-scattering
@@ -189,24 +200,48 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 	float tMax = 1.0f;
 
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
-	auto lightRay = nanovdb::Ray<float>(data->iRay);
+
+	nanovdb::Vec3<float> lightDirection = { data->options.lightPosition.x, data->options.lightPosition.y, data->options.lightPosition.z };
+	auto lightRay = nanovdb::Ray<float>(data->iRay(data->iRay.t0()), lightDirection);
+	
+	//clip to bounds.
+	if (lightRay.clip(data->sceneInfo->gridBoundingBox) == false) {
+		//ray is outside participating media so we assume it's reached the directional light
+		return transmission;
+	}
+
+	auto tFar = lightRay.t0();
 
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
-		float sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		float sigma = acc.getValue(nanovdb::Coord::Floor(lightRay(tFar)));
 		auto mu_a = sigma * data->options.sigma_a;
 		auto mu_s = sigma * data->options.sigma_s;
 		auto mu_t = mu_a + mu_s;
 
-		float pathLength = 0;
+		float stepSize = 0;
 		if (sigma > 0.0f)
+		{
 			//sample free path length
-			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+			stepSize -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+			stepSize = Utils::clamp(tMin, tMax, stepSize);
+		}
+		else {
+			stepSize = tMax;
+		}		 
 
-		float stepSize = Utils::clamp(tMin, tMax, pathLength);
+		tFar += stepSize;
+
+		//if ray is outside medium return its weight
+		if (tFar > lightRay.t1()) {
+			return transmission;
+		}
+
+		if (sigma <= 0.0f)
+			continue;
 
 		//	# Calcular la transmisión del paso actual
-		float transmissionStep = exp(-(stepSize - tMin) * mu_t);
+		float transmissionStep = exp(-(stepSize) * mu_t);
 
 		//	# Actualizar la transmisión total
 		transmission *= transmissionStep;
@@ -223,14 +258,5 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 
 		if (transmission <= 0.0f)
 			return transmission;
-
-		//	# Avanzar el rayo
-		lightRay = nanovdb::Ray<float>(lightRay(lightRay.t0() + stepSize), lightRay.dir());
-
-		// clip to bounds.
-		if (lightRay.clip(data->sceneInfo->gridBoundingBox) == false) {
-			//ray is outside participating media so we assume it's reached the directional light
-			return transmission;
-		}
 	}
 }

@@ -6,12 +6,12 @@
   </models>
   <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
-  <sigma_a>0.14</sigma_a>
-  <sigma_s>1.4</sigma_s>
+  <sigma_a>0.001</sigma_a>
+  <sigma_s>0.01</sigma_s>
   <heyneygreenstein_g>0</heyneygreenstein_g>
   <rayPerPixelCount>16</rayPerPixelCount>
   <maxDepth>16</maxDepth>
-  <integrator>deltaTracking</integrator>  
+  <integrator>ratioTracking</integrator>  
 	<width startOffset="540" reference="2160">1080</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
@@ -32,6 +32,6 @@
   <backgroundColor r="0.572" g="0.772" b="0.921"/> 
  
   <!-- 60 times more than above -->
-  <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.05"/>
+  <light x="0" y="-1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.1"/>
   <emission r="0.25" g="0.125" b="0.025" multiplier="0.3"/>
 </options>
