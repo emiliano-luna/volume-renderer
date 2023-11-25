@@ -146,7 +146,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 					data->transmission *
 					lightTransmission *
 					data->options.lightColor *
-					PhaseFunction::heyney_greenstein(g, cos_theta);// *
+					PhaseFunction::henyey_greenstein(g, cos_theta);// *
 					//sigma / sigma_maj;//Ratio NEE
 
 				float theta;

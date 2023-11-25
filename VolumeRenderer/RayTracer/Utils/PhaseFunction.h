@@ -7,7 +7,7 @@
 class PhaseFunction
 {
 public:
-	static float heyney_greenstein(const float& g, const float& cos_theta);
+	static float henyey_greenstein(const float& g, const float& cos_theta);
 };
 
 #endif

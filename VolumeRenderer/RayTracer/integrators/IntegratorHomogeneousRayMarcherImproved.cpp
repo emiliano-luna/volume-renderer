@@ -112,7 +112,7 @@ Vec3f IntegratorHomogeneousRayMarcherImproved::handleIntersection(HandleIntersec
 						light_attenuation * 
 						density * 
 						sigma_s * 
-						PhaseFunction::heyney_greenstein(g, cos_theta) * 
+						PhaseFunction::henyey_greenstein(g, cos_theta) * 
 						transparency * 
 						step_size;
 				}		

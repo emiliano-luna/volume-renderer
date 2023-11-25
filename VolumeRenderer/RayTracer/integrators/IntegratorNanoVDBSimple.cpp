@@ -64,7 +64,7 @@ Vec3f IntegratorNanoVDBSimple::castRay(HandleIntersectionData* data, uint32_t de
 					data->options.lightColor *							//light color
 					light_attenuation *									// light ray transmission value
 					sigma *												// scattering coefficient
-					PhaseFunction::heyney_greenstein(data->options.heyneyGreensteinG, cos_theta) *	// phase function
+					PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta) *	// phase function
 					transmittance *										// ray current transmission value
 					step_size;
 			}

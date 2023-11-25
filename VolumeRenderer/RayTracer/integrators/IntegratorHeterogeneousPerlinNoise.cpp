@@ -130,7 +130,7 @@ Vec3f IntegratorHeterogeneousPerlinNoise::handleIntersection(HandleIntersectionD
 						light_attenuation *									// light ray transmission value
 						density *											// volume density at the sample position
 						sigma_s *											// scattering coefficient
-						PhaseFunction::heyney_greenstein(g, cos_theta) *	// phase function
+						PhaseFunction::henyey_greenstein(g, cos_theta) *	// phase function
 						transparency *										// ray current transmission value
 						step_size;											// dx in our Riemann sum
 
