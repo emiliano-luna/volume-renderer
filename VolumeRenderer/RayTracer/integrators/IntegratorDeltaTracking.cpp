@@ -9,6 +9,7 @@
 
 Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
+	float pathPDF = 1.0f;
 	bool hasEmission = data->sceneInfo->temperatureGrid;
 
 	data->depthRemaining = data->options.maxDepth;
@@ -46,6 +47,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 	data->tFar = iRay.t0();	
 
 	bool terminated = false;
+	bool survived = false;
 
 	while (!terminated && data->depthRemaining > 0) {
 		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
@@ -54,23 +56,28 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		auto mu_t = mu_a + mu_s;
 
 		float pathLength = 0;
+		float distanceSamplePDF = 1.0f;
 		if (sigma > 0.0f)		
 		{
 			//sample free path length
-			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
-			data->tFar += Utils::clamp(tMin, tMax, pathLength);
+			auto sampledDistance = -log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+			pathLength = Utils::clamp(tMin, tMax, sampledDistance);
+			distanceSamplePDF = mu_t * exp(-pathLength * mu_t);
 		}
 		else {
-			data->tFar += tMax;
+			pathLength = tMax;
 		}
+
+		data->tFar += pathLength;
 										
 		//if ray is outside medium return its weight
 		if (data->tFar > data->iRay.t1()) { 
+			survived = true;
 			break;
 		}		
 
 		if (sigma <= 0.0f)
-			continue;
+			continue;		
 
 		float pAbsorption = mu_a / sigma_maj;
 		float pScattering = mu_s / sigma_maj;
@@ -79,7 +86,10 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		float sample = data->randomGenerator->getFloat(0, 1);
 
 		//null-scattering
-		if (sample < pNull) {}
+		if (sample < pNull) 
+		{
+			pathPDF *= pNull;
+		}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
 			if (hasEmission) {
@@ -105,30 +115,40 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 			//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
 			float g = data->options.heyneyGreensteinG;
 
-			float theta;
-			if (g != 0.0f) {
-				float xi = data->randomGenerator->getFloat(-1, 1);
+			float cos_theta;
+			float xi = data->randomGenerator->getFloat(0, 1);
 
+			if (g != 0.0f) {		
 				//get random theta and phi
 				//theta using Henyey-Greenstein function
 				float aux = ((1 - g * g) / (1 + g - 2 * g * xi));
-				float cos_theta = 1 / (2 * g) * (1 + g * g - (aux * aux));
-				theta = std::acos(cos_theta);
+				cos_theta = 1 / (2 * g) * (1 + g * g - (aux * aux));
 			}
 			else {
-				theta = data->randomGenerator->getFloat(0, 1) * 2 * M_PI;
+				cos_theta = 2.0 * xi - 1.0;
 			}
+
+			float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 
 			//phi randomly with uniform distribution in [0, 2*pi0]
 			float phi = data->randomGenerator->getFloat(0, 1) * 2 * M_PI;
 			//polar to cartesian coordinates
 			nanovdb::Vec3<float> iRayOrigin = { data->iRay(data->tFar) };
-			nanovdb::Vec3<float> rayDir = { 1 * sin(theta) * cos(phi),
-				1 * sin(theta) * sin(phi),
-				1 * cos(theta) };
+			nanovdb::Vec3<float> rayDir = { 
+				sin_theta * cos(phi),
+				sin_theta * sin(phi),
+				cos_theta };
 
 			data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
 			data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
+
+			//multiply path pdf for distance sample pdf
+			//we multiply first jump after scattering event only for now, not sure if this is ok
+			//note that this isn't the actual jump distance 
+			//but the one before clamped between tMin and tMax
+			//pathPDF *= distanceSamplePDF;
+			//multiply path pdf for direction sample pdf
+			pathPDF *= PhaseFunction::henyey_greenstein(g, cos_theta);
 
 			// clip to bounds.
 			if (data->iRay.clip(data->sceneInfo->gridBoundingBox) == false) {
@@ -140,10 +160,15 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 			data->tFar = data->iRay.t0();
 		}
-	}
+	}	
+
+	pathPDF *= 800000.0f;
+
+	if (pathPDF > 1.0f)
+		pathPDF = 1.0f;
 
 	if (terminated)
-		return result;
+		return result * pathPDF;
 	else
-		return result + data->options.backgroundColor;
+		return (result + data->options.backgroundColor) * pathPDF;
 }
