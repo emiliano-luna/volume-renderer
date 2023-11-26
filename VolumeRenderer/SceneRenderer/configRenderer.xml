@@ -6,10 +6,10 @@
   </models>
   <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
-  <sigma_a>0.15</sigma_a>
-  <sigma_s>0.85</sigma_s>
-  <heyneygreenstein_g>0.8</heyneygreenstein_g>
-  <rayPerPixelCount>64</rayPerPixelCount>
+  <sigma_a>0.14</sigma_a>
+  <sigma_s>1.4</sigma_s>
+  <heyneygreenstein_g>0.0</heyneygreenstein_g>
+  <rayPerPixelCount>4</rayPerPixelCount>
   <maxDepth>16</maxDepth>
   <integrator>deltaTracking</integrator>  
 	<width startOffset="540" reference="2160">1080</width>
@@ -17,6 +17,7 @@
   <!-- <width startOffset="160" reference="640">320</width> -->
 	<height startOffset="540" reference="2160">1080</height>
 	<multiThreaded>true</multiThreaded>
+  <importanceSampling>false</importanceSampling>
   <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
   <multiThreadedChunkSize>20</multiThreadedChunkSize>
 

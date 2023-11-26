@@ -58,24 +58,34 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 		data->rayDirection = dir;
 		data->objectId = -1;
 		data->L_total_diffuse = Vec3f(0.0f);
-
-		data->rayResults[i] = castRay(data, 0, 1);
-		data->rayPDFs[i] = data->rayPDF;		
+				
+		if (data->options.useImportanceSampling) {
+			data->rayResults[i] = castRay(data, 0, 1);
+			data->rayPDFs[i] = data->rayPDF;
+		}
+		else {
+			color += castRay(data, 0, 1);
+		}
 	}
 
-	auto totalRayPDFs = 0.0f;
-	for (size_t i = 0; i < raysPerPixel; i++)
-	{
-		totalRayPDFs += data->rayPDFs[i];
-	}
-	for (size_t i = 0; i < raysPerPixel; i++)
-	{
-		auto weight = data->rayPDFs[i] / totalRayPDFs;
-		auto rayColor = data->rayResults[i] * weight;
-		color += rayColor;
-	}
+	if (data->options.useImportanceSampling) {
+		auto totalRayPDFs = 0.0f;
+		for (size_t i = 0; i < raysPerPixel; i++)
+		{
+			totalRayPDFs += data->rayPDFs[i];
+		}
+		for (size_t i = 0; i < raysPerPixel; i++)
+		{
+			auto weight = data->rayPDFs[i] / totalRayPDFs;
+			auto rayColor = data->rayResults[i] * weight;
+			color += rayColor;
+		}
 
-	*(pix++) = color;// / raysPerPixel;
+		*(pix++) = color;
+	}
+	else {
+		*(pix++) = color / raysPerPixel;
+	}
 }
 
 Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {

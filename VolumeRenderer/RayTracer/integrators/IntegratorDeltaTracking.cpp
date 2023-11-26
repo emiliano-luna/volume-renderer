@@ -56,13 +56,13 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		auto mu_t = mu_a + mu_s;
 
 		float pathLength = 0;
-		float distanceSamplePDF = 1.0f;
+		//float distanceSamplePDF = 1.0f;
 		if (sigma > 0.0f)		
 		{
 			//sample free path length
 			auto sampledDistance = -log(data->randomGenerator->getFloat(0, 1)) / mu_t;
 			pathLength = Utils::clamp(tMin, tMax, sampledDistance);
-			distanceSamplePDF = mu_t * exp(-pathLength * mu_t);
+			//distanceSamplePDF = mu_t * exp(-pathLength * mu_t);
 		}
 		else {
 			pathLength = tMax;
@@ -88,7 +88,8 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		//null-scattering
 		if (sample < pNull) 
 		{
-			pathPDF *= pNull;
+			if (data->options.useImportanceSampling)
+				pathPDF *= pNull;
 		}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
@@ -142,13 +143,9 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 			data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
 			data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
 
-			//multiply path pdf for distance sample pdf
-			//we multiply first jump after scattering event only for now, not sure if this is ok
-			//note that this isn't the actual jump distance 
-			//but the one before clamped between tMin and tMax
-			//pathPDF *= distanceSamplePDF;
-			//multiply path pdf for direction sample pdf
-			pathPDF *= PhaseFunction::henyey_greenstein(g, cos_theta);
+			if (data->options.useImportanceSampling)
+				//multiply path pdf for direction sample pdf
+				pathPDF *= PhaseFunction::henyey_greenstein(g, cos_theta);
 
 			// clip to bounds.
 			if (data->iRay.clip(data->sceneInfo->gridBoundingBox) == false) {

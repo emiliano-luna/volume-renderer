@@ -106,6 +106,7 @@ struct Options
 	Vec3f lightColor;
 	Vec3f emissionColor;
 	float heyneyGreensteinG;
+	bool useImportanceSampling;
 };
 
 struct PointLight {

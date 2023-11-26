@@ -55,6 +55,8 @@ Options* XMLManager::GetRendererOptions() {
 	options->multiThreaded = root.child("multiThreaded").text().as_bool();
 	options->multiThreadedChunkSize = root.child("multiThreadedChunkSize").text().as_int();
 
+	options->useImportanceSampling = root.child("importanceSampling").text().as_bool();
+
 	options->backgroundColor = Vec3f(
 		root.child("backgroundColor").attribute("r").as_float(),
 		root.child("backgroundColor").attribute("g").as_float(),
