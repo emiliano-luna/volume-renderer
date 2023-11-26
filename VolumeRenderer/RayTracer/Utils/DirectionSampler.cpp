@@ -1,4 +1,5 @@
 #include "DirectionSampler.h"
+#include <algorithm>
 
 ONB* DirectionSampler::onb = new ONB();
 
@@ -29,4 +30,46 @@ Vec3f DirectionSampler::getCosineDistributionRebound(Vec3f normal, RandomGenerat
 	res = v1 + v2 + v3;
 
 	return res;
+}
+
+//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
+Vec3f DirectionSampler::sampleHenyeyGreenstein(float g, Vec3f direction, RandomGenerator* generator) {
+	onb->Update(direction);
+
+	auto normalizedDirection = Utils::normalize(direction);
+	float cos_theta;
+	float xi = generator->getFloat(0, 1);
+
+	if (g != 0.0f) {
+		//get random theta and phi
+		//theta using Henyey-Greenstein function
+		float aux = ((1 - g * g) / (1 - g + 2 * g * xi));
+		cos_theta = (1 + g * g - (aux * aux)) / (2 * g);
+	}
+	else {
+		cos_theta = 1.0 - 2.0 * xi;
+	}
+
+	float sin_theta = sqrt(std::max(0.0f, 1.0f - cos_theta * cos_theta));
+
+	//phi randomly with uniform distribution in [0, 2*pi0]
+	float phi = generator->getFloat(0, 1) * 2 * M_PI;
+
+	//(0,0,1) when gHG = 1.0
+	auto localDirection = Vec3f(
+		sin_theta * cos(phi),
+		sin_theta * sin(phi),
+		cos_theta);	
+
+	//multiply by corresponding directions	
+	/*auto v1 = localDirection.x * onb->s.x + localDirection.y * onb->t.x + localDirection.z * normalizedDirection.x;
+	auto v2 = localDirection.x * onb->s.y + localDirection.y * onb->t.y + localDirection.z * normalizedDirection.y;
+	auto v3 = localDirection.x * onb->s.z + localDirection.y * onb->t.z + localDirection.z * normalizedDirection.z;*/
+
+	auto v1 = localDirection.x * onb->s;
+	auto v2 = localDirection.y * onb->t;
+	auto v3 = localDirection.z * normalizedDirection;
+	auto v  = v1 + v2 + v3;
+
+	return v;
 }

@@ -6,6 +6,7 @@
 #include "../nanovdb/util/GridStats.h"
 #include "../nanovdb/fog_example/common.h"
 #include "../Utils/PhaseFunction.h"
+#include "../Utils/DirectionSampler.h"
 
 Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
@@ -113,39 +114,30 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 			}
 
 			//use Henyey-Greenstein to get scattering direction
-			//g parámetro de anisotropía (g=0 isotrópico; g>0 anisotropía hacia adelante; g<0 anisotropía hacia atrás)
-			float g = data->options.heyneyGreensteinG;
+			auto scatteredDirection = DirectionSampler::sampleHenyeyGreenstein(
+				data->options.heyneyGreensteinG, 
+				data->rayDirection, 
+				data->randomGenerator);
 
-			float cos_theta;
-			float xi = data->randomGenerator->getFloat(0, 1);
-
-			if (g != 0.0f) {		
-				//get random theta and phi
-				//theta using Henyey-Greenstein function
-				float aux = ((1 - g * g) / (1 + g - 2 * g * xi));
-				cos_theta = 1 / (2 * g) * (1 + g * g - (aux * aux));
-			}
-			else {
-				cos_theta = 2.0 * xi - 1.0;
-			}
-
-			float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-
-			//phi randomly with uniform distribution in [0, 2*pi0]
-			float phi = data->randomGenerator->getFloat(0, 1) * 2 * M_PI;
 			//polar to cartesian coordinates
 			nanovdb::Vec3<float> iRayOrigin = { data->iRay(data->tFar) };
 			nanovdb::Vec3<float> rayDir = { 
-				sin_theta * cos(phi),
-				sin_theta * sin(phi),
-				cos_theta };
-
-			data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
-			data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
+				scatteredDirection.x, 
+				scatteredDirection.y, 
+				scatteredDirection.z
+			};
 
 			if (data->options.useImportanceSampling)
+			{
+				float cos_theta = Utils::dotProduct(rayDirection, data->rayDirection);
 				//multiply path pdf for direction sample pdf
-				pathPDF *= PhaseFunction::henyey_greenstein(g, cos_theta);
+				pathPDF *= PhaseFunction::henyey_greenstein(
+					data->options.heyneyGreensteinG, 
+					cos_theta);
+			}
+
+			data->rayDirection = scatteredDirection;
+			data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
 
 			// clip to bounds.
 			if (data->iRay.clip(data->sceneInfo->gridBoundingBox) == false) {
@@ -172,11 +164,8 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	if (terminated)
 	{
-		//media color
-		//auto mediaColor = Vec3f(0.3f);
-
-		return result;// * pathPDF;
+		return result;
 	}
 	else
-		return (result + data->options.backgroundColor);// * pathPDF;
+		return (result + data->options.backgroundColor);
 }
