@@ -48,7 +48,6 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 	data->tFar = iRay.t0();	
 
 	bool terminated = false;
-	bool survived = false;
 
 	while (!terminated && data->depthRemaining > 0) {
 		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
@@ -73,7 +72,6 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 										
 		//if ray is outside medium return its weight
 		if (data->tFar > data->iRay.t1()) { 
-			survived = true;
 			break;
 		}		
 
@@ -99,7 +97,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 				result +=
 					data->options.emissionColor *
-					emission / emissionMax;
+					mu_a;
 			}
 
 			terminated = true;
