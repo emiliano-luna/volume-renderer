@@ -38,6 +38,9 @@ public:
 	Vec3f radiance;
 	float transmission;
 	int depthRemaining;
+	float* rayPDFs;
+	Vec3f* rayResults;
+	float rayPDF;
 
 	nanovdb::Ray<float> iRay;
 	RandomGenerator* randomGenerator;

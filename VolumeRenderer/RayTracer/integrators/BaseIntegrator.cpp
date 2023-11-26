@@ -59,10 +59,23 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 		data->objectId = -1;
 		data->L_total_diffuse = Vec3f(0.0f);
 
-		color += castRay(data, 0, 1);
+		data->rayResults[i] = castRay(data, 0, 1);
+		data->rayPDFs[i] = data->rayPDF;		
 	}
 
-	*(pix++) = color / raysPerPixel;
+	auto totalRayPDFs = 0.0f;
+	for (size_t i = 0; i < raysPerPixel; i++)
+	{
+		totalRayPDFs += data->rayPDFs[i];
+	}
+	for (size_t i = 0; i < raysPerPixel; i++)
+	{
+		auto weight = data->rayPDFs[i] / totalRayPDFs;
+		auto rayColor = data->rayResults[i] * weight;
+		color += rayColor;
+	}
+
+	*(pix++) = color;// / raysPerPixel;
 }
 
 Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {
@@ -84,41 +97,41 @@ Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {
 	}
 }
 
-void BaseIntegrator::renderPixel(int i, int j, Options &options,
-	SceneInfo* scene)
-{
-	Vec3f* framebuffer = new Vec3f[1];
-	Vec3f* pix = framebuffer;
-
-	HandleIntersectionData* data = new HandleIntersectionData();
-		
-	data->sceneInfo = scene;
-	data->options = options;	
-	data->randomGenerator = new RandomGenerator(0);
-
-	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
-	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
-
-	float scale = tan(Utils::deg2rad(options.fov * 0.5));
-	float imageAspectRatio = width / height;
-
-	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
-	float y = (1 - 2 * (0.5) / height) * scale;
-
-	float xPlusOne = (2 * (1.5) / width - 1) * imageAspectRatio * scale;
-	float pixelWidth = xPlusOne - x;
-
-	float yPlusOne = (1 - 2 * (1.5) / height) * scale;
-	float pixelHeight = yPlusOne - y;
-
-	renderRay(i, j, pixelWidth, pixelHeight, pix, &options.cameraPosition, imageAspectRatio, scale, data);
-
-	saveFile(framebuffer, 1, 1, "outPixel.png");
-
-	std::cout << "Renderer - Imagen Guardada.";
-
-	delete[] framebuffer;
-}
+//void BaseIntegrator::renderPixel(int i, int j, Options &options,
+//	SceneInfo* scene)
+//{
+//	Vec3f* framebuffer = new Vec3f[1];
+//	Vec3f* pix = framebuffer;
+//
+//	HandleIntersectionData* data = new HandleIntersectionData();
+//		
+//	data->sceneInfo = scene;
+//	data->options = options;	
+//	data->randomGenerator = new RandomGenerator(0);
+//
+//	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
+//	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
+//
+//	float scale = tan(Utils::deg2rad(options.fov * 0.5));
+//	float imageAspectRatio = width / height;
+//
+//	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
+//	float y = (1 - 2 * (0.5) / height) * scale;
+//
+//	float xPlusOne = (2 * (1.5) / width - 1) * imageAspectRatio * scale;
+//	float pixelWidth = xPlusOne - x;
+//
+//	float yPlusOne = (1 - 2 * (1.5) / height) * scale;
+//	float pixelHeight = yPlusOne - y;
+//
+//	renderRay(i, j, pixelWidth, pixelHeight, pix, &options.cameraPosition, imageAspectRatio, scale, data);
+//
+//	saveFile(framebuffer, 1, 1, "outPixel.png");
+//
+//	std::cout << "Renderer - Imagen Guardada.";
+//
+//	delete[] framebuffer;
+//}
 
 void BaseIntegrator::render(Options &options,
 	SceneInfo* scene)
@@ -258,6 +271,9 @@ void BaseIntegrator::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadIn
 	data->options = options;	
 	data->randomGenerator = new RandomGenerator(threadInfo->fromHeight);
 	data->threadInfo = threadInfo;
+	data->rayPDF = 1.0f;
+	data->rayPDFs = new float[options.rayPerPixelCount];
+	data->rayResults = new Vec3f[options.rayPerPixelCount];
 
 	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
 	float y = (1 - 2 * (0.5) / height) * scale;

@@ -162,13 +162,24 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		}
 	}	
 
-	pathPDF *= 800000.0f;
+	//pathPDF *= 800000.0f;
+	//we increment values, particularly those near 0, to avoid getting images that are too dark
+	//https://www.wolframalpha.com/input?i=f%28x%29+%3D+-+%281+-+x%29+%5E+3+%2B+1
+	/*if (pathPDF < 1.0f)
+		pathPDF = -std::pow(1 - pathPDF, 5) + 1;*/
 
-	if (pathPDF > 1.0f)
-		pathPDF = 1.0f;
+	//if (pathPDF > 1.0f)
+	//	pathPDF = 1.0f;
+
+	data->rayPDF = pathPDF;
 
 	if (terminated)
-		return result * pathPDF;
+	{
+		//media color
+		//auto mediaColor = Vec3f(0.3f);
+
+		return result;// * pathPDF;
+	}
 	else
-		return (result + data->options.backgroundColor) * pathPDF;
+		return (result + data->options.backgroundColor);// * pathPDF;
 }
