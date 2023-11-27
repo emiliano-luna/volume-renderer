@@ -15,8 +15,8 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	data->depthRemaining = data->options.maxDepth;
 
-	float tMin = 0.01f;
-	float tMax = 0.5f;
+	float tMin = data->options.stepSizeMin;
+	float tMax = data->options.stepSizeMax;
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 

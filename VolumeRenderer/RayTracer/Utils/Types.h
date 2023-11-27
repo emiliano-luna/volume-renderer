@@ -107,6 +107,8 @@ struct Options
 	Vec3f emissionColor;
 	float heyneyGreensteinG;
 	bool useImportanceSampling;
+	float stepSizeMin;
+	float stepSizeMax;
 };
 
 struct PointLight {

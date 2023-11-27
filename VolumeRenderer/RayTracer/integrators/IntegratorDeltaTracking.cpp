@@ -14,8 +14,8 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 	bool hasEmission = data->sceneInfo->temperatureGrid;
 
 	data->depthRemaining = data->options.maxDepth;
-	float tMin = 0.01f;
-	float tMax = 0.5f;
+	float tMin = data->options.stepSizeMin;
+	float tMax = data->options.stepSizeMax;
 
 	auto rayDirection = Utils::normalize(data->rayDirection);
 

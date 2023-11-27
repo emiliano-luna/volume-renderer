@@ -90,5 +90,8 @@ Options* XMLManager::GetRendererOptions() {
 
 	options->heyneyGreensteinG = root.child("heyneygreenstein_g").text().as_float();
 
+	options->stepSizeMin = root.child("stepSize").attribute("min").as_float();
+	options->stepSizeMax = root.child("stepSize").attribute("max").as_float();
+
 	return options;
 }
