@@ -36,9 +36,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 	if (iRay.clip(data->sceneInfo->gridBoundingBox) == false) {
 		return Vec3f(data->options.backgroundColor);
 	}
-	
-	Vec3f result = Vec3f(0.0f);
-	
+
 	//find sigmaMax, max density in the entire medium	
 	float sigmaMax = data->sceneInfo->densityExtrema.max();
 	float emissionMax = data->sceneInfo->temperatureExtrema.max();
@@ -78,7 +76,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sigma > 0.0f)
 		{
 			//sample free path length
-			pathLength -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
 			pathLength = Utils::clamp(tMin, tMax, pathLength);
 		}
 		else {
@@ -105,7 +103,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		data->transmission *= sampleAttenuation;
 		pathPDF *= sampleAttenuation;
 
-		float sample = data->randomGenerator->getFloat(0, 1);
+		float sample = data->randomGenerator->getFloat(0.0f, 1.0f);
 
 		if (hasEmission) {
 			//add emission from medium scattering event
@@ -144,11 +142,13 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 				data->radiance +=
 					data->transmission *
 					lightTransmission *
-					data->options.lightColor *
+					data->options.lightColor *					
+					pathLength *
 					PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);// *
-					//sigma / sigma_maj;//Ratio NEE
+					
+				//sigma / sigma_maj;//Ratio NEE
 
-				auto scatteredDirection = DirectionSampler::sampleHenyeyGreenstein(
+				auto scatteredDirection = data->directionSampler->sampleHenyeyGreenstein(
 					data->options.heyneyGreensteinG,
 					data->rayDirection,
 					data->randomGenerator);
@@ -170,7 +170,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 						cos_theta);
 				}
 
-				data->rayDirection = Vec3f(rayDir[0], rayDir[1], rayDir[2]);
+				data->rayDirection = scatteredDirection;
 				data->iRay = nanovdb::Ray<float>(iRayOrigin, rayDir);
 
 				// clip to bounds.
@@ -194,8 +194,8 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigma_maj) {
 	auto transmission = 1.0f;
-	float tMin = 0.01f;
-	float tMax = 0.5f;
+	float tMin = data->options.stepSizeMin * 100;
+	float tMax = data->options.stepSizeMax * 100;
 
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
 
@@ -225,7 +225,7 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 		if (sigma > 0.0f)
 		{
 			//sample free path length
-			stepSize -= log(data->randomGenerator->getFloat(0, 1)) / mu_t;
+			stepSize -= log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
 			stepSize = Utils::clamp(tMin, tMax, stepSize);
 		}
 		else {

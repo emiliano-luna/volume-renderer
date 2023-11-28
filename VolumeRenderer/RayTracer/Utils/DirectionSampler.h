@@ -10,10 +10,11 @@
 class DirectionSampler
 {
 public:
-	static Vec3f getCosineDistributionRebound(Vec3f normal, RandomGenerator* generator);
-	static Vec3f sampleHenyeyGreenstein(float g, Vec3f direction, RandomGenerator* generator);
+	DirectionSampler();
+	Vec3f getCosineDistributionRebound(Vec3f normal, RandomGenerator* generator);
+	Vec3f sampleHenyeyGreenstein(float g, Vec3f direction, RandomGenerator* generator);
 private:
-	static ONB* onb;
+	ONB* onb;
 };
 
 #endif

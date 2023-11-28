@@ -14,6 +14,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 	bool hasEmission = data->sceneInfo->temperatureGrid;
 
 	data->depthRemaining = data->options.maxDepth;
+
 	float tMin = data->options.stepSizeMin;
 	float tMax = data->options.stepSizeMax;
 
@@ -112,7 +113,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 			}
 
 			//use Henyey-Greenstein to get scattering direction
-			auto scatteredDirection = DirectionSampler::sampleHenyeyGreenstein(
+			auto scatteredDirection = data->directionSampler->sampleHenyeyGreenstein(
 				data->options.heyneyGreensteinG, 
 				data->rayDirection, 
 				data->randomGenerator);

@@ -16,6 +16,7 @@
 #include <chrono>
 #include <thread>
 #include "../Utils\MultithreadingHelper.h"
+#include "../Utils/DirectionSampler.h"
 
 class HandleIntersectionData {
 public:
@@ -45,6 +46,7 @@ public:
 	nanovdb::Ray<float> iRay;
 	RandomGenerator* randomGenerator;
 	ThreadInfo* threadInfo;
+	DirectionSampler* directionSampler;
 };
 
 struct SceneData {

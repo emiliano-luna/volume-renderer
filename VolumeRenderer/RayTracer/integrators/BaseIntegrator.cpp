@@ -280,6 +280,7 @@ void BaseIntegrator::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadIn
 	data->sceneInfo = scene;
 	data->options = options;	
 	data->randomGenerator = new RandomGenerator(threadInfo->fromHeight);
+	data->directionSampler = new DirectionSampler();
 	data->threadInfo = threadInfo;
 	data->rayPDF = 1.0f;
 	data->rayPDFs = new float[options.rayPerPixelCount];
@@ -299,5 +300,11 @@ void BaseIntegrator::renderPartial(Vec3f* orig, Vec3f* pix, ThreadInfo* threadIn
 			renderRay(i, j, pixelWidth, pixelHeight, pix, orig, imageAspectRatio, scale, data);
 		}
 	}
+
+	delete data->randomGenerator;
+	delete data->directionSampler;
+	delete data->rayPDFs;
+	delete data->rayResults;
+	delete data;
 }
 
