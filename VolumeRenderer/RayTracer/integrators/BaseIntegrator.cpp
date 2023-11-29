@@ -69,23 +69,13 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 	}
 
 	if (data->options.useImportanceSampling) {
-		auto totalRayPDFs = 0.0f;
 		for (size_t i = 0; i < raysPerPixel; i++)
 		{
-			totalRayPDFs += data->rayPDFs[i];
+			color += data->rayResults[i] / data->rayPDFs[i];
 		}
-		for (size_t i = 0; i < raysPerPixel; i++)
-		{
-			auto weight = data->rayPDFs[i] / totalRayPDFs;
-			auto rayColor = data->rayResults[i] * weight;
-			color += rayColor;
-		}
-
-		*(pix++) = color;
 	}
-	else {
-		*(pix++) = color / raysPerPixel;
-	}
+		
+	*(pix++) = color / (float)raysPerPixel;
 }
 
 Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {

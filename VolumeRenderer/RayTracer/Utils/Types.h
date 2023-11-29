@@ -65,6 +65,10 @@ public:
 	{
 		return Vec3f(v.x / r, v.y / r, v.z / r);
 	}
+	friend Vec3f operator / (const Vec3f& v, const float& r)
+	{
+		return Vec3f(v.x / r, v.y / r, v.z / r);
+	}
 	friend std::ostream & operator << (std::ostream &os, const Vec3f &v)
 	{
 		return os << v.x << ", " << v.y << ", " << v.z;
@@ -105,6 +109,7 @@ struct Options
 	Vec3f lightPosition;
 	Vec3f lightColor;
 	Vec3f emissionColor;
+	Vec3f mediumColor;
 	float heyneyGreensteinG;
 	bool useImportanceSampling;
 	float stepSizeMin;

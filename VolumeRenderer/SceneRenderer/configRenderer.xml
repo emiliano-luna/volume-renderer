@@ -4,19 +4,19 @@
     <!-- <model baseDir="..\Models\">SphereOnly.obj</model> -->
     <!-- <model baseDir="..\Models\">CornellBox-Sphere.obj</model>     -->
   </models>
-  <densityField baseDir="..\DensityFields\">fire.nvdb</densityField>
-  <!-- <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField> -->
-  <sigma_a>2.0</sigma_a>
-  <sigma_s>2.0</sigma_s>
+  <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
+  <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
+  <sigma_a>0.1</sigma_a>
+  <sigma_s>0.9</sigma_s>
   <heyneygreenstein_g>0.8</heyneygreenstein_g>
   <rayPerPixelCount>16</rayPerPixelCount>
-  <stepSize min="0.0001" max="0.01"/>
+  <stepSize min="0.001" max="0.1"/>
   <maxDepth>16</maxDepth>
   <integrator>ratioTracking</integrator>  
-	<width startOffset="0" reference="540">540</width>
+	<width startOffset="540" reference="2160">1080</width>
 	<!-- <height startOffset="0" reference="640">16</height> -->
   <!-- <width startOffset="160" reference="640">320</width> -->
-	<height startOffset="0" reference="1080">1080</height>
+	<height startOffset="540" reference="2160">1080</height>
 	<multiThreaded>true</multiThreaded>
   <importanceSampling>false</importanceSampling>
   <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
@@ -27,9 +27,9 @@
   <!-- <camera x="0" y="0.825" z="6.75" pitch="0" yaw="0" roll="0" fov="60"/> -->
   <!-- camera for bunny_cloud.nvdb -->
   <!-- <camera x="-105.5" y="50.0" z="-60.0" pitch="-15.0" yaw="237.0" roll="0.0" fov="25"/> -->
-  <!-- <camera x="-10.0" y="33.5" z="46.0" pitch="-19.0" yaw="-8.0" roll="0.0" fov="100"/> -->
+  <camera x="-10.0" y="33.5" z="46.0" pitch="-19.0" yaw="-8.0" roll="0.0" fov="100"/>
   <!-- camera for fire.nvdb -->
-  <camera x="-1.0" y="10" z="75.0" pitch="20" yaw="0" roll="0" fov="75"/>
+  <!-- <camera x="-1.0" y="10" z="75.0" pitch="20" yaw="0" roll="0" fov="75"/> -->
 
   <!-- scratchapixel -->
   <!-- <backgroundColor r="0.572" g="0.772" b="0.921"/>  -->
@@ -39,4 +39,5 @@
   <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.1"/>   -->
   <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="80.0"/>  
   <emission r="0.25" g="0.125" b="0.025" multiplier="16.0"/>
+  <medium r="1.0" g="1.0" b="1.0" multiplier="1.0"/>
 </options>

@@ -88,6 +88,12 @@ Options* XMLManager::GetRendererOptions() {
 	auto emissionMultiplier = root.child("emission").attribute("multiplier").as_float();
 	options->emissionColor *= emissionMultiplier;
 
+	options->mediumColor.x = root.child("medium").attribute("r").as_float();
+	options->mediumColor.y = root.child("medium").attribute("g").as_float();
+	options->mediumColor.z = root.child("medium").attribute("b").as_float();
+	auto mediumMultiplier = root.child("medium").attribute("multiplier").as_float();
+	options->mediumColor *= mediumMultiplier;
+
 	options->heyneyGreensteinG = root.child("heyneygreenstein_g").text().as_float();
 
 	options->stepSizeMin = root.child("stepSize").attribute("min").as_float();

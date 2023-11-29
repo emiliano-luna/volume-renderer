@@ -10,7 +10,7 @@
 
 Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	float pathPDF = 1.0f;
+	data->rayPDF = 1.0f;
 	bool hasEmission = data->sceneInfo->temperatureGrid;
 
 	data->depthRemaining = data->options.maxDepth;
@@ -80,7 +80,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 			pathLength = Utils::clamp(tMin, tMax, pathLength);
 		}
 		else {
-			pathLength = tMax;
+			pathLength = tMin * 10;
 		}		
 
 		data->tFar += pathLength;
@@ -101,7 +101,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		float sampleAttenuation = exp(-(pathLength - tMin) * mu_t);
 		// attenuate volume object transparency by current sample transmission value
 		data->transmission *= sampleAttenuation;
-		pathPDF *= sampleAttenuation;
+		data->rayPDF *= mu_t * sampleAttenuation;
 
 		float sample = data->randomGenerator->getFloat(0.0f, 1.0f);
 
@@ -123,6 +123,8 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sample < pNull) {}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
+			data->radiance += data->options.mediumColor * data->transmission;
+
 			terminated = true;
 		}
 		//scattering
@@ -130,7 +132,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		{			
 			//if i run out of rebounds possible assume absorption
 			if (data->depthRemaining-- < 0) {
-				terminated = true;
+				terminated = true;				
 				break;
 			}
 
@@ -163,9 +165,9 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 				if (data->options.useImportanceSampling)
 				{
-					float cos_theta = Utils::dotProduct(rayDirection, data->rayDirection);
+					float cos_theta = Utils::dotProduct(scatteredDirection, data->rayDirection);
 					//multiply path pdf for direction sample pdf
-					pathPDF *= PhaseFunction::henyey_greenstein(
+					data->rayPDF *= PhaseFunction::henyey_greenstein(
 						data->options.heyneyGreensteinG,
 						cos_theta);
 				}
@@ -188,8 +190,10 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	if (terminated)
 		return data->radiance;
-	else
+	else {
 		return data->radiance + data->options.backgroundColor * data->transmission;
+	}
+		
 }
 
 float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigma_maj) {
