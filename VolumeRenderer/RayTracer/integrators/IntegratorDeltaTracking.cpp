@@ -101,6 +101,8 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 					mu_a;
 			}
 
+			result += data->options.mediumColor;
+
 			terminated = true;
 		}
 		//scattering
