@@ -10,6 +10,7 @@
 
 Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
+	float densityMultiplier = data->options.lightRayDensityMultiplier;
 	data->rayPDF = 1.0f;
 	bool hasEmission = data->sceneInfo->temperatureGrid;
 
@@ -67,7 +68,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 			break;
 		}
 
-		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		auto sigma = densityMultiplier * acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 		auto mu_a = sigma * data->options.sigma_a;
 		auto mu_s = sigma * data->options.sigma_s;
 		auto mu_t = mu_a + mu_s;
@@ -101,7 +102,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		float sampleAttenuation = exp(-(pathLength - tMin) * mu_t);
 		// attenuate volume object transparency by current sample transmission value
 		data->transmission *= sampleAttenuation;
-		data->rayPDF *= mu_t * sampleAttenuation;
+		data->rayPDF *= /*mu_t **/ sampleAttenuation;
 
 		float sample = data->randomGenerator->getFloat(0.0f, 1.0f);
 
@@ -198,8 +199,9 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigma_maj) {
 	auto transmission = 1.0f;
-	float tMin = data->options.stepSizeMin * 100;
-	float tMax = data->options.stepSizeMax * 100;
+	float densityMultiplier = data->options.shadowRayDensityMultiplier;
+	float tMin = data->options.stepSizeMin * 20;
+	float tMax = data->options.stepSizeMax * 5;
 
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
 
@@ -220,7 +222,7 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 
 	while (true) {
 		//Ajustar el tamaño del paso basado en la densidad
-		float sigma = acc.getValue(nanovdb::Coord::Floor(lightRay(tFar)));
+		float sigma = densityMultiplier * acc.getValue(nanovdb::Coord::Floor(lightRay(tFar)));
 		auto mu_a = sigma * data->options.sigma_a;
 		auto mu_s = sigma * data->options.sigma_s;
 		auto mu_t = mu_a + mu_s;

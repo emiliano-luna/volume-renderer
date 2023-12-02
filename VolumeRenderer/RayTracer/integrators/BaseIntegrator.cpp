@@ -4,6 +4,10 @@
 #include <algorithm>
 #include <string>
 
+float fastSigmoid(float x) {
+	return x / (1 + abs(x));
+}
+
 void BaseIntegrator::saveFile(Vec3f *framebuffer, int height, int width, const char* fileName) {
 	FreeImage_Initialise();
 
@@ -71,11 +75,21 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 	if (data->options.useImportanceSampling) {
 		for (size_t i = 0; i < raysPerPixel; i++)
 		{
-			color += data->rayResults[i] / data->rayPDFs[i];
+			color += data->rayResults[i] / std::max(0.2f, data->rayPDFs[i]);
 		}
-	}
-		
+
+		//auto colorAvg = color / (float)raysPerPixel;
+
+		////fast sigmoid
+		//colorAvg.x = (fastSigmoid(colorAvg.x * 3) - 0.5) * 2;
+		//colorAvg.y = (fastSigmoid(colorAvg.y * 3) - 0.5) * 2;
+		//colorAvg.z = (fastSigmoid(colorAvg.z * 3) - 0.5) * 2;
+
+		//*(pix++) = colorAvg;
+	}/*
+	else {*/
 	*(pix++) = color / (float)raysPerPixel;
+	//}	
 }
 
 Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {
@@ -96,42 +110,6 @@ Vec3f BaseIntegrator::assignPointToQuadrant(int i, int total) {
 		if (i < total)				return Vec3f(-value, -value, 0) + recursiveResult;
 	}
 }
-
-//void BaseIntegrator::renderPixel(int i, int j, Options &options,
-//	SceneInfo* scene)
-//{
-//	Vec3f* framebuffer = new Vec3f[1];
-//	Vec3f* pix = framebuffer;
-//
-//	HandleIntersectionData* data = new HandleIntersectionData();
-//		
-//	data->sceneInfo = scene;
-//	data->options = options;	
-//	data->randomGenerator = new RandomGenerator(0);
-//
-//	float width = options.widthReference > 0.0f ? options.widthReference : options.width;
-//	float height = options.heightReference > 0.0f ? options.heightReference : options.height;
-//
-//	float scale = tan(Utils::deg2rad(options.fov * 0.5));
-//	float imageAspectRatio = width / height;
-//
-//	float x = (2 * (0.5) / width - 1) * imageAspectRatio * scale;
-//	float y = (1 - 2 * (0.5) / height) * scale;
-//
-//	float xPlusOne = (2 * (1.5) / width - 1) * imageAspectRatio * scale;
-//	float pixelWidth = xPlusOne - x;
-//
-//	float yPlusOne = (1 - 2 * (1.5) / height) * scale;
-//	float pixelHeight = yPlusOne - y;
-//
-//	renderRay(i, j, pixelWidth, pixelHeight, pix, &options.cameraPosition, imageAspectRatio, scale, data);
-//
-//	saveFile(framebuffer, 1, 1, "outPixel.png");
-//
-//	std::cout << "Renderer - Imagen Guardada.";
-//
-//	delete[] framebuffer;
-//}
 
 void BaseIntegrator::render(Options &options,
 	SceneInfo* scene)

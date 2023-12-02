@@ -114,6 +114,8 @@ struct Options
 	bool useImportanceSampling;
 	float stepSizeMin;
 	float stepSizeMax;
+	float lightRayDensityMultiplier;
+	float shadowRayDensityMultiplier;
 };
 
 struct PointLight {
