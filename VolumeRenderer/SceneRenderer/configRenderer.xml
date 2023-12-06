@@ -8,9 +8,9 @@
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
   <sigma_a>0.05</sigma_a>
   <sigma_s>0.95</sigma_s>
-  <heyneygreenstein_g>0.1</heyneygreenstein_g>
-  <rayPerPixelCount>1</rayPerPixelCount>
-  <stepSize min="0.01" max="1.0"/>
+  <heyneygreenstein_g>0.8</heyneygreenstein_g>
+  <rayPerPixelCount>64</rayPerPixelCount>
+  <stepSize min="0.01" max="0.5"/>
   <maxDepth>16</maxDepth>
   <integrator>ratioTracking</integrator>  
 	<width startOffset="270" reference="1080">540</width>
@@ -37,9 +37,9 @@
   <backgroundColor r="0.36" g="0.702" b="0.98"/> 
 
   <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.1"/>   -->
-  <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="15.0"/>  
-  <emission r="0.25" g="0.125" b="0.025" multiplier="16.0"/>
-  <medium r="0.36" g="0.702" b="0.98" multiplier="3.0"/>
-  <lightRayDensityMultiplier>1.0</multiThreadedChunkSize>
+  <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="100.0"/>  
+  <emission r="0.25" g="0.125" b="0.025" multiplier="0.0"/>
+  <medium r="0.36" g="0.702" b="0.98" multiplier="8.0"/>
+  <lightRayDensityMultiplier>1.0</lightRayDensityMultiplier>
   <shadowRayDensityMultiplier>1.0</shadowRayDensityMultiplier>
 </options>
