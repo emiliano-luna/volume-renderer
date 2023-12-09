@@ -263,5 +263,8 @@ VolumeRenderer/RayTracer/x64/
 VolumeRenderer/x64/
 VolumeRenderer/SceneRenderer/x64/
 
+!*.lib
+!*.dll
+
 !embree4.lib
 !tbb.lib
