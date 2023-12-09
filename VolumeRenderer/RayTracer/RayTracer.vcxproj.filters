@@ -180,6 +180,9 @@
     <ClInclude Include="integrators\IntegratorDensitySampling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
