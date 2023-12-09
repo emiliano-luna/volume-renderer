@@ -268,3 +268,5 @@ VolumeRenderer/SceneRenderer/x64/
 
 !embree4.lib
 !tbb.lib
+
+VolumeRenderer/RayTracer/vcpkg_installed
