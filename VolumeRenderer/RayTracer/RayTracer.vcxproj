@@ -219,7 +219,6 @@
     <ClInclude Include="Utils\Types.h" />
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Utils\XMLManager.h" />
-    <ClInclude Include="zlib\zlib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="integrators\IntegratorDeltaTracking.cpp" />
