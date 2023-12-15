@@ -78,6 +78,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		{
 			//sample free path length
 			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
+			pathLength *= data->options.stepSizeMultiplier;
 			pathLength = Utils::clamp(tMin, tMax, pathLength);
 		}
 		else {
@@ -231,17 +232,18 @@ float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* d
 		if (sigma > 0.0f)
 		{
 			//sample free path length
-			stepSize -= log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
+			stepSize = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
+			stepSize *= data->options.stepSizeMultiplier;
 			stepSize = Utils::clamp(tMin, tMax, stepSize);
 		}
 		else {
-			stepSize = tMax;
+			stepSize = tMin * 100;
 		}		 
 
 		tFar += stepSize;
 
 		//if ray is outside medium return its weight
-		if (tFar > lightRay.t1()) {
+		if (tFar > lightRay.t1()) {			
 			return transmission;
 		}
 

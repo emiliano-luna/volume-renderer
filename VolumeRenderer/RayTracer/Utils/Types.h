@@ -114,6 +114,7 @@ struct Options
 	bool useImportanceSampling;
 	float stepSizeMin;
 	float stepSizeMax;
+	float stepSizeMultiplier;
 	float lightRayDensityMultiplier;
 	float shadowRayDensityMultiplier;
 };

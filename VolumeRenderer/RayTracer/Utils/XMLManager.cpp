@@ -98,6 +98,7 @@ Options* XMLManager::GetRendererOptions() {
 
 	options->stepSizeMin = root.child("stepSize").attribute("min").as_float(0.01f);
 	options->stepSizeMax = root.child("stepSize").attribute("max").as_float(1.0f);
+	options->stepSizeMultiplier = root.child("stepSize").attribute("multiplier").as_float(1.0f);
 
 	options->lightRayDensityMultiplier = root.child("lightRayDensityMultiplier").text().as_float(1.0f);
 	options->shadowRayDensityMultiplier = root.child("shadowRayDensityMultiplier").text().as_float(1.0f);
