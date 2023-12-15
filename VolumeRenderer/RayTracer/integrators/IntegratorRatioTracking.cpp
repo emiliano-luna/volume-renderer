@@ -142,13 +142,14 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 				//Sample direct lighting at volume-scattering event
 				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
 				float cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
+				//float henyeyGreensteinPDF = PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);
 
 				data->radiance +=
 					data->transmission *
 					lightTransmission *
-					data->options.lightColor *					
-					pathLength *
-					PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);// *
+					data->options.lightColor *
+					pathLength;// *
+					//henyeyGreensteinPDF;					// *
 					
 				//sigma / sigma_maj;//Ratio NEE
 
