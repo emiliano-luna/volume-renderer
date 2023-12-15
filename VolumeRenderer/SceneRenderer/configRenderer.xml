@@ -9,16 +9,18 @@
   <sigma_a>0.05</sigma_a>
   <sigma_s>0.95</sigma_s>
   <heyneygreenstein_g>0.924</heyneygreenstein_g>
-  <rayPerPixelCount>64</rayPerPixelCount>
-  <stepSize min="0.001" max="99999.9" multiplier="0.001"/>
+  <rayPerPixelCount>4</rayPerPixelCount>
+  <stepSize min="0.001" max="99999.9" multiplier="0.01"/>
   <maxDepth>16</maxDepth>
   <integrator>ratioTracking</integrator>  
-	<width startOffset="540" reference="2160">1080</width>
-	<height startOffset="540" reference="2160">1080</height>
+	<!-- <width startOffset="540" reference="2160">1080</width>
+	<height startOffset="540" reference="2160">1080</height> -->
   <!-- <width startOffset="270" reference="1080">540</width>
 	<height startOffset="270" reference="1080">540</height> -->
-  <!-- <width startOffset="140" reference="560">280</width>
-	<height startOffset="140" reference="560">280</height> -->
+  <width startOffset="140" reference="560">280</width>
+	<height startOffset="140" reference="560">280</height>
+  <!-- <width startOffset="70" reference="280">140</width>
+	<height startOffset="70" reference="280">140</height> -->
 	<multiThreaded>true</multiThreaded>
   <importanceSampling>false</importanceSampling>
   <!-- determinism is guaranteed as long as multiThreadedChunkSize doesn't change from execution to execution -->
@@ -39,9 +41,10 @@
   <backgroundColor r="0.36" g="0.702" b="0.98"/> 
 
   <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.1"/>   -->
-  <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="1.0"/>  
+  <!-- <light x="0" y="1" z="0" r="0.933" g="0.68627" b="0.38" multiplier="1.8"/>   -->
+  <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="2.0"/>
   <emission r="0.25" g="0.125" b="0.025" multiplier="0.0"/>
-  <medium r="0.36" g="0.702" b="0.98" multiplier="1.0"/>
+  <medium r="1.0" g="1.0" b="1.0" multiplier="0.0"/>
   <lightRayDensityMultiplier>1.0</lightRayDensityMultiplier>
   <shadowRayDensityMultiplier>1.0</shadowRayDensityMultiplier>
 </options>

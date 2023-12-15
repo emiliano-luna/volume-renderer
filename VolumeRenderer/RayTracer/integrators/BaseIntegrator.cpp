@@ -86,9 +86,20 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 		//colorAvg.z = (fastSigmoid(colorAvg.z * 3) - 0.5) * 2;
 
 		//*(pix++) = colorAvg;
-	}/*
+	}
+
+	auto colorAvg = color / (float)raysPerPixel;
+	//normalize color to avoid pixels that are too bright
+	if (colorAvg.x > 1.0f || colorAvg.y > 1.0f || colorAvg.z > 1.0f) {
+		auto maxCoord = 
+			(colorAvg.x > colorAvg.y && colorAvg.x > colorAvg.z) ? colorAvg.x :
+				colorAvg.y > colorAvg.z ? colorAvg.y : colorAvg.z;
+
+		colorAvg = colorAvg / maxCoord;
+	}
+	/*
 	else {*/
-	*(pix++) = color / (float)raysPerPixel;
+	*(pix++) = colorAvg;
 	//}	
 }
 
