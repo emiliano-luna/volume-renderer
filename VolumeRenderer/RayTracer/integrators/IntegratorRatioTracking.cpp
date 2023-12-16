@@ -100,7 +100,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
 
 		//current sample transparency
-		float sampleAttenuation = exp(-(pathLength - tMin) * mu_t);
+		double sampleAttenuation = exp(-(pathLength) * mu_t);
 		// attenuate volume object transparency by current sample transmission value
 		data->transmission *= sampleAttenuation;
 		data->rayPDF *= /*mu_t **/ sampleAttenuation;
@@ -142,14 +142,14 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 				//Sample direct lighting at volume-scattering event
 				auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
 				float cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
-				//float henyeyGreensteinPDF = PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);
+				float henyeyGreensteinPDF = PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);
 
 				data->radiance +=
 					data->transmission *
 					lightTransmission *
 					data->options.lightColor *
-					pathLength;// *
-					//henyeyGreensteinPDF;					// *
+					pathLength *
+					henyeyGreensteinPDF;					// *
 					
 				//sigma / sigma_maj;//Ratio NEE
 
@@ -194,6 +194,17 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 	if (terminated)
 		return data->radiance;
 	else {
+		//Sample direct lighting when ray survives
+		auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
+		double cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
+		double henyeyGreensteinPDF = PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);
+
+		data->radiance +=
+			data->transmission *
+			lightTransmission *
+			data->options.lightColor *
+			henyeyGreensteinPDF;
+
 		return data->radiance + data->options.backgroundColor * data->transmission;
 	}
 		
