@@ -10,9 +10,14 @@ Vec3f Utils::crossProduct(const Vec3f &a, const Vec3f &b)
 	);
 }
 
+float Utils::magnitude2(const Vec3f& v)
+{
+	return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
 Vec3f Utils::normalize(const Vec3f &v)
 {
-	float mag2 = v.x * v.x + v.y * v.y + v.z * v.z;
+	float mag2 = Utils::magnitude2(v);
 	if (mag2 > 0) {
 		float invMag = 1 / sqrtf(mag2);
 		return Vec3f(v.x * invMag, v.y * invMag, v.z * invMag);

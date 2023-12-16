@@ -53,6 +53,7 @@ Options* XMLManager::GetRendererOptions() {
 	options->heightStartOffset = root.child("height").attribute("startOffset").as_int(0);
 	options->heightReference = root.child("height").attribute("reference").as_int(400);
 	options->multiThreaded = root.child("multiThreaded").text().as_bool(true);
+	options->multiThreadedFreeThreads = root.child("multiThreaded").attribute("freeThreads").as_int(0);
 	options->multiThreadedChunkSize = root.child("multiThreadedChunkSize").text().as_int(20);
 
 	options->useImportanceSampling = root.child("importanceSampling").text().as_bool();
@@ -62,6 +63,8 @@ Options* XMLManager::GetRendererOptions() {
 		root.child("backgroundColor").attribute("g").as_float(),
 		root.child("backgroundColor").attribute("b").as_float()
 	);
+	auto backgroundColorMultiplier = root.child("backgroundColor").attribute("multiplier").as_float(1.0f);
+	options->backgroundColor *= backgroundColorMultiplier;
 
 	options->fov = root.child("camera").attribute("fov").as_float(90.0f);
 	

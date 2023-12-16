@@ -103,7 +103,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		double sampleAttenuation = exp(-(pathLength) * mu_t);
 		// attenuate volume object transparency by current sample transmission value
 		data->transmission *= sampleAttenuation;
-		data->rayPDF *= /*mu_t **/ sampleAttenuation;
+		data->rayPDF *= mu_t * sampleAttenuation;
 
 		float sample = data->randomGenerator->getFloat(0.0f, 1.0f);
 
@@ -195,15 +195,15 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		return data->radiance;
 	else {
 		//Sample direct lighting when ray survives
-		auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
-		double cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
-		double henyeyGreensteinPDF = PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);
+		//auto lightTransmission = directLightningRayMarch(data, 5.0f, sigma_maj);
+		//double cos_theta = Utils::dotProduct(data->rayDirection, data->options.lightPosition);
+		//double henyeyGreensteinPDF = PhaseFunction::henyey_greenstein(data->options.heyneyGreensteinG, cos_theta);
 
-		data->radiance +=
-			data->transmission *
-			lightTransmission *
-			data->options.lightColor *
-			henyeyGreensteinPDF;
+		//data->radiance +=
+		//	data->transmission *
+		//	lightTransmission *
+		//	data->options.lightColor *
+		//	henyeyGreensteinPDF;
 
 		return data->radiance + data->options.backgroundColor * data->transmission;
 	}
@@ -213,8 +213,8 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 float IntegratorRatioTracking::directLightningRayMarch(HandleIntersectionData* data, float maxStepSize, float sigma_maj) {
 	auto transmission = 1.0f;
 	float densityMultiplier = data->options.shadowRayDensityMultiplier;
-	float tMin = data->options.stepSizeMin * 20;
-	float tMax = data->options.stepSizeMax * 5;
+	float tMin = data->options.stepSizeMin * 5;
+	float tMax = data->options.stepSizeMax;
 
 	auto acc = data->sceneInfo->densityGrid->tree().getAccessor();
 

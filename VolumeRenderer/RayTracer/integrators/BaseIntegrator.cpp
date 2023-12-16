@@ -68,35 +68,41 @@ void BaseIntegrator::renderRay(int i, int j, float pixelWidth, float pixelHeight
 			data->rayPDFs[i] = data->rayPDF;
 		}
 		else {
-			color += castRay(data, 0, 1);
+		color += castRay(data, 0, 1);
 		}
 	}
 
 	if (data->options.useImportanceSampling) {
 		for (size_t i = 0; i < raysPerPixel; i++)
 		{
-			color += data->rayResults[i] / std::max(0.2f, data->rayPDFs[i]);
+			color += data->rayResults[i] / std::max(0.1f, data->rayPDFs[i]);
 		}
 
 		//auto colorAvg = color / (float)raysPerPixel;
-
-		////fast sigmoid
-		//colorAvg.x = (fastSigmoid(colorAvg.x * 3) - 0.5) * 2;
-		//colorAvg.y = (fastSigmoid(colorAvg.y * 3) - 0.5) * 2;
-		//colorAvg.z = (fastSigmoid(colorAvg.z * 3) - 0.5) * 2;
-
-		//*(pix++) = colorAvg;
 	}
+
+	//	////fast sigmoid
+	//	//colorAvg.x = (fastSigmoid(colorAvg.x * 3) - 0.5) * 2;
+	//	//colorAvg.y = (fastSigmoid(colorAvg.y * 3) - 0.5) * 2;
+	//	//colorAvg.z = (fastSigmoid(colorAvg.z * 3) - 0.5) * 2;
+
+	//	//*(pix++) = colorAvg;
+	//}
 
 	auto colorAvg = color / (float)raysPerPixel;
-	//normalize color to avoid pixels that are too bright
-	if (colorAvg.x > 1.0f || colorAvg.y > 1.0f || colorAvg.z > 1.0f) {
-		auto maxCoord = 
-			(colorAvg.x > colorAvg.y && colorAvg.x > colorAvg.z) ? colorAvg.x :
-				colorAvg.y > colorAvg.z ? colorAvg.y : colorAvg.z;
 
-		colorAvg = colorAvg / maxCoord;
-	}
+	//https://64.github.io/tonemapping/
+	//Simple Reinhard
+
+
+	////normalize color to avoid pixels that are too bright
+	//if (colorAvg.x > 1.0f || colorAvg.y > 1.0f || colorAvg.z > 1.0f) {
+	//	auto maxCoord = 
+	//		(colorAvg.x > colorAvg.y && colorAvg.x > colorAvg.z) ? colorAvg.x :
+	//			colorAvg.y > colorAvg.z ? colorAvg.y : colorAvg.z;
+
+	//	colorAvg = colorAvg / maxCoord;
+	
 	/*
 	else {*/
 	*(pix++) = colorAvg;
@@ -133,7 +139,7 @@ void BaseIntegrator::render(Options &options,
 
 	std::chrono::steady_clock::time_point begin;
 	begin = std::chrono::steady_clock::now();
-	
+
 	if (options.multiThreaded && usedThreads > 1)
 	{
 		int heightPerThread = options.multiThreadedChunkSize > 0 ?
@@ -186,6 +192,30 @@ void BaseIntegrator::render(Options &options,
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	std::cout << "Renderer - Escena rendereada en: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
 	
+	std::cout << "Renderer - Comenzando post proceso." << std::endl;
+	begin = std::chrono::steady_clock::now();
+
+	auto maxWhite2 = 0.0f;
+	for (size_t i = 0; i < options.width * options.height; i++)
+	{		
+		auto pixel = framebuffer[i];
+		auto distance2 = Utils::magnitude2(pixel);
+		if (distance2 > maxWhite2)
+			maxWhite2 = distance2;
+	}
+
+	for (size_t i = 0; i < options.width * options.height; i++)
+	{	
+		//https://64.github.io/tonemapping/
+		//reinhard extended
+		auto pixel = framebuffer[i];
+		auto numerator = pixel * ((pixel / Vec3f(maxWhite2)) + 1.0f);
+		(framebuffer[i]) = numerator / (pixel + 1.0f);
+	}
+
+	end = std::chrono::steady_clock::now();
+	std::cout << "Renderer - Post proceso finalizado en :" << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
+
 	std::time_t end_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	char dateChars[26];
 	ctime_s(dateChars, sizeof dateChars, &end_time);

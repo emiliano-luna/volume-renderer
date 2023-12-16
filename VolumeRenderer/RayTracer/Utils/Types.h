@@ -51,6 +51,7 @@ public:
 	Vec3f(float* xyz) : x(xyz[0]), y(xyz[1]), z(xyz[2]) {}
 	Vec3f operator * (const float &r) const { return Vec3f(x * r, y * r, z * r); }
 	Vec3f operator * (const Vec3f &v) const { return Vec3f(x * v.x, y * v.y, z * v.z); }
+	Vec3f operator / (const Vec3f& v) const { return Vec3f(x / v.x, y / v.y, z / v.z); }	
 	Vec3f operator - (const Vec3f &v) const { return Vec3f(x - v.x, y - v.y, z - v.z); }
 	Vec3f operator + (const Vec3f &v) const { return Vec3f(x + v.x, y + v.y, z + v.z); }
 	Vec3f operator - () const { return Vec3f(-x, -y, -z); }
