@@ -10,7 +10,8 @@
 
 Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t depth, uint32_t reboundFactor)
 {
-	float pathPDF = 1.0f;
+	float densityMultiplier = data->options.lightRayDensityMultiplier;
+	data->rayPDF = 1.0f;
 	bool hasEmission = data->sceneInfo->temperatureGrid;
 
 	data->depthRemaining = data->options.maxDepth;
@@ -51,7 +52,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 	bool terminated = false;
 
 	while (!terminated && data->depthRemaining > 0) {
-		auto sigma = acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
+		auto sigma = densityMultiplier * acc.getValue(nanovdb::Coord::Floor(data->iRay(data->tFar)));
 		auto mu_a = sigma * data->options.sigma_a;
 		auto mu_s = sigma * data->options.sigma_s;
 		auto mu_t = mu_a + mu_s;
@@ -61,12 +62,13 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sigma > 0.0f)		
 		{
 			//sample free path length
-			auto sampledDistance = -log(data->randomGenerator->getFloat(0, 1)) / mu_t;
-			pathLength = Utils::clamp(tMin, tMax, sampledDistance);
+			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
+			pathLength *= data->options.stepSizeMultiplier;
+			pathLength = Utils::clamp(tMin, tMax, pathLength);
 			//distanceSamplePDF = mu_t * exp(-pathLength * mu_t);
 		}
 		else {
-			pathLength = tMax;
+			pathLength = tMin * 10;
 		}
 
 		data->tFar += pathLength;
@@ -89,7 +91,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sample < pNull) 
 		{
 			if (data->options.useImportanceSampling)
-				pathPDF *= pNull;
+				data->rayPDF *= pNull;
 		}
 		//absorption
 		else if (sample < pNull + pAbsorption) {
@@ -132,7 +134,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 			{
 				float cos_theta = Utils::dotProduct(rayDirection, data->rayDirection);
 				//multiply path pdf for direction sample pdf
-				pathPDF *= PhaseFunction::henyey_greenstein(
+				data->rayPDF *= PhaseFunction::henyey_greenstein(
 					data->options.heyneyGreensteinG, 
 					cos_theta);
 			}
@@ -160,8 +162,6 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 
 	//if (pathPDF > 1.0f)
 	//	pathPDF = 1.0f;
-
-	data->rayPDF = pathPDF;
 
 	if (terminated)
 	{
