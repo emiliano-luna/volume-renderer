@@ -195,14 +195,20 @@ void BaseIntegrator::render(Options &options,
 	std::cout << "Renderer - Comenzando post proceso." << std::endl;
 	begin = std::chrono::steady_clock::now();
 
-	auto maxWhite2 = 0.0f;
+	/*auto maxWhite2 = 0.0f;*/
+	auto maxWhite = 0.0f;
 	for (size_t i = 0; i < options.width * options.height; i++)
 	{		
 		auto pixel = framebuffer[i];
-		auto distance2 = Utils::magnitude2(pixel);
-		if (distance2 > maxWhite2)
-			maxWhite2 = distance2;
+		//auto distance2 = Utils::magnitude2(pixel);
+		//if (distance2 > maxWhite2)
+		//	maxWhite2 = distance2;
+		if (pixel.x > maxWhite) maxWhite = pixel.x;
+		if (pixel.y > maxWhite) maxWhite = pixel.y;
+		if (pixel.z > maxWhite) maxWhite = pixel.z;
 	}
+
+	auto maxWhite2 = maxWhite * maxWhite;
 
 	for (size_t i = 0; i < options.width * options.height; i++)
 	{	
