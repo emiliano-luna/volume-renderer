@@ -101,6 +101,7 @@ struct Options
 	Vec3f backgroundColor;
 	Vec3f ambientLight;
 	bool multiThreaded;
+	uint8_t multiThreadedFreeThreads;
 	uint32_t multiThreadedChunkSize;
 	std::string fileName;
 	Vec3f cameraPosition;

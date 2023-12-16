@@ -129,15 +129,16 @@ void BaseIntegrator::render(Options &options,
 	Vec3f *pix = framebuffer;
 
 	unsigned concurrentThreadsSupported = std::thread::hardware_concurrency();
+	auto usedThreads = concurrentThreadsSupported - options.multiThreadedFreeThreads;
 
 	std::chrono::steady_clock::time_point begin;
 	begin = std::chrono::steady_clock::now();
 	
-	if (options.multiThreaded && concurrentThreadsSupported > 1)
+	if (options.multiThreaded && usedThreads > 1)
 	{
 		int heightPerThread = options.multiThreadedChunkSize > 0 ?
 			options.multiThreadedChunkSize :
-			options.height / concurrentThreadsSupported;
+			options.height / usedThreads;
 
 		sceneData.pix = pix;
 		sceneData.options = options;
@@ -146,9 +147,9 @@ void BaseIntegrator::render(Options &options,
 
 		auto multithreadingHelper = new MultithreadingHelper(heightPerThread, std::ceil(options.height / (float)heightPerThread));
 
-		HANDLE* myhandle = new HANDLE[concurrentThreadsSupported];
+		HANDLE* myhandle = new HANDLE[usedThreads];
 
-		for (uint32_t i = 0; i < concurrentThreadsSupported; ++i) {
+		for (uint32_t i = 0; i < usedThreads; ++i) {
 			RenderThreadData* data = new RenderThreadData();
 
 			//uint32_t* fromHeight = new uint32_t(heightPerThread * i);
@@ -167,9 +168,9 @@ void BaseIntegrator::render(Options &options,
 			SetThreadAffinityMask(myhandle[i], static_cast<DWORD_PTR>(1) << i);
 		}
 
-		WaitForMultipleObjects(concurrentThreadsSupported, myhandle, true, INFINITE);
+		WaitForMultipleObjects(usedThreads, myhandle, true, INFINITE);
 
-		for (int i = 0; i < concurrentThreadsSupported; ++i)
+		for (int i = 0; i < usedThreads; ++i)
 			CloseHandle(myhandle[i]);
 	}
 	else
