@@ -9,8 +9,8 @@
   <sigma_a>0.02</sigma_a>
   <sigma_s>0.2</sigma_s>
   <heyneygreenstein_g>0.4</heyneygreenstein_g>
-  <rayPerPixelCount>1</rayPerPixelCount>
-  <stepSize min="0.01" max="999999.9" multiplier="0.1"/>
+  <rayPerPixelCount>64</rayPerPixelCount>
+  <stepSize min="0.01" max="999999.9" multiplier="0.01"/>
   <maxDepth>16</maxDepth>
   <integrator>ratioTracking</integrator>  
   <!-- image size for bunny -->
@@ -62,7 +62,7 @@
   <!--fire-->
   <!-- <emission r="0.25" g="0.125" b="0.025" multiplier="10.0"/> -->
   <!--blue fire-->
-  <emission r="0.015" g="0.247" b="0.596" multiplier="80.0"/>
+  <emission r="0.015" g="0.247" b="0.596" multiplier="100.0"/>
 
   <medium r="1.0" g="1.0" b="1.0" multiplier="0.0"/>
   <lightRayDensityMultiplier>1.0</lightRayDensityMultiplier>
