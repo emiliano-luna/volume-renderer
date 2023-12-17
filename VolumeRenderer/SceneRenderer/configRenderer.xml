@@ -6,17 +6,17 @@
   </models>
   <!-- <densityField baseDir="..\DensityFields\">fire.nvdb</densityField> -->
   <densityField baseDir="..\DensityFields\">bunny_cloud.nvdb</densityField>
-  <sigma_a>0.1</sigma_a>
-  <sigma_s>0.9</sigma_s>
-  <heyneygreenstein_g>-0.2</heyneygreenstein_g>
-  <rayPerPixelCount>16</rayPerPixelCount>
-  <stepSize min="0.01" max="9999.9" multiplier="0.0001"/>
+  <sigma_a>0.02</sigma_a>
+  <sigma_s>0.2</sigma_s>
+  <heyneygreenstein_g>0.924</heyneygreenstein_g>
+  <rayPerPixelCount>4</rayPerPixelCount>
+  <stepSize min="0.01" max="999999.9" multiplier="0.05"/>
   <maxDepth>16</maxDepth>
-  <integrator>deltaTracking</integrator>  
-	<width startOffset="540" reference="2160">1080</width>
-	<height startOffset="540" reference="2160">1080</height>
-  <!-- <width startOffset="270" reference="1080">540</width>
-	<height startOffset="270" reference="1080">540</height> -->
+  <integrator>ratioTracking</integrator>  
+	<!-- <width startOffset="540" reference="2160">1080</width>
+	<height startOffset="540" reference="2160">1080</height> -->
+  <width startOffset="270" reference="1080">540</width>
+	<height startOffset="270" reference="1080">540</height>
   <!-- <width startOffset="140" reference="560">280</width>
 	<height startOffset="140" reference="560">280</height> -->
   <!-- <width startOffset="70" reference="280">140</width>
@@ -42,7 +42,7 @@
 
   <!-- <light x="0" y="1" z="0" r="19.65" g="4.5" b="13.5" multiplier="0.1"/>   -->
   <!-- <light x="0" y="1" z="0" r="0.933" g="0.68627" b="0.38" multiplier="1.8"/>   -->
-  <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="1024.0"/>
+  <light x="0" y="1" z="0" r="1.0" g="1.0" b="1.0" multiplier="2000.0"/>
   <emission r="0.25" g="0.125" b="0.025" multiplier="0.0"/>
   <medium r="1.0" g="1.0" b="1.0" multiplier="0.0"/>
   <lightRayDensityMultiplier>1.0</lightRayDensityMultiplier>

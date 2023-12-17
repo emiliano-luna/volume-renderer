@@ -62,7 +62,7 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sigma > 0.0f)		
 		{
 			//sample free path length
-			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
+			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / sigma_maj;
 			pathLength *= data->options.stepSizeMultiplier;
 			pathLength = Utils::clamp(tMin, tMax, pathLength);
 			//distanceSamplePDF = mu_t * exp(-pathLength * mu_t);
@@ -85,13 +85,17 @@ Vec3f IntegratorDeltaTracking::castRay(HandleIntersectionData* data, uint32_t de
 		float pScattering = mu_s / sigma_maj;
 		float pNull = std::max<float>(0, 1 - pAbsorption - pScattering);
 
+		double sampleAttenuation = exp(-(pathLength) * mu_t);
+		// attenuate volume object transparency by current sample transmission value
+		data->transmission *= sampleAttenuation;
+		data->rayPDF *= mu_t * sampleAttenuation;
+
 		float sample = data->randomGenerator->getFloat(0, 1);
 
 		//null-scattering
 		if (sample < pNull) 
 		{
-			if (data->options.useImportanceSampling)
-				data->rayPDF *= pNull;
+
 		}
 		//absorption
 		else if (sample < pNull + pAbsorption) {

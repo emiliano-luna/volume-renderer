@@ -77,7 +77,7 @@ Vec3f IntegratorRatioTracking::castRay(HandleIntersectionData* data, uint32_t de
 		if (sigma > 0.0f)
 		{
 			//sample free path length
-			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / mu_t;
+			pathLength = -log(data->randomGenerator->getFloat(0.00001f, 1.0f)) / sigma_maj;
 			pathLength *= data->options.stepSizeMultiplier;
 			pathLength = Utils::clamp(tMin, tMax, pathLength);
 		}
